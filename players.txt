@@ -1,0 +1,1 @@
+[{"id":2,"username":"joseppison","eloRating":{"rating":1500.0}},{"id":3,"username":"swagman","eloRating":{"rating":1500.0}},{"id":4,"username":"joseppisonss","eloRating":{"rating":1500.0}},{"id":5,"username":"word","eloRating":{"rating":1500.0}}]
