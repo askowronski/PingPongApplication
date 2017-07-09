@@ -1,9 +1,9 @@
 package app.PersistenceManagers;
 
 
-import app.EloRating;
-import app.PingPongGame;
-import app.Player;
+import app.StatsEngine.EloRating;
+import app.StatsEngine.PingPongGame;
+import app.StatsEngine.Player;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;

@@ -3,9 +3,9 @@ package app.API;
 
 import app.PersistenceManagers.GamePersistenceManager;
 import app.PersistenceManagers.PlayerPersistenceManager;
-import app.PingPongGame;
-import app.Player;
-import app.SinglePlayerStatisticsCalculator;
+import app.StatsEngine.PingPongGame;
+import app.StatsEngine.Player;
+import app.StatsEngine.SinglePlayerStatisticsCalculator;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;

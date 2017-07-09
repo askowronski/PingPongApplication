@@ -1,4 +1,4 @@
-package app;
+package app.StatsEngine;
 
 
 import com.fasterxml.jackson.annotation.JsonCreator;

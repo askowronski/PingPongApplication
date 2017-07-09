@@ -1,4 +1,4 @@
-package app;
+package app.StatsEngine;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package app;
+package app.StatsEngine;
 
 import java.util.ArrayList;
 import java.util.List;

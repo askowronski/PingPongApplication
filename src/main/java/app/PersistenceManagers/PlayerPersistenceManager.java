@@ -1,8 +1,7 @@
 package app.PersistenceManagers;
 
-import app.EloRating;
-import app.PingPongGame;
-import app.Player;
+import app.StatsEngine.EloRating;
+import app.StatsEngine.Player;
 import app.ReadWriteFile.File;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
