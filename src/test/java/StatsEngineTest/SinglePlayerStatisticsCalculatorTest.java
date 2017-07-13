@@ -1,5 +1,9 @@
-package app.StatsEngine;
+package StatsEngineTest;
 
+import app.StatsEngine.EloRating;
+import app.StatsEngine.PingPongGame;
+import app.StatsEngine.Player;
+import app.StatsEngine.SinglePlayerStatisticsCalculator;
 import org.junit.Test;
 
 import java.util.ArrayList;

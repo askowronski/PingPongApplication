@@ -9,10 +9,11 @@ const Button = (props) => {
 }
 
 const Display = (props) => {
+
     return (
         <div>
       <span>Games Played</span>
-            <span> equals + {props.gamesPlayed} </span>
+            <span> equals + {props.gamesPlayed(4)} </span>
         </div>
 
     );
@@ -42,8 +43,9 @@ class App extends React.Component {
             }
         }).then(function (data) {
             this.setState({
-                gamesPlayed: JSON.parse(data.message).username
+                userName: JSON.parse(data.message).username
             })
+            return data.message
         }.bind(this));
     };
 
@@ -71,7 +73,7 @@ class IDForm extends React.Component {
         super(props);
         this.state = {
             value: '',
-            gamesPlayed:0
+            userName:'huh'
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -85,18 +87,16 @@ class IDForm extends React.Component {
             url: "http://localhost:8080/GetPlayer?id="+id,
             dataType: 'json',
             cache: false,
-            error: function (xhr, status, err) {
-                console.error("http://localhost:8080/GetPlayer?id="+id, status, err.toString());
-            }
+
         }).then(function (data) {
             window.alert(data.message);
             this.setState({
 
-                gamesPlayed: JSON.parse(data.message).username
+                userName:data.message
             })
-            if(this.gamesPlayed===null){
+            if(this.userName===null){
                 this.setState({
-                    gamesPlayed: "User Not Found"
+                    userName: "User Not Found"
                 })
 
             }
@@ -110,7 +110,7 @@ class IDForm extends React.Component {
     }
 
     handleSubmit(event) {
-        event.preventDefault();
+        console.log(this.state.value);
         {this.getGamesPlayed(this.state.value)};
     }
 
@@ -125,7 +125,7 @@ class IDForm extends React.Component {
                 <input type="submit" value="Submit" />
             </form>
 
-            <Display gamesPlayed={this.state.gamesPlayed} />
+            <Display gamesPlayed={this.getGamesPlayed} />
             </div>
         );
     }

@@ -1,5 +1,7 @@
-package app.StatsEngine;
+package StatsEngineTest;
 
+import app.StatsEngine.EloRating;
+import app.StatsEngine.GameOutcome;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;

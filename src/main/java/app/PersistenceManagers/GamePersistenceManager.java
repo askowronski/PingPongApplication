@@ -31,6 +31,7 @@ public class GamePersistenceManager {
         this.getFile().writeFile(this.writeGameToJson(game),false);
     }
 
+
     public void writeGameToFile(int id, int score1, int score2) {
         Player player1 = new Player(new EloRating(), 1,"ja");
         Player player2 = new Player(new EloRating(), 2,"ja");
@@ -130,7 +131,6 @@ public class GamePersistenceManager {
     public void writeGamesToFile(List<PingPongGame> games) {
         this.getFile().writeFile(this.writeGameToJson(games),false);
     }
-
 
     public File getFile() {
         return this.file;
