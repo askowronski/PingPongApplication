@@ -202,6 +202,17 @@ public class PlayerPersistenceManager {
 
     }
 
+    public Player getPlayerWithHighestRating() {
+        List<Player> players = this.getPlayers();
+        Player highestPlayer = players.get(0);
+        for(int i = 0; i< players.size(); i++) {
+            if(players.get(i).getEloRating().getRating()>highestPlayer.getEloRating().getRating()){
+                highestPlayer= players.get(i);
+            }
+        }
+        return highestPlayer;
+    }
+
 
 
 

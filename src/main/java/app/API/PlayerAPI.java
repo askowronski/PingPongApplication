@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class PlayerAPI {
 
@@ -42,10 +43,11 @@ public class PlayerAPI {
         if(player.getiD()==0){
             return new APIResult(false,"Player with ID "+id+" not found");
         }
+        System.out.println("GetPlayer called");
         return new APIResult(true, pPM.writePlayerToJson(player));
     }
 
-    @RequestMapping("EditPlayer")
+    @RequestMapping("/EditPlayer")
     public APIResult processEditPlayer(@RequestParam(value="id",required=true) int id,
                                   @RequestParam(value="newUsername",required=true) String newUsername) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
@@ -55,7 +57,7 @@ public class PlayerAPI {
         return new APIResult(false,"Player Unsuccessfully Edited");
     }
 
-    @RequestMapping("DeletePlayer")
+    @RequestMapping("/DeletePlayer")
     public APIResult processDeletePlayer(@RequestParam(value="id",required = false) Optional<Integer> id,
                                          @RequestParam(value="username",required = true) String username) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
@@ -73,6 +75,12 @@ public class PlayerAPI {
         }
 
             return new APIResult(false,"Player was not found");
+    }
+
+    @RequestMapping("/GetPlayerWithHighestRating")
+    public APIResult getPlayerWithHighestRating() {
+        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
+        return new APIResult(true,pPM.writePlayerToJson(pPM.getPlayerWithHighestRating()));
     }
 
 

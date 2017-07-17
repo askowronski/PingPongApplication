@@ -1,0 +1,120 @@
+span {
+
+}
+
+.selected {
+    background-color:#008080;
+    font-weight:bold;
+}
+
+.answer {
+    background-color:#ffa500;
+    font-weight:bold;
+}
+
+.fa-star {
+    margin:.5em;
+    font-size:24px;
+}
+
+.playing {
+}
+
+.lost {
+    background-color:#ff0000;
+}
+
+.won {
+    background-color:#0000ff;
+}
+
+.btn-correct{
+    background-color:#32CD32;
+}
+
+.btn-incorrect{
+    background-color:#ff0000;
+}
+
+.reset {
+    width:60px;
+    background-color:#00ffff;
+}
+
+.container-header {
+
+}
+
+.header-row {
+    display: inline-block;
+    width:100%;
+    text-align: center;
+    float:left;
+}
+
+.header-button-holder {
+    margin-top:3.5%;
+    margin-left:10%;
+    margin-right:10%;
+    float:left;
+    width:20px;
+    height:20px;
+    border:10px;
+}
+
+.header-button {
+    background-color: #32CD32;
+    width:150px;
+    height:60px;
+    font-size:18px;
+}
+
+body {
+    background: linear-gradient(-90deg, #00d8ff, #009bff);
+}
+
+
+th {
+    padding:50px;
+    align:center;
+    text-align:center;
+}
+
+td {
+    width:300px;
+    text-align: center;
+    align:center;
+    padding-left:75px;
+    padding-right:75px;
+    padding-top:30px;
+    padding-bottom:30px ;
+}
+
+tr {
+    border:15px;
+}
+
+table {
+    margin-top: 125px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.infoDisplay {
+
+}
+
+.square {
+    width: 325px;
+    height: 162.5px;
+    background: red;
+    text-align: center;
+    align-self: auto;
+    display:inline-table;
+}
+
+
+
+
+
+

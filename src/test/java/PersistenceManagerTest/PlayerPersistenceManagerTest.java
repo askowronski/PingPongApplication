@@ -80,7 +80,7 @@ public class PlayerPersistenceManagerTest {
     }
 
     @Test
-    public void testFidndPlayers() {
+    public void testFindPlayers() {
 
         String username = "jaboi";
         String username2 = "matt";

@@ -28,7 +28,7 @@ public class GamePersistenceManager {
     }
 
     public void writeGameToFile(PingPongGame game) {
-        this.getFile().writeFile(this.writeGameToJson(game),false);
+        this.getFile().writeFile(this.writeGameToGamesJson(game),false);
     }
 
 
@@ -72,7 +72,7 @@ public class GamePersistenceManager {
         return new PingPongGame();
     }
 
-    public String writeGameToJson(PingPongGame game) {
+    public String writeGameToGamesJson(PingPongGame game) {
         ObjectMapper mapper = new ObjectMapper();
         List<PingPongGame> games = this.getGames();
         games.add(game);
@@ -84,7 +84,17 @@ public class GamePersistenceManager {
         }
     }
 
-    public String writeGameToJson(List<PingPongGame> games) {
+    public String writeGameToJson(PingPongGame game) {
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            return mapper.writeValueAsString(game);
+        } catch(JsonProcessingException e){
+            return e.getMessage();
+        }
+    }
+
+    public String writeGameToGamesJson(List<PingPongGame> games) {
         ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.writeValueAsString(games);
@@ -125,11 +135,11 @@ public class GamePersistenceManager {
         List<PingPongGame> games = this.getGames();
         games.set(games.indexOf(oldGame),newGame);
 
-        this.getFile().writeFile(this.writeGameToJson(games),false);
+        this.getFile().writeFile(this.writeGameToGamesJson(games),false);
     }
 
     public void writeGamesToFile(List<PingPongGame> games) {
-        this.getFile().writeFile(this.writeGameToJson(games),false);
+        this.getFile().writeFile(this.writeGameToGamesJson(games),false);
     }
 
     public File getFile() {

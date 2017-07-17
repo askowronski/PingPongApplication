@@ -20,7 +20,17 @@ module.exports = {
                     cacheDirectory: true,
                     presets: ['es2015', 'react']
                 }
+            },
+
+        { test: /\.css$/, loader: "style-loader!css-loader"
+        },
+            {
+                test: /\.(woff2?|ttf|svg|eot)(\?v=\d+\.\d+\.\d+)?$/,
+                loader: 'file-loader',
             }
-        ]
-    }
+    ]
+
+}
+
+
 };

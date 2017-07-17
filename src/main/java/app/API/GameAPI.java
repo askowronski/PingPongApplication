@@ -3,6 +3,7 @@ package app.API;
 import app.PersistenceManagers.GamePersistenceManager;
 import app.StatsEngine.PingPongGame;
 import app.StatsEngine.Player;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,8 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class GameAPI {
 
@@ -106,6 +109,15 @@ public class GameAPI {
         games.remove(game);
         gPM.writeGamesToFile(games);
         return new APIResult(true,"Game Deleted");
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(path = "/GetGame", method=GET)
+    public APIResult processGetGame(@RequestParam("iD") int iD) {
+        GamePersistenceManager gPM = new GamePersistenceManager();
+        PingPongGame game = gPM.getGameByID(iD);
+        return new APIResult(true, gPM.writeGameToJson(game));
+
     }
 
 
