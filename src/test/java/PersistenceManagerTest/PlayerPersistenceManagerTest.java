@@ -27,7 +27,7 @@ public class PlayerPersistenceManagerTest {
 
         String json = pPM.writePlayerArrayToJson(players);
 
-        String expectedContents = "[{\"id\":1,\"username\":\"jaboi\",\"eloRating\":{\"rating\":1500.0}}]";
+        String expectedContents = "[{\"id\":1,\"newUsername\":\"jaboi\",\"eloRating\":{\"rating\":1500.0}}]";
 
         assertTrue(json.equals(expectedContents));
 

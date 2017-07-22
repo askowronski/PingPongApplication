@@ -23,6 +23,7 @@ public class GameAPI {
 
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(method=POST,path="/CreateGame")
     public APIResult processCreateGame(@RequestParam(value="player1ID",required = true) String player1ID,
                                   @RequestParam(value="player2ID",required = true) String player2ID,
@@ -51,6 +52,7 @@ public class GameAPI {
 
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(method=POST,path="/EditGame")
     public APIResult processEditGame(@RequestParam(value="iD",required=true) int gameID,
                                 @RequestParam(value="player1ID",required = false) Optional<Integer> player1ID,
@@ -98,6 +100,7 @@ public class GameAPI {
 
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(path = "/DeleteGame",method=POST)
     public APIResult processDeleteGame(@RequestParam("iD") int iD) {
         GamePersistenceManager gPM = new GamePersistenceManager();
@@ -117,6 +120,15 @@ public class GameAPI {
         GamePersistenceManager gPM = new GamePersistenceManager();
         PingPongGame game = gPM.getGameByID(iD);
         return new APIResult(true, gPM.writeGameToJson(game));
+
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(path = "/GetGames", method=GET)
+    public APIResult processGetGame() {
+        GamePersistenceManager gPM = new GamePersistenceManager();
+        List<PingPongGame> games = gPM.getGames();
+        return new APIResult(true, gPM.writeGameToGamesJson(games));
 
     }
 

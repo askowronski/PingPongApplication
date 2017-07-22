@@ -62,11 +62,29 @@ span {
     border:10px;
 }
 
+.header-button-input-holder {
+    margin-top:15%;
+    margin-left:10%;
+    margin-right:5%;
+    width:20px;
+    height:20px;
+    border:10px;
+    display:inline;
+}
+
 .header-button {
     background-color: #32CD32;
     width:150px;
     height:60px;
     font-size:18px;
+}
+
+.header-button-input {
+    background-color: #32CD32;
+    width:75px;
+    height:30px;
+    font-size:14px;
+    margin-top:5%;
 }
 
 body {
@@ -95,10 +113,30 @@ tr {
 }
 
 table {
-    margin-top: 125px;
+    margin-top: 5px;
     margin-left:auto;
     margin-right:auto;
 }
+
+Table {
+    border-collapse: collapse;
+    padding-top:50px;
+    margin-top:50px;
+}
+
+Th, Td {
+    border: 1px solid black;
+    padding:10px;
+}
+
+Th {
+    padding:15px;
+}
+
+.tableHolder {
+    padding-top:1px;
+}
+
 
 .infoDisplay {
 
@@ -113,7 +151,11 @@ table {
     display:inline-table;
 }
 
-
+.CreatePlayerForm {
+    margin-top: 10%;
+    margin-left:10%;
+    margin-right:auto;
+}
 
 
 

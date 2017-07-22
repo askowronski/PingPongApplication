@@ -24,8 +24,8 @@ public class GamePersistenceManagerTest {
         GamePersistenceManager gPM = new GamePersistenceManager(filePath);
         String output = gPM.writeGameToGamesJson(game);
 
-        String expectedResult = "[{\"iD\":1,\"player1\":{\"id\":1,\"username\":\"ka\",\"eloRating\":{\"rating\":1500.0}}," +
-                "\"player2\":{\"id\":2,\"username\":\"sweet\",\"eloRating\":{\"rating\":1500.0}},\"score1\":15,\"score2\":13";
+        String expectedResult = "[{\"iD\":1,\"player1\":{\"id\":1,\"newUsername\":\"ka\",\"eloRating\":{\"rating\":1500.0}}," +
+                "\"player2\":{\"id\":2,\"newUsername\":\"sweet\",\"eloRating\":{\"rating\":1500.0}},\"score1\":15,\"score2\":13";
 
 
 
@@ -62,8 +62,8 @@ public class GamePersistenceManagerTest {
         gPM.writeGameToFile(game);
         gPM.editWriteGameToFile(game,editGame);
         String fileContents = gPM.readFile();
-        String expectedResult = "[{\"iD\":1,\"player1\":{\"id\":1,\"username\":\"ka\",\"eloRating\":{\"rating\":1500.0}}," +
-                "\"player2\":{\"id\":2,\"username\":\"sweet\",\"eloRating\":{\"rating\":1500.0}},\"score1\":15,\"score2\":14";
+        String expectedResult = "[{\"iD\":1,\"player1\":{\"id\":1,\"newUsername\":\"ka\",\"eloRating\":{\"rating\":1500.0}}," +
+                "\"player2\":{\"id\":2,\"newUsername\":\"sweet\",\"eloRating\":{\"rating\":1500.0}},\"score1\":15,\"score2\":14";
 
 
 

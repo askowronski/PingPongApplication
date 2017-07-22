@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -17,9 +19,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class PlayerAPI {
 
 
-
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(method=POST,path="/CreatePlayer")
-    public APIResult processCreatePerson(@RequestParam(value="username",required=true) String username) {
+    public APIResult processCreatePerson(@RequestParam(value="newUsername",required=true) String username) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
 
         int id = pPM.getNextID();
@@ -47,7 +49,8 @@ public class PlayerAPI {
         return new APIResult(true, pPM.writePlayerToJson(player));
     }
 
-    @RequestMapping("/EditPlayer")
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(path="/EditPlayer", method=POST)
     public APIResult processEditPlayer(@RequestParam(value="id",required=true) int id,
                                   @RequestParam(value="newUsername",required=true) String newUsername) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
@@ -57,9 +60,10 @@ public class PlayerAPI {
         return new APIResult(false,"Player Unsuccessfully Edited");
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping("/DeletePlayer")
     public APIResult processDeletePlayer(@RequestParam(value="id",required = false) Optional<Integer> id,
-                                         @RequestParam(value="username",required = true) String username) {
+                                         @RequestParam(value="newUsername",required = true) String username) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         boolean result = false;
         if(id.isPresent()) {
@@ -70,17 +74,26 @@ public class PlayerAPI {
         } else {
             result = pPM.deletePlayer(username);
             if(result) {
-                return new APIResult(true,"Player with username "+ username+" was Deleted");
+                return new APIResult(true,"Player with newUsername "+ username+" was Deleted");
             }
         }
 
             return new APIResult(false,"Player was not found");
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping("/GetPlayerWithHighestRating")
     public APIResult getPlayerWithHighestRating() {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         return new APIResult(true,pPM.writePlayerToJson(pPM.getPlayerWithHighestRating()));
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(path = "/GetPlayers",method=GET)
+    public APIResult getPlayers() {
+        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
+        List<Player> players = pPM.getPlayers();
+        return new APIResult(true,pPM.writePlayerArrayToJson(players));
     }
 
 
