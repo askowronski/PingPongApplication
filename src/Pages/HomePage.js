@@ -3,10 +3,8 @@ import {Header,InfoDisplayTable} from '../ReactComponents/displayComponents.js';
 
 const React = require('react');
 const jQuery = require('jquery');
-var _ = require('lodash');
 const css = require("css-loader");
 require("../stylesheet.css");
-var FontAwesome = require('react-fontawesome');
 
 
 

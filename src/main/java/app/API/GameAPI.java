@@ -1,6 +1,7 @@
 package app.API;
 
 import app.PersistenceManagers.GamePersistenceManager;
+import app.PersistenceManagers.PlayerPersistenceManager;
 import app.StatsEngine.PingPongGame;
 import app.StatsEngine.Player;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -30,6 +31,7 @@ public class GameAPI {
                                   @RequestParam(value="score1",required = true) String score1,
                                   @RequestParam(value="score2",required = true) String score2) {
         GamePersistenceManager gPM = new GamePersistenceManager();
+        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
 
         try {
             int IDplayer1 = Integer.parseInt(player1ID);
@@ -40,6 +42,15 @@ public class GameAPI {
 
             Player player1 = gPM.getPlayer(IDplayer1);
             Player player2 = gPM.getPlayer(IDplayer2);
+
+            List<Player> players = pPM.getPlayers();
+            int indexPlayer1 = players.indexOf(player1);
+            int indexPlayer2 = players.indexOf(player2);
+            if(player1Score>player2Score) {
+
+            } else {
+
+            }
 
             PingPongGame game = new PingPongGame(gPM.getNextID(),player1,player2,player1Score,player2Score);
             gPM.writeGameToFile(game);
@@ -55,11 +66,12 @@ public class GameAPI {
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(method=POST,path="/EditGame")
     public APIResult processEditGame(@RequestParam(value="iD",required=true) int gameID,
-                                @RequestParam(value="player1ID",required = false) Optional<Integer> player1ID,
-                                @RequestParam(value="player2ID",required = false) Optional<Integer> player2ID,
+                                @RequestParam(value="player1ID",required = false) Optional<String> player1Username,
+                                @RequestParam(value="player2ID",required = false) Optional<String> player2Username,
                                 @RequestParam(value="score1",required = false) Optional<Integer> score1,
                                 @RequestParam(value="score2",required = false) Optional<Integer> score2){
         GamePersistenceManager gPM = new GamePersistenceManager();
+        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         PingPongGame game = gPM.getGameByID(gameID);
         Player newPlayer1;
         Player newPlayer2;
@@ -67,14 +79,14 @@ public class GameAPI {
         int newScore2;
 
         if(game.getiD()!=0){
-            if(player1ID.isPresent()){
-                newPlayer1=gPM.getPlayer(player1ID.get());
+            if(player1Username.isPresent()){
+                newPlayer1=pPM.getPlayerByUsername(player1Username.get());
             } else {
                 newPlayer1 = game.getPlayer1();
             }
 
-            if(player2ID.isPresent()){
-                newPlayer2=gPM.getPlayer(player2ID.get());
+            if(player2Username.isPresent()){
+                newPlayer2=pPM.getPlayerByUsername(player2Username.get());
             } else {
                 newPlayer2 = game.getPlayer2();
             }
@@ -91,8 +103,7 @@ public class GameAPI {
                 newScore2 = game.getPlayer2Score();
             }
 
-            PingPongGame newGame = new PingPongGame(game.getiD(),newPlayer1,newPlayer2,newScore1,newScore2,game.getTime());
-            gPM.editWriteGameToFile(game,newGame);
+            gPM.editWriteGameToFile(game,newPlayer1,newPlayer2,newScore1,newScore2);
 
             return new APIResult(true,"Game Edited");
         }

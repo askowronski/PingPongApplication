@@ -15,7 +15,7 @@ import java.util.List;
 
 public class GamePersistenceManager {
 
-    public static String FILE_PATH = "pingpong.txt";
+    private static String FILE_PATH = "pingpong.txt";
 
     private final File file;
 
@@ -28,17 +28,16 @@ public class GamePersistenceManager {
     }
 
     public void writeGameToFile(PingPongGame game) {
+        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
+        List<PingPongGame> games = this.getGames();
+        Player player1 = game.getPlayer1();
+        Player player2 = game.getPlayer2();
+
+
+        pPM.updatePlayersEloRating(player1,player2,game);
+
         this.getFile().writeFile(this.writeGameToGamesJson(game),false);
     }
-
-
-    public void writeGameToFile(int id, int score1, int score2) {
-        Player player1 = new Player(new EloRating(), 1,"ja");
-        Player player2 = new Player(new EloRating(), 2,"ja");
-        PingPongGame game = new PingPongGame(1, player1, player2, score1, score2);
-    }
-
-
 
     public Player getPlayer(int id){
         PlayerPersistenceManager ppm = new PlayerPersistenceManager();
@@ -133,9 +132,48 @@ public class GamePersistenceManager {
 
     public void editWriteGameToFile(PingPongGame oldGame, PingPongGame newGame) {
         List<PingPongGame> games = this.getGames();
-        games.set(games.indexOf(oldGame),newGame);
+        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
 
+        int indexOld = games.indexOf(oldGame);
+        Player player1;
+        Player player2;
+
+        if(indexOld >0) {
+            player1 = games.get(games.indexOf(oldGame)).getPlayer1();
+            player2 = games.get(games.indexOf(oldGame)).getPlayer2();
+
+        } else {
+            player1 = new Player(new EloRating(),oldGame.getPlayer1().getiD(),oldGame.getPlayer1().getUsername());
+            player2 = new Player(new EloRating(),oldGame.getPlayer2().getiD(),oldGame.getPlayer2().getUsername());
+        }
+
+        games.set(indexOld,newGame);
+
+        for(int i = indexOld; i < games.size(); i++) {
+            pPM.updatePlayersEloRating(player1,player2,games.get(i));
+        }
         this.getFile().writeFile(this.writeGameToGamesJson(games),false);
+    }
+
+    public void editWriteGameToFile(PingPongGame game, Player player1, Player player2, int score1, int score2) {
+        List<PingPongGame> games = this.getGames();
+        List<PingPongGame> gamesPrior = games.subList(0,games.indexOf(game));
+        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
+
+        //get the last instance of the player prior to the game being edited
+        for(int i = 0; i< gamesPrior.size(); i++) {
+            if(gamesPrior.get(i).getPlayer1().getiD()==player1.getiD()) {
+                player1 = gamesPrior.get(i).getPlayer1();
+            }
+            if(gamesPrior.get(i).getPlayer2().getiD()==player2.getiD()) {
+                player2 = gamesPrior.get(i).getPlayer2();
+            }
+        }
+        //updated the player persistence layer to be up to date with these two players
+        pPM.writePlayerToFile(player1);
+        pPM.writePlayerToFile(player2);
+        PingPongGame updatedGame = new PingPongGame(game.getiD(),player1, player2,score1, score2);
+        this.writeGameToFile(updatedGame);
     }
 
     public void writeGamesToFile(List<PingPongGame> games) {
@@ -157,6 +195,4 @@ public class GamePersistenceManager {
         }
         return gamesForPlayer;
     }
-
-
 }

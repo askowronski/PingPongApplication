@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -61,9 +62,9 @@ public class PlayerAPI {
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
-    @RequestMapping("/DeletePlayer")
+    @RequestMapping(path="/DeletePlayer",method=DELETE)
     public APIResult processDeletePlayer(@RequestParam(value="id",required = false) Optional<Integer> id,
-                                         @RequestParam(value="newUsername",required = true) String username) {
+                                         @RequestParam(value="username",required = true) String username) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         boolean result = false;
         if(id.isPresent()) {

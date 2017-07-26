@@ -1,6 +1,8 @@
 package app.PersistenceManagers;
 
 import app.StatsEngine.EloRating;
+import app.StatsEngine.GameOutcome;
+import app.StatsEngine.PingPongGame;
 import app.StatsEngine.Player;
 import app.ReadWriteFile.File;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -213,7 +215,37 @@ public class PlayerPersistenceManager {
         return highestPlayer;
     }
 
+    public void updatePlayersEloRating(Player player1PriorToGame, Player player2PriorToGame,PingPongGame game) {
+        List<Player> allPlayers = this.getPlayers();
 
+        Player player1 = player1PriorToGame;
+        Player player2 = player2PriorToGame;
 
+        int indexPlayer1 = allPlayers.indexOf(player1);
+        int indexPlayer2 = allPlayers.indexOf(player2);
 
+        if(game.getPlayer1Score()>game.getPlayer2Score()) {
+            EloRating newRating1 = player1.getEloRating().newRating(GameOutcome.WIN,player2.getEloRating());
+            EloRating newRating2 = player2.getEloRating().newRating(GameOutcome.LOSS,player1.getEloRating());
+            Player newPlayer1 = new Player(newRating1,player1.getiD(),player1.getUsername());
+            Player newPlayer2 = new Player(newRating2,player2.getiD(),player2.getUsername());
+            allPlayers.set(indexPlayer1,newPlayer1);
+            allPlayers.set(indexPlayer2,newPlayer2);
+        } else if(game.getPlayer2Score()>game.getPlayer1Score()) {
+            EloRating newRating1 = player1.getEloRating().newRating(GameOutcome.LOSS,player2.getEloRating());
+            EloRating newRating2 = player2.getEloRating().newRating(GameOutcome.WIN,player1.getEloRating());
+            Player newPlayer1 = new Player(newRating1,player1.getiD(),player1.getUsername());
+            Player newPlayer2 = new Player(newRating2,player2.getiD(),player2.getUsername());
+            allPlayers.set(indexPlayer1,newPlayer1);
+            allPlayers.set(indexPlayer2,newPlayer2);
+        } else {
+            EloRating newRating1 = player1.getEloRating().newRating(GameOutcome.DRAW,player2.getEloRating());
+            EloRating newRating2 = player2.getEloRating().newRating(GameOutcome.DRAW,player1.getEloRating());
+            Player newPlayer1 = new Player(newRating1,player1.getiD(),player1.getUsername());
+            Player newPlayer2 = new Player(newRating2,player2.getiD(),player2.getUsername());
+            allPlayers.set(indexPlayer1,newPlayer1);
+            allPlayers.set(indexPlayer2,newPlayer2);
+        }
+        this.writePlayerArrayToJson(allPlayers);
+    }
 }

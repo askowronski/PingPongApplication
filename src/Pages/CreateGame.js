@@ -2,10 +2,8 @@ import {Header} from '../ReactComponents/displayComponents.js';
 
 const React = require('react');
 const jQuery = require('jquery');
-var _ = require('lodash');
 const css = require("css-loader");
 require("../stylesheet.css");
-var FontAwesome = require('react-fontawesome');
 
 class CreatePlayerForm extends React.Component {
     constructor(props) {
@@ -102,8 +100,6 @@ export default class CreateGame extends React.Component {
     state = {
         buttonNames:["InputPlayer","Scores","Players"]
     };
-
-
 
     render(){
 

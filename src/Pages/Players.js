@@ -2,17 +2,15 @@ import ToggleDisplay from 'react-toggle-display';
 
 const React = require('react');
 const jQuery = require('jquery');
-var _ = require('lodash');
 const css = require("css-loader");
 const Reactable = require('reactable');
 require("../stylesheet.css");
-var FontAwesome = require('react-fontawesome');
 
 
 
 export default class PlayersList extends React.Component {
     state = {
-      players:[], result:'',showUsername:[],showEditPlayer:[]
+      players:[], result:'',showUsername:[],showEditPlayer:[],deletePlayerResponse:''
     };
 
     componentDidMount = () => {
@@ -27,8 +25,8 @@ export default class PlayersList extends React.Component {
                     players:JSON.parse(data.message),
                     result:data.success,
                 });
-                var showEditArray = [];
-                var showUsernameArray = [];
+                let showEditArray = [];
+                let showUsernameArray = [];
                 for(let i = 0; i< JSON.parse(data.message).length; i++){
                    showUsernameArray.push(true);
                    showEditArray.push(false);
@@ -67,12 +65,25 @@ export default class PlayersList extends React.Component {
             showEditPlayer:showEditArray
         });
     };
+
+    processDeletePlayer = (id,username) => {
+        jQuery.ajax({
+
+            url: "http://localhost:8080/DeletePlayer?id="+id+"&username="+username,
+            type:"DELETE",
+            dataType:"json",
+            async:false,
+            success: function(data){
+                alert(data.message);
+                this.componentDidMount();
+            }.bind(this)
+        });
     };
 
     render() {
-        var Table = Reactable.Table;
-        var Tr = Reactable.Tr;
-        var Td = Reactable.Td;
+        let Table = Reactable.Table;
+        let Tr = Reactable.Tr;
+        let Td = Reactable.Td;
 
         return (
             <div className="tableHolder">
@@ -98,9 +109,9 @@ export default class PlayersList extends React.Component {
                           <div>
                               <a style={{cursor: 'pointer'}} onClick={() => this.showEditPlayer(i)} >Edit</a>
                               &nbsp;
-                              <a href="">Delete</a>
+                              <a style={{cursor: 'pointer'}} onClick={() => this.processDeletePlayer(player.id,player.username)}>Delete</a>
                               &nbsp;
-                              <a href="" onClick={() => this.showEditPlayer(i)}>Cancel</a>
+                              <a style={{cursor: 'pointer'}} onClick={() => this.cancelEditPlayer(i)}>Cancel</a>
                           </div>
                       </Td>
                   </Tr>

@@ -248,10 +248,14 @@ export const HeaderButtons = (props) => {
         window.location = ('/Players');
     };
 
+    const goToGames = () => {
+        window.location = ('/Games');
+    };
+
     return (
         <div className="header-row">
             <div  className="header-button-holder"> <button className="header-button" onClick={() => showButtons()} id={displayNames[0]} >{displayNames[0]}</button> </div>
-            <div  className="header-button-holder"> <button className="header-button"  id={displayNames[1]} >{displayNames[1]}</button> </div>
+            <div  className="header-button-holder"> <button className="header-button" onClick={() => goToGames()} id={displayNames[1]} >{displayNames[1]}</button> </div>
             <div  className="header-button-holder"> <button className="header-button" onClick={() => goToPlayers()} id={displayNames[2]} >{displayNames[2]}</button> </div>
         </div>
     );
