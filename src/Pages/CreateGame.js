@@ -5,7 +5,7 @@ const jQuery = require('jquery');
 const css = require("css-loader");
 require("../stylesheet.css");
 
-class CreatePlayerForm extends React.Component {
+class CreateGameForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -110,7 +110,7 @@ export default class CreateGame extends React.Component {
                 </div>
                 <br/>
                 <div id="PlayerForm" className="CreatePlayerForm">
-                    <CreatePlayerForm/>
+                    <CreateGameForm/>
                 </div>
             </div>
         );

@@ -29,7 +29,7 @@ public class GameAPITest {
 
         GamePersistenceManager gPM = new GamePersistenceManager(filePath);
         GameAPI gameAPI = new GameAPI();
-        gameAPI.processCreateGame(Integer.toString(player1ID),
+        gameAPI.createGame(Integer.toString(player1ID),
                 Integer.toString(player2ID),
                 Integer.toString(score1),
                 Integer.toString(score2));

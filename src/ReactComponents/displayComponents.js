@@ -1,15 +1,11 @@
 import ToggleDisplay from 'react-toggle-display';
 
 const React = require('react');
-const ReactDOM = require('react-dom');
 const jQuery = require('jquery');
 var _ = require('lodash');
 const css = require("css-loader");
 require("../stylesheet.css");
-var FontAwesome = require('react-fontawesome');
-var ReactRouter = require('react-router');
-var Router = require('react-router').Router;
-var Route = require('react-router').Route;
+
 
 class InfoDisplayPlayer extends React.Component {
 
@@ -24,7 +20,7 @@ class InfoDisplayPlayer extends React.Component {
 
         jQuery.ajax({
 
-            url: "http://localhost:8080/GetPlayer?id=4",
+            url: "http://localhost:8080/GetPlayer?id=1",
             type: "GET",
             dataType: "json",
             async: false,
@@ -131,7 +127,7 @@ class InfoDisplayHighestRating extends React.Component  {
                 this.setState({
                     data:data.message,
                     id:JSON.parse(data.message).id,
-                    newUsername:JSON.parse(data.message).newUsername,
+                    username:JSON.parse(data.message).username,
                     eloRating: JSON.parse(data.message).eloRating.rating,
                 });
             }.bind(this)
@@ -147,7 +143,7 @@ class InfoDisplayHighestRating extends React.Component  {
             <div id="highestEloRatingContainer" className="square">
                 <span id="highestEloRatingHeader">Player With Highest Elo Rating!</span>
                 <br/>
-                <span id="highestEloRatingUsername">Username: {this.state.newUsername} </span>
+                <span id="highestEloRatingUsername">Username: {this.state.username} </span>
                 <br/>
                 <span id="highestEloRatingRating">Rating: {this.state.eloRating}</span>
                 <br/>
@@ -235,32 +231,6 @@ export const InfoDisplayTable = (props) => {
     );
 };
 
-export const HeaderButtons = (props) => {
-
-    let displayNames = ["Input","Scores","Players"];
-
-    const showButtons = () => {
-
-        jQuery('#inputDisplayToggle').show();
-    };
-
-    const goToPlayers = () => {
-        window.location = ('/Players');
-    };
-
-    const goToGames = () => {
-        window.location = ('/Games');
-    };
-
-    return (
-        <div className="header-row">
-            <div  className="header-button-holder"> <button className="header-button" onClick={() => showButtons()} id={displayNames[0]} >{displayNames[0]}</button> </div>
-            <div  className="header-button-holder"> <button className="header-button" onClick={() => goToGames()} id={displayNames[1]} >{displayNames[1]}</button> </div>
-            <div  className="header-button-holder"> <button className="header-button" onClick={() => goToPlayers()} id={displayNames[2]} >{displayNames[2]}</button> </div>
-        </div>
-    );
-};
-
 const InputButtons = (props) => {
 
     const inputPlayer = () => {
@@ -271,17 +241,66 @@ const InputButtons = (props) => {
         window.location = '/CreateGame';
     };
 
-        return (
-            <ToggleDisplay id="inputDisplayToggle" show={props.showInputButtons}>
-                <div className="header-row-input">
+    return (
+        <div className="topLevlInputButtons">
+            <ToggleDisplay id="inputDisplayToggle" show='true' >
+                <div id="inputButtonDiv" className="header-row-input">
                     <div className="header-button-input-holder">
-                        <button className="header-button-input" onClick={inputPlayer} id="playerInputButton">Player</button>
-                        <button className="header-button-input" onClick={inputGame} id="gameInputButton">Game</button>
+                        <button className="header-button-input" onClick={inputPlayer} id="playerInputButton" >Player</button>
+                        <button className="header-button-input" onClick={inputGame} id="gameInputButton" >Game</button>
                     </div>
                 </div>
             </ToggleDisplay>
+        </div>
+
+    );
+};
+
+export class HeaderButtons extends React.Component {
+    state = {
+        buttonDisplayNames:["Input","Scores","Players"],
+        showInputButtons:false
+    };
+
+    goToPlayers = () => {
+    window.location = ('/Players');
+    };
+
+    goToGames = () => {
+    window.location = ('/Games');
+    };
+
+    onInputClick = () => {
+        this.setState({
+            showInputButtons:!this.state.showInputButtons
+        });
+
+        if(jQuery('#playerInputButton').css('visibility')==="hidden"){
+            jQuery('#playerInputButton').css('visibility','visible');
+            jQuery('#gameInputButton').css('visibility','visible');
+        } else {
+            jQuery('#playerInputButton').css('visibility', 'hidden');
+            jQuery('#gameInputButton').css('visibility', 'hidden');
+        }
+    };
+
+    render(){
+        return (
+            <div id="headerContainer">
+            <div className="header-row">
+                <div  className="header-button-holder"> <button className="header-button" onClick={() => this.onInputClick()} id={this.state.buttonDisplayNames[0]} >{this.state.buttonDisplayNames[0]}</button> </div>
+                <div  className="header-button-holder"> <button className="header-button" onClick={() =>this. goToGames()} id={this.state.buttonDisplayNames[1]} >{this.state.buttonDisplayNames[1]}</button> </div>
+                <div  className="header-button-holder"> <button className="header-button" onClick={() => this.goToPlayers()} id={this.state.buttonDisplayNames[2]} >{this.state.buttonDisplayNames[2]}</button> </div>
+            </div>
+                <div id="inputButtonContainer">
+                    <InputButtons showInputButtons={this.state.showInputButtons}/>
+                </div>
+            </div>
         );
+    }
 }
+
+
 
 
 export class Header extends React.Component {
@@ -291,7 +310,9 @@ export class Header extends React.Component {
     };
 
     onInputClick = () => {
-        jQuery('#inputDisplayToggle').show();
+        this.setState(prevState => ({
+            showInputButtons:!prevState
+        }));
     };
 
     render() {
@@ -300,8 +321,7 @@ export class Header extends React.Component {
         return (
 
         <div>
-            <HeaderButtons onClick={this.onInputClick}/>
-            <InputButtons  showInputButtons = {showInputButtons}/>
+            <HeaderButtons />
         </div>
         )
     };

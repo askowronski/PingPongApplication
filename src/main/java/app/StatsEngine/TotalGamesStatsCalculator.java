@@ -3,6 +3,8 @@ package app.StatsEngine;
 
 import app.PersistenceManagers.GamePersistenceManager;
 import app.PersistenceManagers.PlayerPersistenceManager;
+import app.PingPongModel.PingPongGame;
+import app.PingPongModel.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +53,7 @@ public class TotalGamesStatsCalculator {
 
         double stdDevSum=0;
 
-        double average = (double) averageNumerator/losingScores.size();
+        double average = averageNumerator/(double)losingScores.size();
 
         for(Integer score:losingScores){
             stdDevSum += Math.pow((score-average),2);
@@ -78,7 +80,7 @@ public class TotalGamesStatsCalculator {
 
         double stdDevSum=0;
 
-        double average = (double) averageNumerator/scores.size();
+        double average = averageNumerator/(double) scores.size();
 
         for(Integer score:scores){
             stdDevSum += Math.pow((score-average),2);

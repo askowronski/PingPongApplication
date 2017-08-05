@@ -3,8 +3,8 @@ package app.API;
 
 import app.PersistenceManagers.GamePersistenceManager;
 import app.PersistenceManagers.PlayerPersistenceManager;
-import app.StatsEngine.PingPongGame;
-import app.StatsEngine.Player;
+import app.PingPongModel.PingPongGame;
+import app.PingPongModel.Player;
 import app.StatsEngine.SinglePlayerStatisticsCalculator;
 import app.StatsEngine.TotalGamesStatsCalculator;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,7 +22,7 @@ public class StatsAPI {
     public APIResult getTotalWins(@RequestParam(value="id") int playerID) {
         GamePersistenceManager gPM= new GamePersistenceManager();
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        Player player = pPM.getPlayer(playerID);
+        Player player = pPM.getPlayerByID(playerID);
         if(player.getiD()==0){
             return new APIResult(false,"Player not found");
         }
@@ -38,7 +38,7 @@ public class StatsAPI {
     public APIResult getTotalGames(@RequestParam(value="id") int playerID) {
         GamePersistenceManager gPM= new GamePersistenceManager();
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        Player player = pPM.getPlayer(playerID);
+        Player player = pPM.getPlayerByID(playerID);
         if(player.getiD()==0){
             return new APIResult(false,"Player not found");
         }
@@ -54,7 +54,7 @@ public class StatsAPI {
     public APIResult getStdDev(@RequestParam(value="id") int playerID) {
         GamePersistenceManager gPM= new GamePersistenceManager();
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        Player player = pPM.getPlayer(playerID);
+        Player player = pPM.getPlayerByID(playerID);
         if(player.getiD()==0){
             return new APIResult(false,"Player not found");
         }
@@ -71,7 +71,7 @@ public class StatsAPI {
     public APIResult getTotalLosses(@RequestParam(value="id") int playerID) {
         GamePersistenceManager gPM= new GamePersistenceManager();
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        Player player = pPM.getPlayer(playerID);
+        Player player = pPM.getPlayerByID(playerID);
         if(player.getiD()==0){
             return new APIResult(false,"Player not found");
         }
@@ -87,7 +87,7 @@ public class StatsAPI {
     public APIResult getHighestScore(@RequestParam(value="id") int playerID) {
         GamePersistenceManager gPM= new GamePersistenceManager();
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        Player player = pPM.getPlayer(playerID);
+        Player player = pPM.getPlayerByID(playerID);
         if(player.getiD()==0){
             return new APIResult(false,"Player not found");
         }
@@ -103,7 +103,7 @@ public class StatsAPI {
     public APIResult getAverageScore(@RequestParam(value="id") int playerID) {
         GamePersistenceManager gPM= new GamePersistenceManager();
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        Player player = pPM.getPlayer(playerID);
+        Player player = pPM.getPlayerByID(playerID);
         if(player.getiD()==0){
             return new APIResult(false,"Player not found");
         }

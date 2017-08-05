@@ -9,7 +9,7 @@ require("../stylesheet.css");
 
 
 
-export default class Game extends React.Component {
+export default class Home extends React.Component {
     state = {
         buttonNames:["InputPlayer","Scores","Players"]
     };

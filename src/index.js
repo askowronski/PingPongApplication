@@ -1,5 +1,5 @@
 import history from './history';
-import Game from './Pages/HomePage.js';
+import Home from './Pages/HomePage.js';
 import CreatePlayer from './Pages/CreatePlayer.js';
 import CreateGame from './Pages/CreateGame.js';
 import PlayersList from './Pages/Players.js';
@@ -8,21 +8,16 @@ import {Header} from './ReactComponents/displayComponents';
 
 const React = require('react');
 const ReactDOM = require('react-dom');
-const jQuery = require('jquery');
-var _ = require('lodash');
-const css = require("css-loader");
 require("./stylesheet.css");
-var FontAwesome = require('react-fontawesome');
-var ReactRouter = require('react-router');
 var Router = require('react-router').Router;
 var Route = require('react-router').Route;
 
 
-class App extends React.Component {
+class HomePage extends React.Component {
     render(){
         return(
             <div>
-                <Game />
+                <Home />
             </div>
         );
 
@@ -47,7 +42,6 @@ class InputGame extends React.Component {
                 <CreateGame />
             </div>
         );
-
     }
 }
 
@@ -93,7 +87,7 @@ class GamesPage extends React.Component {
 ReactDOM.render(
     <Router history={history}>
         <div>
-            <Route path="/Home" component={App} />
+            <Route path="/Home" component={HomePage} />
             <Route path="/CreatePlayer" component={InputPlayer} />
             <Route path="/CreateGame" component={InputGame} />
             <Route path="/Players" component={PlayersPage} />

@@ -1,7 +1,7 @@
 package StatsEngineTest;
 
-import app.StatsEngine.EloRating;
-import app.StatsEngine.GameOutcome;
+import app.PingPongModel.EloRating;
+import app.PingPongModel.GameOutcomeEnum;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;
@@ -34,7 +34,7 @@ public class EloRatingTest {
         EloRating rating1 = new EloRating();
         EloRating rating2 = new EloRating();
 
-        EloRating newRating = rating1.newRating(GameOutcome.WIN,rating2);
+        EloRating newRating = rating1.newRating(GameOutcomeEnum.WIN,rating2);
         assertTrue(newRating.getRating() == (double)(rating1.getRating()+(EloRating.K_FACTOR/2)));
     }
 
@@ -43,7 +43,7 @@ public class EloRatingTest {
         EloRating rating1 = new EloRating();
         EloRating rating2 = new EloRating(400);
 
-        EloRating newRating = rating1.newRating(GameOutcome.WIN,rating2);
+        EloRating newRating = rating1.newRating(GameOutcomeEnum.WIN,rating2);
         assertTrue(newRating.getRating() == (double)(rating1.getRating()+(EloRating.K_FACTOR*(1-rating1.expectedScore(rating2)))));
     }
 
@@ -52,7 +52,7 @@ public class EloRatingTest {
         EloRating rating1 = new EloRating();
         EloRating rating2 = new EloRating(400);
 
-        EloRating newRating = rating1.newRating(GameOutcome.DRAW,rating2);
+        EloRating newRating = rating1.newRating(GameOutcomeEnum.DRAW,rating2);
         assertTrue(newRating.getRating() == (double)(rating1.getRating()+(EloRating.K_FACTOR*(0-rating1.expectedScore(rating2)))));
     }
 
@@ -61,7 +61,7 @@ public class EloRatingTest {
         EloRating rating1 = new EloRating();
         EloRating rating2 = new EloRating(400);
 
-        EloRating newRating = rating1.newRating(GameOutcome.LOSS,rating2);
+        EloRating newRating = rating1.newRating(GameOutcomeEnum.LOSS,rating2);
         assertTrue(newRating.getRating() == (double)(rating1.getRating()+(EloRating.K_FACTOR*(-1-rating1.expectedScore(rating2)))));
     }
 

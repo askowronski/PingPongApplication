@@ -1,5 +1,8 @@
 package app.StatsEngine;
 
+import app.PingPongModel.PingPongGame;
+import app.PingPongModel.Player;
+
 import java.util.ArrayList;
 import java.util.List;
 

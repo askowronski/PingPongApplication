@@ -1,9 +1,11 @@
 package PersistenceManagerTest;
 
 
+import app.PersistenceManagers.GamePersistenceManager;
 import app.PersistenceManagers.PlayerPersistenceManager;
-import app.StatsEngine.EloRating;
-import app.StatsEngine.Player;
+import app.PingPongModel.EloRating;
+import app.PingPongModel.PingPongGame;
+import app.PingPongModel.Player;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -109,6 +111,19 @@ public class PlayerPersistenceManagerTest {
         assertEquals(players.get(2),playersRead.get(2));
 
 
+    }
+
+    @Test
+    public void testFindPlayersAsOfAGame() {
+        GamePersistenceManager gPM = new GamePersistenceManager();
+        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
+        List<PingPongGame> games = gPM.getGames();
+        PingPongGame game = new PingPongGame(games.get(0).getiD(),games.get(0).getPlayer1(),
+                games.get(0).getPlayer2(),games.get(0).getPlayer1Score(),games.get(0).getPlayer2Score());
+
+        List<Player> players = pPM.getPlayersPriorToAGame(game);
+
+        assertTrue(players.size() == pPM.getPlayers().size());
     }
 
 

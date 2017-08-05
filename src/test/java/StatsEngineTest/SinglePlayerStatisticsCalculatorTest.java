@@ -1,8 +1,8 @@
 package StatsEngineTest;
 
-import app.StatsEngine.EloRating;
-import app.StatsEngine.PingPongGame;
-import app.StatsEngine.Player;
+import app.PingPongModel.EloRating;
+import app.PingPongModel.PingPongGame;
+import app.PingPongModel.Player;
 import app.StatsEngine.SinglePlayerStatisticsCalculator;
 import org.junit.Test;
 

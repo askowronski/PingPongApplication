@@ -1,8 +1,8 @@
 package app.API;
 
-import app.StatsEngine.EloRating;
+import app.PingPongModel.EloRating;
 import app.PersistenceManagers.PlayerPersistenceManager;
-import app.StatsEngine.Player;
+import app.PingPongModel.Player;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,7 +22,7 @@ public class PlayerAPI {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(method=POST,path="/CreatePlayer")
-    public APIResult processCreatePerson(@RequestParam(value="newUsername",required=true) String username) {
+    public APIResult createPlayer(@RequestParam(value="newUsername",required=true) String username) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
 
         int id = pPM.getNextID();
@@ -40,7 +40,7 @@ public class PlayerAPI {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping("/GetPlayer")
-    public APIResult processGetPlayer(@RequestParam(value="id", required=true) int id) {
+    public APIResult getPlayer(@RequestParam(value="id", required=true) int id) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         Player player = pPM.getPlayerByID(id);
         if(player.getiD()==0){
@@ -52,8 +52,8 @@ public class PlayerAPI {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(path="/EditPlayer", method=POST)
-    public APIResult processEditPlayer(@RequestParam(value="id",required=true) int id,
-                                  @RequestParam(value="newUsername",required=true) String newUsername) {
+    public APIResult editPlayer(@RequestParam(value="id",required=true) int id,
+                                @RequestParam(value="newUsername",required=true) String newUsername) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         if(pPM.editPlayer(id,newUsername)) {
             return new APIResult(true,"Player Edited");
@@ -63,8 +63,8 @@ public class PlayerAPI {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(path="/DeletePlayer",method=DELETE)
-    public APIResult processDeletePlayer(@RequestParam(value="id",required = false) Optional<Integer> id,
-                                         @RequestParam(value="username",required = true) String username) {
+    public APIResult deletePlayer(@RequestParam(value="id",required = false) Optional<Integer> id,
+                                  @RequestParam(value="username",required = true) String username) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         boolean result = false;
         if(id.isPresent()) {

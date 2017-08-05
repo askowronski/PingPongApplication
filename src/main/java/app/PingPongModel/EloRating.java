@@ -1,4 +1,4 @@
-package app.StatsEngine;
+package app.PingPongModel;
 
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class EloRating {
 
     public static double DEFAULT_RATING = 1500.00;
-    public static int K_FACTOR = 16;
+    public static double K_FACTOR = 16;
 
     @JsonProperty("rating") private final double rating;
 
@@ -31,7 +31,7 @@ public class EloRating {
         return this.rating;
     }
 
-    public EloRating newRating(GameOutcome outcome, EloRating rating2) {
+    public EloRating newRating(GameOutcomeEnum outcome, EloRating rating2) {
         double expectedScore = this.expectedScore(rating2);
            return new EloRating(this.getRating() + this.K_FACTOR * (outcome.getFactor() - expectedScore));
 

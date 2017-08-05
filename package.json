@@ -16,6 +16,7 @@
     "react-fontawesome": "^1.6.1",
     "react-router": "^4.1.2",
     "react-toggle-display": "^2.2.0",
+    "react-typeahead": "^2.0.0-alpha.5",
     "reactable": "^0.14.1"
   },
   "scripts": {

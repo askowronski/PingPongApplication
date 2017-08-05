@@ -2,9 +2,7 @@ package app.API;
 
 import app.StatsEngine.TotalGamesStatsCalculator;
 
-/**
- * Created by askowronski on 7/17/17.
- */
+
 public class APIResultStats extends APIResult {
 
     private final int totalGames;
