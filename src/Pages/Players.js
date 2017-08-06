@@ -41,6 +41,8 @@ export default class PlayersList extends React.Component {
 
     };
 
+
+
     showEditPlayer = (index) => {
 
         let showUsernameArray = this.state.showUsername.concat();

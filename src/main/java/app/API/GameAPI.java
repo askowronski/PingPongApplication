@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -38,11 +39,11 @@ public class GameAPI {
             PingPongGame game = new PingPongGame(gPM.getNextID(),player1,player2,player1Score,player2Score);
             gPM.writeGameToFile(game);
             pPM.updatePlayersEloRating(player1,player2,game);
-            return  new APIResult(true,"Home Created");
+            return  new APIResult(true,"Game Created");
 
         } catch (NumberFormatException e ){
             e.printStackTrace();
-            return new APIResult(false,"Home Unsuccessfully Created");
+            return new APIResult(false,"Game Unsuccessfully Created");
         }
 
     }
@@ -50,8 +51,8 @@ public class GameAPI {
     @CrossOrigin()
     @RequestMapping(method=POST,path="/EditGame")
     public APIResult editGame(@RequestParam(value="iD",required=true) int gameID,
-                              @RequestParam(value="player1ID",required = false) Optional<Integer> player1Username,
-                              @RequestParam(value="player2ID",required = false) Optional<Integer> player2Username,
+                              @RequestParam(value="player1ID",required = false) Optional<Integer> player1ID,
+                              @RequestParam(value="player2ID",required = false) Optional<Integer> player2ID,
                               @RequestParam(value="score1",required = false) Optional<Integer> score1,
                               @RequestParam(value="score2",required = false) Optional<Integer> score2){
         GamePersistenceManager gPM = new GamePersistenceManager();
@@ -63,14 +64,14 @@ public class GameAPI {
         int newScore2;
 
         if(game.getiD()!=0){
-            if(player1Username.isPresent()){
-                newPlayer1=pPM.getPlayerByID(player1Username.get());
+            if(player1ID.isPresent() && player1ID.get()!=game.getPlayer1().getiD()){
+                newPlayer1=pPM.getPlayerByID(player1ID.get());
             } else {
                 newPlayer1 = game.getPlayer1();
             }
 
-            if(player2Username.isPresent()){
-                newPlayer2=pPM.getPlayerByID(player2Username.get());
+            if(player2ID.isPresent()&& player2ID.get()!=game.getPlayer2().getiD()){
+                newPlayer2=pPM.getPlayerByID(player2ID.get());
             } else {
                 newPlayer2 = game.getPlayer2();
             }
@@ -89,9 +90,9 @@ public class GameAPI {
 
             PingPongGame newGame = new PingPongGame(game.getiD(),newPlayer1,newPlayer2,newScore1,newScore2);
             gPM.editWriteGameToFile(game,newGame);
-            return new APIResult(true,"Home Edited");
+            return new APIResult(true,"Game Edited");
         }
-            return new APIResult(false,"Home Unsuccessfully Edited");
+            return new APIResult(false,"Game Unsuccessfully Edited");
 
     }
 
@@ -102,24 +103,22 @@ public class GameAPI {
             PlayerPersistenceManager pPM = new PlayerPersistenceManager();
             List<PingPongGame> oldGames = gPM.getGames();
             gPM.editWriteGameToFile(gPM.getGameByID(game.getiD()), game);
-            return new APIResult(true,"Home Edited");
+            return new APIResult(true,"Game Edited");
         }
-        return new APIResult(false,"Home Unsuccessfully Edited");
+        return new APIResult(false,"Game Unsuccessfully Edited");
 
     }
 
     @CrossOrigin()
-    @RequestMapping(path = "/DeleteGame",method=POST)
+    @RequestMapping(path = "/DeleteGame",method=DELETE)
     public APIResult deleteGame(@RequestParam("iD") int iD) {
         GamePersistenceManager gPM = new GamePersistenceManager();
         PingPongGame game = gPM.getGameByID(iD);
         if(game.getiD()==0){
-            return new APIResult(false,"Home Not Found");
+            return new APIResult(false,"Game Not Found");
         }
-        List<PingPongGame> games = gPM.getGames();
-        games.remove(game);
-        gPM.writeGamesToFile(games);
-        return new APIResult(true,"Home Deleted");
+        gPM.deleteGameWriteToFile(game);
+        return new APIResult(true,"Game Deleted");
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
@@ -137,6 +136,30 @@ public class GameAPI {
         GamePersistenceManager gPM = new GamePersistenceManager();
         List<PingPongGame> games = gPM.getGames();
         return new APIResult(true, gPM.writeGamesToJson(games));
+
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(path = "/GetGamesForPlayer", method=GET)
+    public APIResult getGamesForPlayer(@RequestParam(value="id") int id) {
+        GamePersistenceManager gPM = new GamePersistenceManager();
+        List<PingPongGame> games = gPM.getGamesForPlayer(gPM.getPlayer(id));
+        return new APIResult(true, gPM.writeGamesToJson(games));
+
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(path = "/GetGamesForPlayerChart", method=GET)
+    public APIResult getGamesForPlayerChart(@RequestParam(value="id") int id) {
+        GamePersistenceManager gPM = new GamePersistenceManager();
+        List<PingPongGame> games = gPM.getGamesForPlayer(gPM.getPlayer(id));
+        String json="[";
+        for(PingPongGame game:games){
+            json+="{\"name\":\"Game\",\"value\":\"sick\",\"unit\":\"\"},";
+        }
+        json=json.substring(0,json.length()-1);
+        json+="]";
+        return new APIResult(true, json);
 
     }
 

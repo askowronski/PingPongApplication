@@ -137,28 +137,33 @@ public class GamePersistenceManager {
 
         pPM.writePlayersToFile(playersPriorToGame);
 
-        Player player1PriorToGame = pPM.getPlayerByID(newGame.getPlayer1().getiD());
-        Player player2PriorToGame = pPM.getPlayerByID(newGame.getPlayer2().getiD());
 
-        games.set(games.indexOf(oldGame),newGame);
+        if(newGame == null){
+            games.remove(oldGame);
+        } else {
+            games.set(games.indexOf(oldGame), newGame);
+        }
 
         List<PingPongGame> copyOfGames = new ArrayList<>(games);
 
         for(int i = games.indexOf(newGame); i< games.size(); i++){
-            List<Player> currentPlayers = pPM.getPlayers();
-            if(i>games.indexOf(newGame)){
-                PingPongGame gameToEdit = games.get(i);
-                //replace players with new rating before updating again
-                PingPongGame editedGame = new PingPongGame(oldGame.getiD(),
-                        pPM.getPlayerByID(oldGame.getPlayer1().getiD()),
-                        pPM.getPlayerByID(oldGame.getPlayer2().getiD()),
-                        oldGame.getPlayer1Score(),oldGame.getPlayer2Score());
-                copyOfGames.set(i,editedGame);
-            }
-            pPM.updatePlayersEloRating(player1PriorToGame,player2PriorToGame,copyOfGames.get(i));
 
+            PingPongGame gameToEdit = games.get(i);
+            Player  player1PriorToGame = pPM.getPlayerByID(gameToEdit.getPlayer1().getiD());
+            Player player2PriorToGame = pPM.getPlayerByID(gameToEdit.getPlayer2().getiD());
+            //replace players with new rating before updating again
+            PingPongGame editedGame = new PingPongGame(gameToEdit.getiD(),
+                    player1PriorToGame,
+                    player2PriorToGame,
+                    gameToEdit.getPlayer1Score(),gameToEdit.getPlayer2Score());
+            copyOfGames.set(i,editedGame);
+            pPM.updatePlayersEloRating(player1PriorToGame,player2PriorToGame,copyOfGames.get(i));
         }
         this.writeGamesToFile(copyOfGames);
+    }
+
+    public void deleteGameWriteToFile(PingPongGame game){
+        this.editWriteGameToFile(game,null);
     }
 
     public void editWriteGameToFile(PingPongGame game, Player player1, Player player2, int score1, int score2) {

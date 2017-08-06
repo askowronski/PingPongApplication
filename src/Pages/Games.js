@@ -16,7 +16,14 @@ export default class GamesList extends React.Component {
         resultGames:'',
         players:[],
         showEdit:[],
-        resultPlayers:''
+        resultPlayers:'',
+        editPlayer1ID:0,
+        editPlayer2ID:0,
+        editScore1:0,
+        editScore2:0,
+        editGameID:0,
+        resultEditGame:'',
+        resultDelete:''
     };
 
     componentDidMount = () => {
@@ -55,13 +62,23 @@ export default class GamesList extends React.Component {
         });
     };
 
-    showEditGame = (index) => {
+    showEditGame = (index,game) => {
 
         let showEditArray = this.state.showEdit.concat();
+        let indexOfTrue = showEditArray.indexOf(true);
+        if(indexOfTrue >=0){
+            showEditArray[indexOfTrue]=false;
+        }
         showEditArray[index]=true;
+
 
         this.setState({
             showEdit:showEditArray,
+            editGameID:game.iD,
+            editPlayer1ID:game.player1.id,
+            editPlayer2ID:game.player2.id,
+            editScore1:game.score1,
+            editScore2:game.score2
         });
     };
 
@@ -70,12 +87,63 @@ export default class GamesList extends React.Component {
         showEditArray[index]=false;
 
         this.setState({
-            showEdit : showEditArray
+            showEdit : showEditArray,
+            editGameID:0
         });
     };
 
-    processDeleteGame = (id,username) => {
+    deleteGame = (id) => {
+        jQuery.ajax({
 
+            url: "http://localhost:8080/DeleteGame?iD="+id,
+            type:"DELETE",
+            dataType:"json",
+            async:false,
+            success: function(data){
+                this.setState({
+                    resultDelete:JSON.parse(data.message),
+                });
+            }.bind(this)
+        });
+    };
+
+    onChangePlayer1 = (event) => {
+        let id = event.id;
+      this.setState({
+          editPlayer1ID:id
+      });
+    };
+
+    onChangePlayer2 = (event) => {
+        let id = event.id;
+        this.setState({
+            editPlayer2ID:id
+        });
+    };
+
+    onChangeScore1 = (event) => {
+        let score = event.target.value;
+        this.setState({
+            editScore1:score
+        });
+    };
+
+    onChangeScore2 = (event) => {
+        let score = event.target.value;
+        this.setState({
+            editScore2:score
+        });
+    };
+
+    handleSubmit = () => {
+        jQuery.ajax({
+            url: "http://localhost:8080/EditGame?iD="+this.state.editGameID+"&player1ID="+this.state.editPlayer1ID
+            +"&player2ID="+this.state.editPlayer2ID+"&score1="+this.state.editScore1+"&score2="+this.state.editScore2,
+            type:"POST",
+            dataType:"json",
+            async:false,
+            success: this.componentDidMount
+        });
     };
 
     render() {
@@ -83,26 +151,22 @@ export default class GamesList extends React.Component {
         let Tr = Reactable.Tr;
         let Td = Reactable.Td;
 
-        let editLinks = <div>
-            <a href="">Edit</a>
-            &nbsp;
-            <a href="">Delete</a>
-        </div>;
         return (
             <div className="tableHolder">
-                <form>
                 <Table className="table" border="true" itemsPerPage={4}>
 
                     {this.state.games.map((game,i) =>
                         <Tr>
-                            <Td column="ID" >{game.id}</Td>
+                            <Td column="ID" >{game.iD}</Td>
                             <Td column="Player 1 Username" >
                                 <div>
                                     <ToggleDisplay show={!this.state.showEdit[i]}>
                                         {game.player1.username}
                                         </ToggleDisplay>
                                     <ToggleDisplay show={this.state.showEdit[i]} >
-                                        <EditUsernameTypeAhead id="swag" players={this.state.players} currentPlayer = {game.player1.username}/>
+                                        <EditUsernameTypeAhead  onOptionSelected={(event) => this.onChangePlayer1(event)}
+                                                                players={this.state.players}
+                                                                currentPlayer = {game.player1.username}/>
                                     </ToggleDisplay>
                                 </div>
                             </Td>
@@ -112,7 +176,10 @@ export default class GamesList extends React.Component {
                                         {game.player2.username}
                                     </ToggleDisplay>
                                     <ToggleDisplay show={this.state.showEdit[i]} >
-                                        <EditUsernameTypeAhead players={this.state.players} currentPlayer = {game.player2.username}/>
+                                        <EditUsernameTypeAhead onOptionSelected={(event) => this.onChangePlayer2(event)}
+                                                               players={this.state.players}
+                                                               currentPlayer = {game.player2.username}
+                                                               />
                                     </ToggleDisplay>
                                 </div>
                             </Td>
@@ -123,7 +190,7 @@ export default class GamesList extends React.Component {
                                     </ToggleDisplay>
                                     <ToggleDisplay show = {this.state.showEdit[i]}>
                                         <div>
-                                        <EditScoreInput score = {game.score1}/>
+                                        <EditScoreInput onChange={(event) => this.onChangeScore1(event)} score = {game.score1}/>
                                         </div>
                                     </ToggleDisplay>
                                 </div>
@@ -135,24 +202,29 @@ export default class GamesList extends React.Component {
                                     </ToggleDisplay>
                                     <ToggleDisplay show = {this.state.showEdit[i]}>
                                         <div>
-                                            <EditScoreInput score = {game.score2}/>
+                                            <EditScoreInput onChange={(event) => this.onChangeScore2(event)} score = {game.score2}/>
                                         </div>
                                     </ToggleDisplay>
                                 </div>
                             </Td>
                             <Td column="Actions" >
                                 <div>
-                                    <a style={{cursor: 'pointer'}} onClick={() => this.showEditGame(i)} >Edit</a>
+                                    <ToggleDisplay show={this.state.showEdit[i]}>
+                                        <div>
+                                        <input type="button" value="Submit" onClick={this.handleSubmit}/>
+                                        &nbsp;
+                                        </div>
+                                    </ToggleDisplay>
+                                    <a style={{cursor: 'pointer'}} onClick={() => this.showEditGame(i,game)} >Edit</a>
                                     &nbsp;
                                     <a style={{cursor: 'pointer'}} onClick={() => this.cancelEditGame(i)}>Cancel</a>
                                     &nbsp;
-                                    <a style={{cursor: 'pointer'}} >Delete</a>
+                                    <a style={{cursor: 'pointer'}} onClick={() => this.deleteGame(game.iD)} >Delete</a>
                                 </div>
                             </Td>
                         </Tr>
                     )};
                 </Table>
-                </form>
             </div>
         );
     }
@@ -168,17 +240,18 @@ const EditUsernameTypeAhead = (props) => {
     return (
         <Typeahead
             options = {options}
-            displayOption={displayOption}
-            filterOption='username'
-            value= {props.currentPlayer}
-            id={props.id}
+            displayOption = {displayOption}
+            filterOption = 'username'
+            value = {props.currentPlayer}
+            id = {props.id}
+            onOptionSelected = {props.onOptionSelected}
         />
     );
 };
 
 const EditScoreInput = (props) => {
     return (
-           <input type="number" defaultValue={props.score}/>
+           <input type = "number" defaultValue = {props.score} onChange={props.onChange}/>
     )
 };
 

@@ -1,6 +1,7 @@
 {
   "devDependencies": {
     "babel-cli": "^6.24.1",
+    "babel-plugin-recharts": "^1.1.0",
     "css-loader": "^0.28.4",
     "react-scripts": "^1.0.10",
     "style-loader": "^0.18.2"
@@ -9,15 +10,22 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "fetch-api": "0.0.2",
+    "fusioncharts": "^3.12.1",
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-fontawesome": "^1.6.1",
+    "react-fusioncharts": "^1.0.4",
+    "react-pure-render": "^1.0.2",
     "react-router": "^4.1.2",
     "react-toggle-display": "^2.2.0",
     "react-typeahead": "^2.0.0-alpha.5",
-    "reactable": "^0.14.1"
+    "react-utils": "^1.0.0",
+    "react-with-addons": "0.0.1",
+    "reactable": "^0.14.1",
+    "reactutils": "^2.0.0",
+    "recharts": "^1.0.0-alpha.2"
   },
   "scripts": {
     "start": "react-scripts start",

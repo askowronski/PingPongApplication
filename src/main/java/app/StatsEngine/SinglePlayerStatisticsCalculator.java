@@ -1,5 +1,6 @@
 package app.StatsEngine;
 
+import app.PingPongModel.GameOutcomeEnum;
 import app.PingPongModel.PingPongGame;
 import app.PingPongModel.Player;
 
@@ -110,5 +111,21 @@ public class SinglePlayerStatisticsCalculator {
             }
         }
         return numerator/(double)games.size();
+    }
+
+    public List<GameOutcomeEnum> getOutcomes() {
+        List<GameOutcomeEnum> outcomes = new ArrayList<>();
+        List<PingPongGame> games = this.getGames();
+
+        for(PingPongGame game:games){
+            if(game.didWin(this.getPlayer())){
+                outcomes.add(GameOutcomeEnum.WIN);
+            } else if(game.didLose(this.getPlayer())){
+                outcomes.add(GameOutcomeEnum.LOSS);
+            } else {
+                outcomes.add(GameOutcomeEnum.DRAW);
+            }
+        }
+        return outcomes;
     }
 }

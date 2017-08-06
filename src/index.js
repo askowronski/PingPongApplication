@@ -5,6 +5,7 @@ import CreateGame from './Pages/CreateGame.js';
 import PlayersList from './Pages/Players.js';
 import Games from './Pages/Games.js';
 import {Header} from './ReactComponents/displayComponents';
+import NetWinsGraph from './Pages/PlayerPage.js';
 
 const React = require('react');
 const ReactDOM = require('react-dom');
@@ -81,6 +82,21 @@ class GamesPage extends React.Component {
     }
 }
 
+class PlayerProfilePage extends React.Component {
+    render() {
+        return(
+         <div>
+             <div>
+                 <Header/>
+             </div>
+             <div>
+                 <NetWinsGraph/>
+             </div>
+         </div>
+        )
+    }
+}
+
 
 
 
@@ -92,6 +108,7 @@ ReactDOM.render(
             <Route path="/CreateGame" component={InputGame} />
             <Route path="/Players" component={PlayersPage} />
             <Route path="/Games" component={GamesPage} />
+            <Route path="/PlayerProfile" component={PlayerProfilePage}/>
         </div>
 
     </Router>,

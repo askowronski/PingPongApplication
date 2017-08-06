@@ -243,7 +243,7 @@ const InputButtons = (props) => {
 
     return (
         <div className="topLevlInputButtons">
-            <ToggleDisplay id="inputDisplayToggle" show='true' >
+            <ToggleDisplay id="inputDisplayToggle"  >
                 <div id="inputButtonDiv" className="header-row-input">
                     <div className="header-button-input-holder">
                         <button className="header-button-input" onClick={inputPlayer} id="playerInputButton" >Player</button>
