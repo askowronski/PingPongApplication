@@ -128,4 +128,18 @@ public class SinglePlayerStatisticsCalculator {
         }
         return outcomes;
     }
+
+    public double getOpponentAverageScore(){
+        double numerator=0.0;
+        List<PingPongGame> games = this.getGames();
+        for(PingPongGame game:games) {
+            if(game.getPlayer1().equals(this.getPlayer())){
+                numerator+=game.getPlayer2Score();
+            }
+            if(game.getPlayer2().equals(this.getPlayer())){
+                numerator+=game.getPlayer1Score();
+            }
+        }
+        return numerator/(double)games.size();
+    }
 }

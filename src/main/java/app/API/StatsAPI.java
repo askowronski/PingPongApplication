@@ -1,6 +1,7 @@
 package app.API;
 
 
+import app.API.GraphData.AverageScorePerGameData;
 import app.PersistenceManagers.GamePersistenceManager;
 import app.PersistenceManagers.PlayerPersistenceManager;
 import app.PingPongModel.GameOutcomeEnum;
@@ -8,6 +9,8 @@ import app.PingPongModel.PingPongGame;
 import app.PingPongModel.Player;
 import app.StatsEngine.SinglePlayerStatisticsCalculator;
 import app.StatsEngine.TotalGamesStatsCalculator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -158,7 +161,7 @@ public class StatsAPI {
         int i = 1;
 
         for(Integer count:netWins){
-            json = json+"{\"wins\":"+count+",\"label\":\"game\",\"flex\": \"siiiiick\"},";
+            json = json+"{\"wins\":"+count+",\"game\":"+gPM.writeGameToJson(gamesForPlayer.get(i-1))+",\"label\":"+i+"},";
             i++;
         }
         json = json.substring(0,json.length()-1);
@@ -168,5 +171,54 @@ public class StatsAPI {
         return new APIResult(true,json);
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping("/GetAverageScores")
+    public APIResult getAverageScores(@RequestParam(value="id") int playerID) {
+        GamePersistenceManager gPM = new GamePersistenceManager();
+        List<PingPongGame> gamesForPlayer = gPM.getGamesForPlayer(gPM.getPlayer(playerID));
+        Player player = gPM.getPlayer(playerID);
+
+        if(gamesForPlayer.size()==0){
+            return new APIResult(false,"No Games For Player");
+        }
+
+        String json = "[{\"averageScore\":"+0+",\"game\":"+0+",\"label\":0,\"score\":"+0+",\"opponent score\":"+0+"},";
+        int i = 1;
+        List<PingPongGame> runningGameList = new ArrayList<>();
+        List<AverageScorePerGameData> dataList = new ArrayList<>();
+        dataList.add(new AverageScorePerGameData(0,0,0,
+                0,new PingPongGame(0,player,player,0,0),0));
+        for(PingPongGame game:gamesForPlayer){
+            int score = 0;
+            int oppScore = 0;
+            if(game.getPlayer1().getiD() == playerID){
+                score = game.getPlayer1Score();
+                oppScore = -game.getPlayer2Score();
+            } else {
+                score = game.getPlayer2Score();
+                oppScore = -game.getPlayer1Score();
+            }
+            runningGameList.add(game);
+            SinglePlayerStatisticsCalculator calc = new SinglePlayerStatisticsCalculator(runningGameList,player);
+            json = json+"{\"averageScore\":"+calc.getAverageScore()+",\"game\":"
+                    +gPM.writeGameToJson(gamesForPlayer.get(i-1))+",\"label\":"+i+",\"score\":"+score+",\"opponent score\":"+oppScore+"},";
+            AverageScorePerGameData data = new AverageScorePerGameData(calc.getAverageScore(),
+                    score,- calc.getOpponentAverageScore(),oppScore,game,i);
+            dataList.add(data);
+            i++;
+        }
+
+        json = json.substring(0,json.length()-1);
+        json= json+"]";
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            json= mapper.writeValueAsString(dataList);
+        } catch(JsonProcessingException e){
+            json= e.getMessage();
+        }
+
+        return new APIResult(true,json);
+    }
 
 }

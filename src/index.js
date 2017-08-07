@@ -5,7 +5,8 @@ import CreateGame from './Pages/CreateGame.js';
 import PlayersList from './Pages/Players.js';
 import Games from './Pages/Games.js';
 import {Header} from './ReactComponents/displayComponents';
-import NetWinsGraph from './Pages/PlayerPage.js';
+import {AverageScoreGraph,AverageScorePerGame,PlayerGraphTable} from './Pages/PlayerPage.js';
+import NetWinsGraph from "./Pages/PlayerPage";
 
 const React = require('react');
 const ReactDOM = require('react-dom');
@@ -90,7 +91,7 @@ class PlayerProfilePage extends React.Component {
                  <Header/>
              </div>
              <div>
-                 <NetWinsGraph/>
+                 <PlayerGraphTable/>
              </div>
          </div>
         )

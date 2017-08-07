@@ -1,8 +1,11 @@
 package app.API;
 
+import app.PersistenceManagers.GamePersistenceManager;
 import app.PingPongModel.EloRating;
 import app.PersistenceManagers.PlayerPersistenceManager;
+import app.PingPongModel.PingPongGame;
 import app.PingPongModel.Player;
+import app.StatsEngine.SinglePlayerStatisticsCalculator;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -97,7 +100,14 @@ public class PlayerAPI {
         return new APIResult(true,pPM.writePlayerArrayToJson(players));
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(path = "/GetAverageScore",method=GET)
+    public APIResult getPlayerAverageScore(@RequestParam(value="id") int id) {
+        GamePersistenceManager gPM = new GamePersistenceManager();
+        List<PingPongGame> gamesForPlayer = gPM.getGamesForPlayer(gPM.getPlayer(id));
+        Player player = gPM.getPlayer(id);
+        SinglePlayerStatisticsCalculator calc = new SinglePlayerStatisticsCalculator(gamesForPlayer,player);
 
-
-
+        return new APIResult(true,"[{ \"averageScore\" : \""+calc.getAverageScore()+"\"}]");
+    }
 }
