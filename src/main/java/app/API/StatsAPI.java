@@ -2,6 +2,7 @@ package app.API;
 
 
 import app.API.GraphData.AverageScorePerGameData;
+import app.API.GraphData.EloRatingGraphData;
 import app.PersistenceManagers.GamePersistenceManager;
 import app.PersistenceManagers.PlayerPersistenceManager;
 import app.PingPongModel.GameOutcomeEnum;
@@ -186,11 +187,15 @@ public class StatsAPI {
         int i = 1;
         List<PingPongGame> runningGameList = new ArrayList<>();
         List<AverageScorePerGameData> dataList = new ArrayList<>();
+
+
         dataList.add(new AverageScorePerGameData(0,0,0,
-                0,new PingPongGame(0,player,player,0,0),0));
+                0,new PingPongGame(0,player,player,0,0),0,
+                1500.00,gamesForPlayer.get(0).getOpponent(player).getEloRating().getRating()));
         for(PingPongGame game:gamesForPlayer){
             int score = 0;
             int oppScore = 0;
+            Player opponent = game.getOpponent(player);
             if(game.getPlayer1().getiD() == playerID){
                 score = game.getPlayer1Score();
                 oppScore = -game.getPlayer2Score();
@@ -198,12 +203,14 @@ public class StatsAPI {
                 score = game.getPlayer2Score();
                 oppScore = -game.getPlayer1Score();
             }
+
+
             runningGameList.add(game);
             SinglePlayerStatisticsCalculator calc = new SinglePlayerStatisticsCalculator(runningGameList,player);
             json = json+"{\"averageScore\":"+calc.getAverageScore()+",\"game\":"
                     +gPM.writeGameToJson(gamesForPlayer.get(i-1))+",\"label\":"+i+",\"score\":"+score+",\"opponent score\":"+oppScore+"},";
             AverageScorePerGameData data = new AverageScorePerGameData(calc.getAverageScore(),
-                    score,- calc.getOpponentAverageScore(),oppScore,game,i);
+                    score,- calc.getOpponentAverageScore(),oppScore,game,i,player.getEloRating().getRating(),opponent.getEloRating().getRating());
             dataList.add(data);
             i++;
         }
@@ -214,6 +221,41 @@ public class StatsAPI {
         ObjectMapper mapper = new ObjectMapper();
         try {
             json= mapper.writeValueAsString(dataList);
+        } catch(JsonProcessingException e){
+            json= e.getMessage();
+        }
+
+        return new APIResult(true,json);
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping("/GetEloRatings")
+    public APIResult getEloRatings(@RequestParam(value="id") int playerID) {
+
+        GamePersistenceManager gPM = new GamePersistenceManager();
+        List<PingPongGame> gamesForPlayer = gPM.getGamesForPlayer(gPM.getPlayer(playerID));
+        Player player = gPM.getPlayer(playerID);
+
+        List<EloRatingGraphData> data = new ArrayList<>();
+
+        int i = 0;
+        for(PingPongGame game:gamesForPlayer){
+            Player opponenet = game.getOpponent(player);
+            Player player1;
+            if(game.getPlayer1().equals(opponenet)){
+                player1 = game.getPlayer2();
+            } else {
+                player1 = game.getPlayer1();
+            }
+
+            data.add(new EloRatingGraphData(game,i,player1.getEloRating().getRating(),-opponenet.getEloRating().getRating()));
+            i++;
+        }
+         String json;
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            json= mapper.writeValueAsString(data);
         } catch(JsonProcessingException e){
             json= e.getMessage();
         }

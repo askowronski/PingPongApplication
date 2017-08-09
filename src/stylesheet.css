@@ -94,13 +94,24 @@ span {
     box-sizing: border-box;
     padding: 10px;
     width: 100%;
-    heigh:600px;
+    heigh:100%;
     background-color: #fff;
     border:12px solid #B22226;
 }
 
 .recharts-label{
     padding:10px;
+}
+
+.playerProfileHeader {
+    font-size:40pt;
+    font-family:Seravek;
+}
+
+.UsernameHeader {
+    font-size:40pt;
+    font-family:Seravek;
+    font-style:italic;
 }
 
 tspan {
@@ -115,26 +126,44 @@ body {
 
 th {
     padding:50px;
-    align:center;
     text-align:center;
 }
 
 td {
     width:300px;
     text-align: center;
-    align:center;
     padding: 30px 75px;
 }
 
-tr {
-    border:15px;
-}
+
 
 table {
     margin-top: 5px;
     margin-left:auto;
     margin-right:auto;
     width:100%;
+}
+
+.GameDisplayTable {
+    margin-top: 5px;
+    margin-left:auto;
+    margin-right:auto;
+    width:65%;
+}
+
+.GameDisplayHeader {
+    margin-top: 5px;
+    margin-left:auto;
+    margin-right:auto;
+    width:50%;
+}
+
+.AverageUserHeader {
+    width:100%;
+}
+
+.You {
+    text-decoration: underline;
 }
 
 Table {
@@ -144,7 +173,6 @@ Table {
 }
 
 Th, Td {
-    border: 1px solid black;
     padding:10px;
 }
 
@@ -159,6 +187,11 @@ Th {
 
 .infoDisplay {
 
+}
+
+.HeaderText {
+    text-decoration: underline;
+    font-weight:bold;
 }
 
 .square {
@@ -179,7 +212,12 @@ Th {
 .custom-tooltip {
     opacity: 1;
     background-color: #fff;
-    border: 5px solid black;
+}
+
+.custom-tooltip-average {
+    opacity: 1;
+    background-color: #fff;
+    width:300px;
 }
 
 span text {
@@ -197,10 +235,19 @@ span text {
     display: inline-block;
     align-self: center;
     padding-right: 10%;
+    width:100%;
 }
 
 .TooltipTitle {
     text-align: left;
+    font-family: SansSerif;
+    text-decoration:underline;
+    padding-left: 4px;
+
+}
+
+.TooltipSubTitle {
+    text-align: center;
     font-family: SansSerif;
     text-decoration:underline;
     padding-left: 4px;

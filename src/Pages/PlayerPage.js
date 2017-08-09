@@ -3,6 +3,9 @@ import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Area, AreaChart, Tooltip,BarChart,Bar,Legend,ReferenceLine,ComposedChart
 } from 'recharts';
 import pureRender from 'react-pure-render';
+import {AverageScorePerGame} from "../PlayerProfileGraphComponents/ScorePerGame/ScorePerGameGraph";
+import {EloRatingPerGame} from "../PlayerProfileGraphComponents/EloRatingGraph";
+import {Typeahead} from "react-typeahead";
 
 const React = require('react');
 const jQuery = require('jquery');
@@ -19,7 +22,10 @@ export class NetWinsGraph extends React.Component {
     state = {
         dataset:[],
         result:'',
-        games:[]
+        games:[],
+        showBar:true,
+        buttonValue: "Show Line Chart",
+        playerID:0
     };
 
 
@@ -27,35 +33,41 @@ export class NetWinsGraph extends React.Component {
         return this.state.dataset
     };
 
-    componentDidMount = () => {
-        jQuery.ajax({
+    componentWillReceiveProps = (nextProps) => {
+        const playerID = nextProps.playerID;
+        if(playerID !== this.props) {
+            this.setState({
+                playerID: playerID
+            });
+            jQuery.ajax({
 
-            url: "http://localhost:8080/GetPlayerOutcomes?id=2",
-            type:"GET",
-            dataType:"json",
-            async:false,
-            success: function(data){
-                this.setState({
-                    dataset:JSON.parse(data.message),
-                    result:data.success,
-                });
+                url: "http://localhost:8080/GetPlayerOutcomes?id="+playerID,
+                type: "GET",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    this.setState({
+                        dataset: JSON.parse(data.message),
+                        result: data.success,
+                    });
 
-            }.bind(this)
-        });
-        jQuery.ajax({
-
-            url: "http://localhost:8080/GetGamesForPlayerChart?id=2",
-            type:"GET",
-            dataType:"json",
-            async:false,
-            success: function(data){
-                this.setState({
-                    games:JSON.parse(data.message),
-                    result:data.success,
-                });
-
-            }.bind(this)
-        });
+                }.bind(this)
+            });
+            // jQuery.ajax({
+            //
+            //     url: "http://localhost:8080/GetGamesForPlayerChart?id="+playerID,
+            //     type:"GET",
+            //     dataType:"json",
+            //     async:false,
+            //     success: function(data){
+            //         this.setState({
+            //             games:JSON.parse(data.message),
+            //             result:data.success,
+            //         });
+            //
+            //     }.bind(this)
+            // });
+        }
 
     };
 
@@ -64,7 +76,7 @@ export class NetWinsGraph extends React.Component {
 
     returnYLabel = (x,y) => {
         return(
-            <text x={x} y={y} textAnchor="left">Wins/Losses</text>
+            <text x={x} y={y} textAnchor="left">Net</text>
         )
     };
 
@@ -74,26 +86,52 @@ export class NetWinsGraph extends React.Component {
         )
     };
 
+    returnBar = (state) => {
+        if(state===true) {
+            return <Bar dataKey="wins" barSize={60} fill="#8884d8"/>
+        }
+        return  <Line dataKey="wins"   fill="#8884d8" />
+
+    };
+
+    toggleBarLine = () => {
+        let check = !this.state.showBar;
+        let buttonVal = "Show Bar Chart";
+        if(check){
+            buttonVal="Show Line Chart";
+        }
+        this.setState({
+            showBar:check,
+            buttonValue:buttonVal
+        })
+    };
+
+
 
 
     render() {
         return (
          <div className="PlayerChartContainer">
              <div className="PlayerGraph">
-             <BarChart width={500} height={400} data={this.state.dataset}
+                     <span ><text >Net Wins/Losses</text></span>
+             <ComposedChart width={1000} height={400} data={this.state.dataset}
                        margin={{top: 5, right: 30, left: 20, bottom: 5}}
              label={"Net Wins/Losses"}>
-                 <XAxis dataKey="label" label={this.returnXLabel(140,385)} />
-                 <YAxis domain={[-5,5]} label={this.returnYLabel(20,150)} ticks={[-5,0,5]} />
+                 <XAxis dataKey="label" label={this.returnXLabel(500,400)} />
+                 <YAxis domain={['auto', 'auto']} label={this.returnYLabel(20,150)}  tickCount={7} />
                  <CartesianGrid strokeDasharray="3 3"/>
                  <ReferenceLine y={0} stroke='#000'/>
                  <div className="legendWinsLosses">
                  <Legend />
                  </div>
-                 <Tooltip label="jah"   content={<CustomTooltipWins/>} />
-                 <Bar dataKey="wins"  barSize={60} fill="#8884d8" />
-             </BarChart>
+                 {this.returnBar(this.state.showBar)}
+                 <Tooltip position={{ x: 1000, y: 0 }}  content={<CustomToolTipDisplayNet/>} />
+             </ComposedChart>
+                 <div className="netWinsToggleButtons">
+                     <button onClick={() => this.toggleBarLine()}>{this.state.buttonValue}</button>
+                 </div>
              </div>
+
          </div>
         )
     }
@@ -127,6 +165,169 @@ const CustomTooltipWins  = React.createClass({
             );
         }
 
+        return null;
+    }
+});
+
+const CustomToolTipDisplayNet  = React.createClass({
+    propTypes: {
+        type: PropTypes.string,
+        payload: PropTypes.array,
+        label: PropTypes.number,
+    },
+
+
+    getIntroOfPage(label) {
+        return "Game "+label;
+    },
+
+    render() {
+        const { active } = this.props;
+
+
+        if (active) {
+            const {payload, label} = this.props;
+            if (label > 0) {
+                let game = payload[0].payload.game;
+
+                return (
+                    <div className="custom-tooltip-average">
+                        <table className="GameDisplayTable">
+                            <th className="GameDisplayHeader" colSpan={5}>
+                                <span className="HeaderText">Net Wins/Losses</span>
+                            </th>
+                            <tr>
+                                <td>
+                                </td>
+                                <td className="AverageUserHeader" colSpan={3}>
+                                    <span >{payload[0].payload.wins}</span>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colSpan={5} className="GameDisplayHeader">
+                                    <span className="HeaderText">{this.getIntroOfPage(label)}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+
+                                </td>
+                                <td className="AverageUserHeader" colSpan={2}>
+                                    <span className="You">You</span>
+                                </td>
+
+                                <td className="AverageUserHeader" colSpan={2}>
+                                    <span className="You">{game.player2.username}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Score
+                                </td>
+                                <td colSpan={2}>
+                                    {game.score1}
+                                </td>
+                                <td colSpan={2}>
+                                    {game.score2}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                );
+            }
+        }
+        return null;
+    }
+});
+
+export const CustomToolTipDisplayGame  = React.createClass({
+    propTypes: {
+        type: PropTypes.string,
+        payload: PropTypes.array,
+        label: PropTypes.number,
+    },
+
+
+    getIntroOfPage(label) {
+        return "Game "+label;
+    },
+
+    render() {
+
+        const { active } = this.props;
+
+
+        if (active) {
+            const {payload, label} = this.props;
+            if (label > 0) {
+                let game = payload[0].payload.game;
+
+                return (
+                    <div className="custom-tooltip-average">
+                        <table className="GameDisplayTable">
+                            <th className="GameDisplayHeader" colSpan={5}>
+                                <span className="HeaderText">Average</span>
+                            </th>
+                            <tr>
+                                <td>
+                                </td>
+                                <td className="AverageUserHeader" colSpan={2}>
+                                    <span className="You">You</span>
+                                </td>
+
+                                <td className="AverageUserHeader" colSpan={2}>
+                                    <span className="You">Opponent</span>
+                                </td>
+                            </tr>
+                            <tr className="GameDisplayAverageRow">
+                                <td>
+                                    Score
+                                </td>
+                                <td colSpan={2}>
+                                    {payload[0].payload.averageScore}
+                                </td>
+                                <td colSpan={2}>
+                                    {-1 * payload[0].payload.opponentAverageScore}
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td colSpan={5} className="GameDisplayHeader">
+                                    <span className="HeaderText">{this.getIntroOfPage(label)}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+
+                                </td>
+                                <td className="AverageUserHeader" colSpan={2}>
+                                    <span className="You">You</span>
+                                </td>
+
+                                <td className="AverageUserHeader" colSpan={2}>
+                                    <span className="You">{game.player2.username}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Score
+                                </td>
+                                <td colSpan={2}>
+                                    {payload[0].payload.score}
+                                </td>
+                                <td colSpan={2}>
+                                    {-1 * payload[0].payload.opponentScore}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                );
+            }
+        }
         return null;
     }
 });
@@ -225,219 +426,87 @@ export class AverageScoreGraph extends React.Component {
     }
 }
 
-export class AverageScorePerGame extends React.Component {
-    state = {
-        dataset:[],
-        result:'',
-        showOppScore:true,
-        barGraphKeys:["opponentScore","score"],
-        opacity: 1,
-        showScore:true,
-        scoreButtonValue:"Hide Score",
-        oppScoreButtonValue:"Hide Opp Score",
-        showAverage:true,
-        averageButtonValue:"Hide Average",
-        showOppAverage:true,
-        oppAverageButtonValue:"Hide Opp Average"
+const PlayerProfileSelect = (props) => {
+    let options = props.players;
+
+    let displayOption = (option) => {
+        return option.username;
     };
 
-    hideBarElement = () => {
-        if(this.state.opacity == 0){
-            this.setState({
-                opacity :1
-            });
-        } else {
-            this.setState({
-                opacity: 0
-            });
-        }
-    };
+    return (
+        <Typeahead
+            options = {options}
+            displayOption = {displayOption}
+            filterOption = 'username'
+            value = {props.currentPlayer}
+            id = {props.id}
+            onOptionSelected = {props.onOptionSelected}
+        />
+    );
+};
 
-    returnData = () => {
-        return this.state.dataset
-    };
+export class PlayerGraphTable extends React.Component {
+
+    constructor() {
+        super();
+        this.state = {
+            playerID: 4,
+            players:[],
+            resultPlayers:'',
+            playerUsername:'ITAL'
+        };
+    }
 
     componentDidMount = () => {
         jQuery.ajax({
 
-            url: "http://localhost:8080/GetAverageScores?id=2",
+            url: "http://localhost:8080/GetPlayers",
             type:"GET",
             dataType:"json",
             async:false,
             success: function(data){
                 this.setState({
-                    dataset:JSON.parse(data.message),
-                    result:data.success,
+                    players:JSON.parse(data.message),
+                    resultPlayers:data.success,
                 });
-
             }.bind(this)
         });
     };
 
-    returnYLabel = (x,y) => {
-        return (
-            <text x={x} y={y}  textAnchor="middle" fontSize={'16pt'} className="XAxisLabel">Score</text>
-        )
+    setPlayer = (event) => {
+      let id = event.id;
+      let username = event.username;
+      this.setState({
+          playerID:id,
+          playerUsername:username
+      })
     };
-
-    returnXLabel = (x,y) => {
-        return (
-                <text x={x} y={y} textAnchor="middle" fontSize={'16pt'} className="XAxisLabel" >Game</text>
-        )
-    };
-
-    toggleScore = () => {
-        let toggle = !this.state.showScore;
-        let text = "";
-        if(toggle===true){
-            text = "Hide Score";
-        } else {
-            text = "Show Score";
-        }
-        this.setState({
-            showScore:toggle,
-            scoreButtonValue:text
-        })
-
-    };
-
-    toggleOppScore = () => {
-        let toggle = !this.state.showOppScore;
-        let text = "";
-        if(toggle===true){
-            text = "Hide Opp Score";
-        } else {
-            text = "Show Opp Score";
-        }
-        this.setState({
-            showOppScore:toggle,
-            oppScoreButtonValue:text
-        })
-
-    };
-
-    toggleAverage = () => {
-        let toggle = !this.state.showAverage;
-        let text = "";
-        if(toggle===true){
-            text = "Hide Average";
-        } else {
-            text = "Show Average";
-        }
-        this.setState({
-            showAverage:toggle,
-            averageButtonValue:text
-        })
-
-    };
-
-    toggleOppAverage = () => {
-        let toggle = !this.state.showOppAverage;
-        let text = "";
-        if(toggle===true){
-            text = "Hide Opp Average";
-        } else {
-            text = "Show Opp Average";
-        }
-        this.setState({
-            showOppAverage:toggle,
-            oppAverageButtonValue:text
-        })
-
-    };
-
-    renderBarScore = (state) => {
-        if(state === true) {
-            return (<Bar dataKey="score" barSize={25} fill='#4286f4' />)
-        }
-    };
-
-    renderBarOppScore = (state) => {
-        if(state === true) {
-            return (<Bar dataKey ="opponentScore" barSize={25} fill='#ad0505'/>
-            )
-        }
-    };
-
-    renderAverageScore = (state) => {
-        if(state === true) {
-            return (<Line dataKey ="averageScore" fill='#581887' stroke='#1029cc'/>
-            )
-        }
-    };
-
-    renderOppAverageScore = (state) => {
-        if(state === true) {
-            return (<Line dataKey ="opponentAverageScore" fill='#470303' stroke='#ad0505'/>
-            )
-        }
-    };
-
-
-
 
     render() {
         return (
-            <div className="PlayerChartContainer">
-                <div className="PlayerGraph">
-                    <span ><text >Average Score Per Game</text></span>
-                    <ComposedChart width={500} height={400} data={this.state.dataset}
-                                   margins={{top: 5, right: 30,  bottom: 5}} >
-                        <XAxis type="number" dataKey="label" label={this.returnXLabel(475,375)} padding={{bottom: 50,right:50}} labelStyle = {{paddingTop:20,color : '#32CD32'}}/>
-                        <YAxis domain={[-30,30]} label={this.returnYLabel(30,150)} ticks={[-30,-20,-10,0,10,20,30]} />
-                        <Tooltip/>
-                        <CartesianGrid strokeDasharray="3 3"/>
-                        <ReferenceLine y={0} stroke='#000'/>
-                        {this.renderBarScore(this.state.showScore)}
-                        {this.renderBarOppScore(this.state.showOppScore)}
-                        {this.renderAverageScore(this.state.showAverage)}
-                        {this.renderOppAverageScore(this.state.showOppAverage)}
-                        <Legend margins={{top: 15, right: 15,  bottom: 5}} />
-                    </ComposedChart>
-                </div>
-                <div className="averageScoreToggleButtons">
-                    <button onClick={() => this.toggleScore()}>{this.state.scoreButtonValue}</button>
-                    <button onClick={() => this.toggleOppScore()}>{this.state.oppScoreButtonValue}</button>
-                    <button onClick={() => this.toggleAverage()}>{this.state.averageButtonValue}</button>
-                    <button onClick={() => this.toggleOppAverage()}>{this.state.oppAverageButtonValue}</button>
-                </div>
-            </div>
+            <table >
+                <thead>
+                <tr>
+                    <th className="playerProfileHeader">Player Profile <spam className="UsernameHeader">{this.state.playerUsername}</spam></th>
+                </tr>
+                <tr>
+                    <PlayerProfileSelect onOptionSelected = {(event) => this.setPlayer(event)}
+                    players = {this.state.players}/>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr id="infoDisplay">
+                    <td><AverageScorePerGame playerID = {this.state.playerID}/></td>
+                </tr>
+                <tr id="infoDisplay">
+                    <td><NetWinsGraph playerID = {this.state.playerID}/></td>
+                </tr>
+                <tr>
+                    <td><EloRatingPerGame playerID = {this.state.playerID}/></td>
+                </tr>
+                </tbody>
+            </table>
         )
     }
-}
-
-
-
-
-
-
-const renderBar2 = () => {
-    return (
-        <Bar dataKey ="opponentScore" barSize={25} fill='#ad0505'/>
-    )
-};
-
-
-
-export const PlayerGraphTable = () => {
-    return (
-        <table >
-            <thead>
-            <tr>
-                <th>Home Page</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr id="infoDisplay">
-                <td><AverageScorePerGame/></td>
-            </tr>
-            <tr id="infoDisplay" >
-                <td><NetWinsGraph/></td>
-            </tr>
-            <tr>
-                <td><AverageScoreGraph/></td>
-            </tr>
-            </tbody>
-        </table>
-    )
 };

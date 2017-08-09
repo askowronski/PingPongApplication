@@ -116,6 +116,14 @@ public class PingPongGame {
         return false;
     }
 
+    public Player getOpponent(Player player) {
+        if(this.getPlayer1().equals(player)){
+            return this.getPlayer2();
+        } else {
+            return this.getPlayer1();
+        }
+    }
+
     @Override
     public boolean equals(Object o){
         if(!(o instanceof PingPongGame)) {

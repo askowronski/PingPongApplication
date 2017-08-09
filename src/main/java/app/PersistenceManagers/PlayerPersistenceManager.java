@@ -260,12 +260,20 @@ public class PlayerPersistenceManager {
         if(!currentGames.contains(game)){
             return currentPlayers;
         }
-        List<PingPongGame> splicedGames = currentGames.subList(0,currentGames.indexOf(game)+1);
+        List<PingPongGame> splicedGames = currentGames.subList(currentGames.indexOf(game)+1,currentGames.size());
+
+        Player player1 = game.getPlayer1();
+        Player player2 = game.getPlayer2();
+
 
 
         for(int i = 0; i < currentPlayers.size(); i++) {
             Player playerCheck = currentPlayers.get(i);
-            for(int j = splicedGames.size()-1; j >=0; j-- ){
+
+            if(playerCheck.getiD() == player1.getiD() || playerCheck.getiD() == player2.getiD()){
+                break;
+            }
+            for(int j = 0; j < splicedGames.size(); j++ ){
                 if(splicedGames.get(j).getPlayer1().getiD() == playerCheck.getiD()) {
                     currentPlayers.set(i,splicedGames.get(j).getPlayer1());
                     break;
@@ -274,10 +282,10 @@ public class PlayerPersistenceManager {
                     currentPlayers.set(i,splicedGames.get(j).getPlayer2());
                     break;
                 }
-                if(j==0){
-                    Player newPlayer = new Player(new EloRating(),currentPlayers.get(i).getiD(),currentPlayers.get(i).getUsername());
-                    currentPlayers.set(i,newPlayer);
-                }
+//                if(j==0){
+//                    Player newPlayer = new Player(new EloRating(),currentPlayers.get(i).getiD(),currentPlayers.get(i).getUsername());
+//                    currentPlayers.set(i,newPlayer);
+//                }
             }
         }
         return currentPlayers;
