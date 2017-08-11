@@ -6,6 +6,7 @@ import pureRender from 'react-pure-render';
 import {AverageScorePerGame} from "../PlayerProfileGraphComponents/ScorePerGame/ScorePerGameGraph";
 import {EloRatingPerGame} from "../PlayerProfileGraphComponents/EloRatingGraph";
 import {Typeahead} from "react-typeahead";
+import history from '../history.js';
 
 const React = require('react');
 const jQuery = require('jquery');
@@ -447,13 +448,14 @@ const PlayerProfileSelect = (props) => {
 
 export class PlayerGraphTable extends React.Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            playerID: 4,
+            playerID:props.history.location.state.player.id,
             players:[],
             resultPlayers:'',
-            playerUsername:'ITAL'
+            playerUsername:props.history.location.state.player.username,
+            history:history.state
         };
     }
 

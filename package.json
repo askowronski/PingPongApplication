@@ -20,6 +20,7 @@
     "react-fusioncharts": "^1.0.4",
     "react-pure-render": "^1.0.2",
     "react-router": "^4.1.2",
+    "react-router-link": "^2.0.2",
     "react-toggle-display": "^2.2.0",
     "react-typeahead": "^2.0.0-alpha.5",
     "react-utils": "^1.0.0",

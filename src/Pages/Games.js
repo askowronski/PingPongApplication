@@ -219,6 +219,8 @@ export default class GamesList extends React.Component {
                                     &nbsp;
                                     <a style={{cursor: 'pointer'}} onClick={() => this.cancelEditGame(i)}>Cancel</a>
                                     &nbsp;
+                                    &nbsp;
+                                    &nbsp;
                                     <a style={{cursor: 'pointer'}} onClick={() => this.deleteGame(game.iD)} >Delete</a>
                                 </div>
                             </Td>

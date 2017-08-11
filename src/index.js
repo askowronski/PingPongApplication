@@ -7,6 +7,7 @@ import Games from './Pages/Games.js';
 import {Header} from './ReactComponents/displayComponents';
 import {AverageScoreGraph,AverageScorePerGame,PlayerGraphTable} from './Pages/PlayerPage.js';
 import NetWinsGraph from "./Pages/PlayerPage";
+import {Link} from "react-router-link";
 
 const React = require('react');
 const ReactDOM = require('react-dom');
@@ -61,6 +62,7 @@ class PlayersPage extends React.Component {
                 </div>
                 <div>
                     <PlayersList showEdit = {this.state.showEdit} showTable = {this.state.showTable} />
+
                 </div>
             </div>
         )
@@ -91,7 +93,7 @@ class PlayerProfilePage extends React.Component {
                  <Header/>
              </div>
              <div>
-                 <PlayerGraphTable/>
+                 <PlayerGraphTable history={history}/>
              </div>
          </div>
         )

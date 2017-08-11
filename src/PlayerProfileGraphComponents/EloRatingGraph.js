@@ -188,68 +188,70 @@ export const CustomToolTipDisplayGameElo  = React.createClass({
 
         if (active) {
             const { payload, label } = this.props;
-            let game = payload[0].payload.game;
+            if(label>0) {
+                let game = payload[0].payload.game;
 
-            return (
-                <div className="custom-tooltip-average">
-                    <table className="GameDisplayTable">
-                        <th className="GameDisplayHeader" colSpan={5}>
-                            <span className="HeaderText">Average</span>
-                        </th>
-                        <tr>
-                            <td>
-                            </td>
-                            <td className="AverageUserHeader" colSpan={2}>
-                                <span className="You">You</span>
-                            </td>
+                return (
+                    <div className="custom-tooltip-average">
+                        <table className="GameDisplayTable">
+                            <th className="GameDisplayHeader" colSpan={5}>
+                                <span className="HeaderText">Average</span>
+                            </th>
+                            <tr>
+                                <td>
+                                </td>
+                                <td className="AverageUserHeader" colSpan={2}>
+                                    <span className="You">You</span>
+                                </td>
 
-                            <td className="AverageUserHeader" colSpan={2}>
-                                <span className="You">Opponent</span>
-                            </td>
-                        </tr>
-                        <tr className="GameDisplayAverageRow">
-                            <td>
-                                Score
-                            </td>
-                            <td colSpan={2} >
-                                {payload[0].payload.eloRating}
-                            </td>
-                            <td colSpan={2}>
-                                {-1*payload[0].payload.opponentEloRating}
-                            </td>
+                                <td className="AverageUserHeader" colSpan={2}>
+                                    <span className="You">Opponent</span>
+                                </td>
+                            </tr>
+                            <tr className="GameDisplayAverageRow">
+                                <td>
+                                    Score
+                                </td>
+                                <td colSpan={2}>
+                                    {payload[0].payload.eloRating}
+                                </td>
+                                <td colSpan={2}>
+                                    {-1 * payload[0].payload.opponentEloRating}
+                                </td>
 
-                        </tr>
-                        <tr>
-                            <td colSpan={5} className="GameDisplayHeader">
-                                <span className="HeaderText">{this.getIntroOfPage(label)}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
+                            </tr>
+                            <tr>
+                                <td colSpan={5} className="GameDisplayHeader">
+                                    <span className="HeaderText">{this.getIntroOfPage(label)}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
 
-                            </td>
-                            <td className="AverageUserHeader" colSpan={2}>
-                                <span className="You">You</span>
-                            </td>
+                                </td>
+                                <td className="AverageUserHeader" colSpan={2}>
+                                    <span className="You">You</span>
+                                </td>
 
-                            <td className="AverageUserHeader" colSpan={2}>
-                                <span className="You">{game.player2.username}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Score
-                            </td>
-                            <td colSpan={2} >
-                                {game.score1}
-                            </td>
-                            <td colSpan={2} >
-                                {game.score2}
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            );
+                                <td className="AverageUserHeader" colSpan={2}>
+                                    <span className="You">{game.player2.username}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Score
+                                </td>
+                                <td colSpan={2}>
+                                    {game.score1}
+                                </td>
+                                <td colSpan={2}>
+                                    {game.score2}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                );
+            }
         }
         return null;
     }

@@ -1,11 +1,12 @@
 import ToggleDisplay from 'react-toggle-display';
+import history from '../history.js';
 
 const React = require('react');
 const jQuery = require('jquery');
 var _ = require('lodash');
 const css = require("css-loader");
 require("../stylesheet.css");
-
+var Router = require('react-router').Router;
 
 class InfoDisplayPlayer extends React.Component {
 
@@ -234,11 +235,11 @@ export const InfoDisplayTable = (props) => {
 const InputButtons = (props) => {
 
     const inputPlayer = () => {
-        window.location = '/CreatePlayer';
+        history.push('/CreatePlayer');
     };
 
     const inputGame = () => {
-        window.location = '/CreateGame';
+        history.push('/CreateGame');
     };
 
     return (
@@ -263,11 +264,12 @@ export class HeaderButtons extends React.Component {
     };
 
     goToPlayers = () => {
-    window.location = ('/Players');
+    history.push('/Players');
+
     };
 
     goToGames = () => {
-    window.location = ('/Games');
+    history.push('/Games');
     };
 
     onInputClick = () => {

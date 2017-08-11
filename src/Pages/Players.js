@@ -1,10 +1,13 @@
 import ToggleDisplay from 'react-toggle-display';
+import {Link} from "react-router-link";
+import history from '../history.js';
 
 const React = require('react');
 const jQuery = require('jquery');
 const css = require("css-loader");
 const Reactable = require('reactable');
 require("../stylesheet.css");
+
 
 
 
@@ -82,6 +85,16 @@ export default class PlayersList extends React.Component {
         });
     };
 
+    playerProfile = (player) => {
+        const location = {
+            pathname:'/PlayerProfile',
+            state:{
+                player:player
+            }
+        };
+        history.push(location);
+    };
+
     render() {
         let Table = Reactable.Table;
         let Tr = Reactable.Tr;
@@ -89,14 +102,14 @@ export default class PlayersList extends React.Component {
 
         return (
             <div className="tableHolder">
-          <Table className="table" border="true" itemsPerPage={4} pageButtonLimit={5}>
+          <Table className="PlayersTable"  itemsPerPage={8} pageButtonLimit={5}>
 
               {this.state.players.map((player,i) =>
-                  <Tr>
-                      <Td column="ID"  >
+                  <Tr className="PlayersRow">
+                      <Td className="PlayersCell" column="ID"  >
                           {player.id}
                       </Td>
-                      <Td column="Username" >
+                      <Td className="PlayersCell" column="Username" >
                           <div>
                           <ToggleDisplay id="usernameToggleDisplay" show={this.state.showUsername[i]}>
                               {player.username}
@@ -106,19 +119,25 @@ export default class PlayersList extends React.Component {
                           </ToggleDisplay>
                           </div>
                       </Td>
-                      <Td column="Elo Rating">{player.eloRating.rating}</Td>
-                      <Td column="Actions" id={player.id}  >
+                      <Td className="PlayersCell" column="Elo Rating">{player.eloRating.rating}</Td>
+                      <Td className="PlayersCell" column="Actions" id={player.id}  >
                           <div>
                               <a style={{cursor: 'pointer'}} onClick={() => this.showEditPlayer(i)} >Edit</a>
                               &nbsp;
-                              <a style={{cursor: 'pointer'}} onClick={() => this.processDeletePlayer(player.id,player.username)}>Delete</a>
-                              &nbsp;
                               <a style={{cursor: 'pointer'}} onClick={() => this.cancelEditPlayer(i)}>Cancel</a>
+                              &nbsp;
+                              <a style={{cursor: 'pointer'}} onClick={() => this.playerProfile(player)}>Profile</a>
+                              &nbsp;
+                              &nbsp;
+                              &nbsp;
+                              <a style={{cursor: 'pointer'}} onClick={() => this.processDeletePlayer(player.id,player.username)}>Delete</a>
+
                           </div>
                       </Td>
                   </Tr>
               )};
           </Table>
+
             </div>
         );
     }
