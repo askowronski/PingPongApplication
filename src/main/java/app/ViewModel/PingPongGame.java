@@ -1,4 +1,4 @@
-package app.PingPongModel;
+package app.ViewModel;
 
 
 import com.fasterxml.jackson.annotation.JsonCreator;

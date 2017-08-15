@@ -1,8 +1,8 @@
-package app.PingPongModel;
+package app.ViewModel;
 
 
 public enum GameOutcomeEnum {
-    WIN(1),DRAW(0.5),LOSS(0);
+    WIN(1.0),DRAW(0.5),LOSS(0);
 
 
     private final double factor;

@@ -1,7 +1,7 @@
 package app.API.GraphData;
 
 
-import app.PingPongModel.PingPongGame;
+import app.ViewModel.PingPongGame;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 

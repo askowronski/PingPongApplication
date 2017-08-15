@@ -1,7 +1,7 @@
 package StatsEngineTest;
 
-import app.PingPongModel.EloRating;
-import app.PingPongModel.GameOutcomeEnum;
+import app.ViewModel.EloRating;
+import app.ViewModel.GameOutcomeEnum;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;

@@ -2,9 +2,9 @@ package PersistenceManagerTest;
 
 
 import app.PersistenceManagers.GamePersistenceManager;
-import app.PingPongModel.EloRating;
-import app.PingPongModel.PingPongGame;
-import app.PingPongModel.Player;
+import app.ViewModel.EloRating;
+import app.ViewModel.PingPongGame;
+import app.ViewModel.Player;
 import org.junit.Test;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class GamePersistenceManagerTest {
         String filePath = "pingPongTest.txt";
         PingPongGame game = new PingPongGame(1,player1,player2,15,13);
         GamePersistenceManager gPM = new GamePersistenceManager(filePath);
-        String output = gPM.writeCurrentGameToGamesJson(game);
+        String output = gPM.writeCurrentGameToGamesJsonOld(game);
 
         String expectedResult = "[{\"iD\":1,\"player1\":{\"id\":1,\"newUsername\":\"ka\",\"eloRating\":{\"rating\":1500.0}}," +
                 "\"player2\":{\"id\":2,\"newUsername\":\"sweet\",\"eloRating\":{\"rating\":1500.0}},\"score1\":15,\"score2\":13";
@@ -40,9 +40,9 @@ public class GamePersistenceManagerTest {
         String filePath = "pingPongTest.txt";
         PingPongGame game = new PingPongGame(1,player1,player2,15,13);
         GamePersistenceManager gPM = new GamePersistenceManager(filePath);
-        gPM.writeGameToFile(game);
+        gPM.writeGameToFileOld(game);
 
-        List<PingPongGame> games = gPM.getGames();
+        List<PingPongGame> games = gPM.getGamesOld();
 
 
 
@@ -59,7 +59,7 @@ public class GamePersistenceManagerTest {
         GamePersistenceManager gPM = new GamePersistenceManager(filePath);
         PingPongGame editGame = new PingPongGame(1,player1,player2,15,14);
         gPM.getFile().writeFile("",false);
-        gPM.writeGameToFile(game);
+        gPM.writeGameToFileOld(game);
         gPM.editWriteGameToFile(game,editGame);
         String fileContents = gPM.readFile();
         String expectedResult = "[{\"iD\":1,\"player1\":{\"id\":1,\"newUsername\":\"ka\",\"eloRating\":{\"rating\":1500.0}}," +

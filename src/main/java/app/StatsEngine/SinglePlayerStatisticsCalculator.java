@@ -1,8 +1,8 @@
 package app.StatsEngine;
 
-import app.PingPongModel.GameOutcomeEnum;
-import app.PingPongModel.PingPongGame;
-import app.PingPongModel.Player;
+import app.ViewModel.GameOutcomeEnum;
+import app.ViewModel.PingPongGame;
+import app.ViewModel.Player;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -5,9 +5,9 @@ import app.API.GraphData.AverageScorePerGameData;
 import app.API.GraphData.EloRatingGraphData;
 import app.PersistenceManagers.GamePersistenceManager;
 import app.PersistenceManagers.PlayerPersistenceManager;
-import app.PingPongModel.GameOutcomeEnum;
-import app.PingPongModel.PingPongGame;
-import app.PingPongModel.Player;
+import app.ViewModel.GameOutcomeEnum;
+import app.ViewModel.PingPongGame;
+import app.ViewModel.Player;
 import app.StatsEngine.SinglePlayerStatisticsCalculator;
 import app.StatsEngine.TotalGamesStatsCalculator;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,7 +28,7 @@ public class StatsAPI {
     public APIResult getTotalWins(@RequestParam(value="id") int playerID) {
         GamePersistenceManager gPM= new GamePersistenceManager();
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        Player player = pPM.getPlayerByID(playerID);
+        Player player = pPM.getPlayerByIDOld(playerID);
         if(player.getiD()==0){
             return new APIResult(false,"Player not found");
         }
@@ -44,7 +44,7 @@ public class StatsAPI {
     public APIResult getTotalGames(@RequestParam(value="id") int playerID) {
         GamePersistenceManager gPM= new GamePersistenceManager();
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        Player player = pPM.getPlayerByID(playerID);
+        Player player = pPM.getPlayerByIDOld(playerID);
         if(player.getiD()==0){
             return new APIResult(false,"Player not found");
         }
@@ -60,7 +60,7 @@ public class StatsAPI {
     public APIResult getStdDev(@RequestParam(value="id") int playerID) {
         GamePersistenceManager gPM= new GamePersistenceManager();
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        Player player = pPM.getPlayerByID(playerID);
+        Player player = pPM.getPlayerByIDOld(playerID);
         if(player.getiD()==0){
             return new APIResult(false,"Player not found");
         }
@@ -77,7 +77,7 @@ public class StatsAPI {
     public APIResult getTotalLosses(@RequestParam(value="id") int playerID) {
         GamePersistenceManager gPM= new GamePersistenceManager();
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        Player player = pPM.getPlayerByID(playerID);
+        Player player = pPM.getPlayerByIDOld(playerID);
         if(player.getiD()==0){
             return new APIResult(false,"Player not found");
         }
@@ -93,7 +93,7 @@ public class StatsAPI {
     public APIResult getHighestScore(@RequestParam(value="id") int playerID) {
         GamePersistenceManager gPM= new GamePersistenceManager();
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        Player player = pPM.getPlayerByID(playerID);
+        Player player = pPM.getPlayerByIDOld(playerID);
         if(player.getiD()==0){
             return new APIResult(false,"Player not found");
         }
@@ -109,7 +109,7 @@ public class StatsAPI {
     public APIResult getAverageScore(@RequestParam(value="id") int playerID) {
         GamePersistenceManager gPM= new GamePersistenceManager();
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        Player player = pPM.getPlayerByID(playerID);
+        Player player = pPM.getPlayerByIDOld(playerID);
         if(player.getiD()==0){
             return new APIResult(false,"Player not found");
         }
@@ -137,7 +137,7 @@ public class StatsAPI {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         GamePersistenceManager gPM = new GamePersistenceManager();
 
-        Player player = pPM.getPlayerByID(playerID);
+        Player player = pPM.getPlayerByIDOld(playerID);
         List<PingPongGame> gamesForPlayer = gPM.getGamesForPlayer(player);
         SinglePlayerStatisticsCalculator calc = new SinglePlayerStatisticsCalculator(gamesForPlayer,player);
 

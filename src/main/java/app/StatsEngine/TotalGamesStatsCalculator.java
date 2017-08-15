@@ -3,8 +3,8 @@ package app.StatsEngine;
 
 import app.PersistenceManagers.GamePersistenceManager;
 import app.PersistenceManagers.PlayerPersistenceManager;
-import app.PingPongModel.PingPongGame;
-import app.PingPongModel.Player;
+import app.ViewModel.PingPongGame;
+import app.ViewModel.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +18,12 @@ public class TotalGamesStatsCalculator {
     }
 
     public int getTotalGames() {
-        List<PingPongGame> games = this.gPM.getGames();
+        List<PingPongGame> games = this.gPM.getGamesOld();
         return games.size();
     }
 
     public double averageEloRating() {
-        List<Player> players = new PlayerPersistenceManager().getPlayers();
+        List<Player> players = new PlayerPersistenceManager().getPlayersOld();
 
         double numerator = 0;
 
@@ -34,7 +34,7 @@ public class TotalGamesStatsCalculator {
     }
 
     public double stdDeviationOfLosses() {
-        List<PingPongGame> games = this.gPM.getGames();
+        List<PingPongGame> games = this.gPM.getGamesOld();
 
         List<Integer> losingScores = new ArrayList<>();
 
@@ -64,7 +64,7 @@ public class TotalGamesStatsCalculator {
     }
 
     public double stdDeviationOfGames() {
-        List<PingPongGame> games = this.gPM.getGames();
+        List<PingPongGame> games = this.gPM.getGamesOld();
 
         List<Integer> scores = new ArrayList<>();
 

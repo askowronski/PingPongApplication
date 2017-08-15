@@ -3,9 +3,9 @@ package PersistenceManagerTest;
 
 import app.PersistenceManagers.GamePersistenceManager;
 import app.PersistenceManagers.PlayerPersistenceManager;
-import app.PingPongModel.EloRating;
-import app.PingPongModel.PingPongGame;
-import app.PingPongModel.Player;
+import app.ViewModel.EloRating;
+import app.ViewModel.PingPongGame;
+import app.ViewModel.Player;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class PlayerPersistenceManagerTest {
         players.add(player);
 
         pPM.writePlayerToFile(player);
-        List<Player> playersRead = pPM.getPlayers();
+        List<Player> playersRead = pPM.getPlayersOld();
 
         assertTrue(player.equals(playersRead.get(0)));
 
@@ -75,7 +75,7 @@ public class PlayerPersistenceManagerTest {
         pPM.writePlayerToFile(player2);
         pPM.writePlayerToFile(player3);
 
-        Player playerRead = pPM.getPlayerByID(3);
+        Player playerRead = pPM.getPlayerByIDOld(3);
 
         assertTrue(player3.equals(playerRead));
 
@@ -104,7 +104,7 @@ public class PlayerPersistenceManagerTest {
         pPM.writePlayerToFile(player2);
         pPM.writePlayerToFile(player3);
 
-        List<Player> playersRead = pPM.getPlayers();
+        List<Player> playersRead = pPM.getPlayersOld();
 
         assertEquals(players.get(0),playersRead.get(0));
         assertEquals(players.get(1),playersRead.get(1));
@@ -117,13 +117,13 @@ public class PlayerPersistenceManagerTest {
     public void testFindPlayersAsOfAGame() {
         GamePersistenceManager gPM = new GamePersistenceManager();
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        List<PingPongGame> games = gPM.getGames();
+        List<PingPongGame> games = gPM.getGamesOld();
         PingPongGame game = new PingPongGame(games.get(0).getiD(),games.get(0).getPlayer1(),
                 games.get(0).getPlayer2(),games.get(0).getPlayer1Score(),games.get(0).getPlayer2Score());
 
         List<Player> players = pPM.getPlayersPriorToAGame(game);
 
-        assertTrue(players.size() == pPM.getPlayers().size());
+        assertTrue(players.size() == pPM.getPlayersOld().size());
     }
 
 

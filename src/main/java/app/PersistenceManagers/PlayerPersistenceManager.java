@@ -1,9 +1,13 @@
 package app.PersistenceManagers;
 
-import app.PingPongModel.EloRating;
-import app.PingPongModel.GameOutcomeEnum;
-import app.PingPongModel.PingPongGame;
-import app.PingPongModel.Player;
+import app.PersistenceModel.PersistenceEloRating;
+import app.PersistenceModel.PersistenceGame;
+import app.PersistenceModel.PersistencePlayer;
+import app.PersistenceModel.PersistencePlayerEloRatingList;
+import app.ViewModel.EloRating;
+import app.ViewModel.GameOutcomeEnum;
+import app.ViewModel.PingPongGame;
+import app.ViewModel.Player;
 import app.ReadWriteFile.File;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -16,7 +20,7 @@ import java.util.List;
 
 public class PlayerPersistenceManager {
 
-    public static String FILE_PATH = "players.txt";
+    public static String FILE_PATH = "pingPongPlayers.txt";
 
     private final File file;
 
@@ -37,6 +41,18 @@ public class PlayerPersistenceManager {
             List<Player> players = new ArrayList<>();
             players.add(player);
             this.getFile().writeFile(this.writePlayerArrayToJson(players),false);
+        }
+    }
+
+    public void writePlayerToFile(PersistencePlayer player) {
+        try{
+            List<PersistencePlayer> currentPlayers = this.readPlayersFromJson(this.getFile().readFile());
+            currentPlayers.add(player);
+            this.getFile().writeFile(this.writePlayersToJson(currentPlayers),false);
+        } catch(NullPointerException e){
+            List<PersistencePlayer> players = new ArrayList<>();
+            players.add(player);
+            this.getFile().writeFile(this.writePlayersToJson(players),false);
         }
     }
 
@@ -64,7 +80,7 @@ public class PlayerPersistenceManager {
         return this.file;
     }
 
-    public int getNextID() {
+    public int getNextIDOld() {
         String json = this.readFile();
         if(json.equals("No Players Found")){
             return 1;
@@ -81,8 +97,25 @@ public class PlayerPersistenceManager {
         return highestID+1;
     }
 
+    public int getNextID() {
+        String json = this.readFile();
+        if(json.equals("No Players Found")){
+            return 1;
+        }
+        List<PersistencePlayer> players = this.readPlayersFromJson(json);
+
+        List<Integer> ids = new ArrayList<>();
+        int highestID = 0;
+        for(PersistencePlayer player:players){
+            if(player.getId()>highestID){
+                highestID=player.getId();
+            }
+        }
+        return highestID+1;
+    }
+
     public boolean checkUsernameExists(String username) {
-        List<Player> players = this.getPlayers();
+        List<Player> players = this.getPlayersOld();
         List<String> usernames = new ArrayList<>();
 
         for(Player player:players) {
@@ -91,8 +124,28 @@ public class PlayerPersistenceManager {
         return usernames.contains(username);
     }
 
+    public boolean checkUsernameExistsNew(String username) {
+        List<PersistencePlayer> players = this.getPlayersNew();
+        List<String> usernames = new ArrayList<>();
+
+        for(PersistencePlayer player:players) {
+            usernames.add(player.getUsername());
+        }
+        return usernames.contains(username);
+    }
+
 
     public String writePlayerArrayToJson(List<Player> players) {
+        ObjectMapper mapper = new ObjectMapper();
+
+        try{
+            return mapper.writeValueAsString(players);
+        } catch(JsonProcessingException e){
+            return e.getMessage();
+        }
+    }
+
+    public String writePlayersToJson(List<PersistencePlayer> players) {
         ObjectMapper mapper = new ObjectMapper();
 
         try{
@@ -116,6 +169,20 @@ public class PlayerPersistenceManager {
         }
     }
 
+    public List<PersistencePlayer> readPlayersFromJson(String json) {
+        ObjectMapper mapper = new ObjectMapper();
+        TypeReference<List<PersistencePlayer>> mapType;
+        mapType = new TypeReference<List<PersistencePlayer>>(){};
+        try {
+            List<PersistencePlayer> players = mapper.readValue(json, mapType);
+            return players;
+        } catch(IOException e){
+            List<PersistencePlayer> players = new ArrayList<>();
+            e.printStackTrace();
+            return players;
+        }
+    }
+
     public String readFile() {
         try{
             return this.getFile().readFile();
@@ -124,7 +191,7 @@ public class PlayerPersistenceManager {
         }
     }
 
-    public Player getPlayerByID(int id){
+    public Player getPlayerByIDOld(int id){
         List<Player> players = this.readPlayerArrayFromJson(this.getFile().readFile());
         for(Player player:players){
             if(player.getiD()==id){
@@ -134,7 +201,17 @@ public class PlayerPersistenceManager {
         return new Player(new EloRating(0),0,"Player Does Not Exist");
     }
 
-    public Player getPlayerByUsername(String username){
+    public PersistencePlayer getPlayerByIDNew(int id){
+        List<PersistencePlayer> players = this.readPlayersFromJson(this.getFile().readFile());
+        for(PersistencePlayer player:players){
+            if(player.getId()==id){
+                return player;
+            }
+        }
+        return new PersistencePlayer(0,"Player Does Not Exist");
+    }
+
+    public Player getPlayerByUsernameOld(String username){
         List<Player> players = this.readPlayerArrayFromJson(this.getFile().readFile());
         for(Player player:players){
             if(player.getUsername().equals(username)){
@@ -144,7 +221,17 @@ public class PlayerPersistenceManager {
         return new Player(new EloRating(0),0,"Player Does Not Exist");
     }
 
-    public List<Player> getPlayers() {
+    public PersistencePlayer getPlayerByUsernameNew(String username){
+        List<PersistencePlayer> players = this.readPlayersFromJson(this.getFile().readFile());
+        for(PersistencePlayer player:players){
+            if(player.getUsername().equals(username)){
+                return player;
+            }
+        }
+        return new PersistencePlayer(0,"Player Does Not Exist");
+    }
+
+    public List<Player> getPlayersOld() {
         String json = this.readFile();
         List<Player> players = new ArrayList<>();
         if(json.equals("No Players Found")){
@@ -153,8 +240,26 @@ public class PlayerPersistenceManager {
         return this.readPlayerArrayFromJson(json);
     }
 
+    public List<PersistencePlayer>  getPlayersNew() {
+        String json = this.readFile();
+        List<PersistencePlayer> players = new ArrayList<>();
+        if(json.equals("No Players Found")){
+            return players;
+        }
+
+        List<PersistencePlayer> allPlayers = this.readPlayersFromJson(json);
+
+        for(PersistencePlayer player:allPlayers) {
+            if(player.getDeleted() == 0){
+                players.add(player);
+            }
+        }
+        return players;
+    }
+
+
     public boolean editPlayer(int id,String newUsername) {
-        Player player = this.getPlayerByID(id);
+        Player player = this.getPlayerByIDOld(id);
 
         if(player.getiD()==0) {
             return false;
@@ -162,7 +267,7 @@ public class PlayerPersistenceManager {
 
         Player newPlayer = new Player(player.getEloRating(),id,newUsername);
 
-        List<Player> players = this.getPlayers();
+        List<Player> players = this.getPlayersOld();
 
         players.set(players.indexOf(player),newPlayer);
 
@@ -174,14 +279,33 @@ public class PlayerPersistenceManager {
 
     }
 
-    public boolean deletePlayer(int id) {
-        Player player = this.getPlayerByID(id);
+    public boolean editPlayerNew(int id,String newUsername) {
+        PersistencePlayer player = this.getPlayerByIDNew(id);
+
+        if(player.getId()==0 || this.checkUsernameExistsNew(newUsername)) {
+            return false;
+        }
+
+        PersistencePlayer newPlayer = new PersistencePlayer(id,newUsername);
+
+        List<PersistencePlayer> players = this.getPlayersNew();
+
+        players.set(players.indexOf(player),newPlayer);
+
+        GamePersistenceManager gPM = new GamePersistenceManager();
+
+        this.getFile().writeFile(this.writePlayersToJson(players),false);
+        return true;
+    }
+
+    public boolean deletePlayerOld(int id) {
+        Player player = this.getPlayerByIDOld(id);
 
         if(player.getiD()==0) {
             return false;
         }
 
-        List<Player> players = this.getPlayers();
+        List<Player> players = this.getPlayersOld();
 
         players.remove(player);
 
@@ -190,24 +314,63 @@ public class PlayerPersistenceManager {
 
     }
 
-    public boolean deletePlayer(String username) {
-        Player player = this.getPlayerByUsername(username);
+    public boolean deletePlayerNew(int id) {
+        PersistencePlayer player = this.getPlayerByIDNew(id);
+
+        if(player.getId()==0) {
+            return false;
+        }
+
+        List<PersistencePlayer> players = this.getPlayersNew();
+        int indexOfPlayer = players.indexOf(player);
+        player.softDeletePlayer();
+
+        players.set(indexOfPlayer,player);
+
+        this.getFile().writeFile(this.writePlayersToJson(players),false);
+        return true;
+
+    }
+
+
+
+    public boolean deletePlayerOld(String username) {
+        Player player = this.getPlayerByUsernameOld(username);
 
         if(player.getiD()==0) {
             return false;
         }
 
-        List<Player> players = this.getPlayers();
+        List<Player> players = this.getPlayersOld();
 
         players.remove(player);
 
         this.getFile().writeFile(this.writePlayerArrayToJson(players),false);
+        return true;
+
+    }
+
+    public boolean deletePlayerNew(String username) {
+        PersistencePlayer player = this.getPlayerByUsernameNew(username);
+
+        if(player.getId()==0) {
+            return false;
+        }
+
+        List<PersistencePlayer> players = this.getPlayersNew();
+
+        int indexOfPlayer = players.indexOf(player);
+        player.softDeletePlayer();
+
+        players.set(indexOfPlayer,player);
+
+        this.getFile().writeFile(this.writePlayersToJson(players),false);
         return true;
 
     }
 
     public Player getPlayerWithHighestRating() {
-        List<Player> players = this.getPlayers();
+        List<Player> players = this.getPlayersOld();
         Player highestPlayer = players.get(0);
         for(int i = 0; i< players.size(); i++) {
             if(players.get(i).getEloRating().getRating()>highestPlayer.getEloRating().getRating()){
@@ -217,7 +380,7 @@ public class PlayerPersistenceManager {
         return highestPlayer;
     }
 
-    public void updatePlayersEloRating(Player player1PriorToGame, Player player2PriorToGame,PingPongGame game) {
+    public void updatePlayersEloRatingOld(Player player1PriorToGame, Player player2PriorToGame,PingPongGame game) {
         List<Player> allPlayers = this.getPlayersPriorToAGame(game);
 
         Player player1 = player1PriorToGame;
@@ -253,10 +416,76 @@ public class PlayerPersistenceManager {
         this.writePlayersToFile(allPlayers);
     }
 
-    public List<Player> getPlayersPriorToAGame(PingPongGame game) {
-        List<Player> currentPlayers = this.getPlayers();
+    public void updatePlayersEloRatingNew(PersistenceGame game) {
         GamePersistenceManager gPM = new GamePersistenceManager();
-        List<PingPongGame> currentGames = gPM.getGames();
+        List<PersistenceGame> games = gPM.getGamesNew();
+
+        int indexOfGame = games.indexOf(game);
+
+        for(int i = indexOfGame; i < games.size(); i++){
+            EloRatingPersistenceManager eRPM1 = new EloRatingPersistenceManager(games.get(i).getPlayer1ID());
+            EloRatingPersistenceManager eRPM2 = new EloRatingPersistenceManager(games.get(i).getPlayer2ID());
+            PersistencePlayerEloRatingList listPlayer1 = eRPM1.getEloRatingList();
+            PersistencePlayerEloRatingList listPlayer2 = eRPM2.getEloRatingList();
+            PersistenceGame currentGame = games.get(i);
+            int indexOfGame1 = listPlayer1.getIndexOfGame(currentGame.getiD());
+            int indexOfGame2 = listPlayer2.getIndexOfGame(currentGame.getiD());
+            PersistenceEloRating newRating1;
+            PersistenceEloRating newRating2;
+            int indexOfElo1;
+            int indexOfElo2;
+            if(indexOfGame1 <0){
+                indexOfElo1 = listPlayer1.getListSize()-1;
+            } else {
+                indexOfElo1 = indexOfGame1-1;
+            }
+            if(indexOfGame2 <0){
+                indexOfElo2=listPlayer2.getListSize()-1;
+            } else {
+                indexOfElo2=indexOfGame2-1;
+            }
+
+
+            if(currentGame.getPlayer1Score() > currentGame.getPlayer2Score()) {
+                newRating1 = listPlayer1.getRating(indexOfElo1).
+                        newRating(GameOutcomeEnum.WIN,listPlayer2.getRating(indexOfElo2));
+                newRating2 = listPlayer2.getRating(indexOfElo2).
+                        newRating(GameOutcomeEnum.LOSS,listPlayer1.getRating(indexOfElo1));
+            } else if(currentGame.getPlayer1Score() < currentGame.getPlayer2Score()) {
+                newRating1 = listPlayer1.getRating(indexOfElo1).
+                        newRating(GameOutcomeEnum.LOSS,listPlayer2.getRating(indexOfElo2));
+                newRating2 = listPlayer2.getRating(indexOfElo2).
+                        newRating(GameOutcomeEnum.WIN,listPlayer1.getRating(indexOfElo1));
+            } else {
+                newRating1 = listPlayer1.getRating(indexOfElo1).
+                        newRating(GameOutcomeEnum.DRAW,listPlayer2.getRating(indexOfElo2));
+                newRating2 = listPlayer2.getRating(indexOfElo2).
+                        newRating(GameOutcomeEnum.DRAW,listPlayer1.getRating(indexOfElo1));
+
+            }
+            if(indexOfGame1<0) {
+                listPlayer1.addEloRating(newRating1);
+            } else {
+                listPlayer1.replaceEloRating(indexOfGame1,newRating1);
+            }
+            if(indexOfGame2 <0) {
+                listPlayer2.addEloRating(newRating2);
+            } else {
+                listPlayer2.replaceEloRating(indexOfGame2, newRating2);
+            }
+
+
+            eRPM1.getFile().writeFile(eRPM1.writeEloRatingListToJson(listPlayer1),false);
+            eRPM2.getFile().writeFile(eRPM2.writeEloRatingListToJson(listPlayer2),false);
+        }
+
+
+    }
+
+    public List<Player> getPlayersPriorToAGame(PingPongGame game) {
+        List<Player> currentPlayers = this.getPlayersOld();
+        GamePersistenceManager gPM = new GamePersistenceManager();
+        List<PingPongGame> currentGames = gPM.getGamesOld();
         if(!currentGames.contains(game)){
             return currentPlayers;
         }
