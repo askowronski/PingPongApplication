@@ -1,5 +1,6 @@
 package app.PersistenceModel;
 
+import app.ViewModel.EloRating;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -34,7 +35,7 @@ public class PersistencePlayerEloRatingList {
                 return i;
             }
         }
-        return -1;
+        return eloRatingList.size()-1;
     }
 
     public int getListSize() {
@@ -43,6 +44,10 @@ public class PersistencePlayerEloRatingList {
 
     public PersistenceEloRating getRating(int index) {
         return this.eloRatingList.get(index);
+    }
+
+    public boolean deleteRating(PersistenceEloRating rating) {
+        return this.eloRatingList.remove(rating);
     }
 
     @Override

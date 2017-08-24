@@ -4,7 +4,6 @@ import app.PersistenceManagers.GamePersistenceManager;
 import app.PersistenceManagers.PlayerPersistenceManager;
 import app.PersistenceModel.PersistenceGame;
 import app.ViewModel.PingPongGame;
-import app.ViewModel.Player;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,37 +16,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @CrossOrigin()
 @RestController
 public class GameAPI {
-
-    @CrossOrigin(origins = "http://localhost:3000")
-    @RequestMapping(method=POST,path="/CreateGameOld")
-    public APIResult createGameOld(@RequestParam(value="player1ID",required = true) String player1ID,
-                                @RequestParam(value="player2ID",required = true) String player2ID,
-                                @RequestParam(value="score1",required = true) String score1,
-                                @RequestParam(value="score2",required = true) String score2) {
-        GamePersistenceManager gPM = new GamePersistenceManager();
-        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-
-        try {
-            int IDplayer1 = Integer.parseInt(player1ID);
-            int IDplayer2 = Integer.parseInt(player2ID);
-
-            int player1Score = Integer.parseInt(score1);
-            int player2Score = Integer.parseInt(score2);
-
-            Player player1 = gPM.getPlayer(IDplayer1);
-            Player player2 = gPM.getPlayer(IDplayer2);
-
-            PingPongGame game = new PingPongGame(gPM.getNextID(),player1,player2,player1Score,player2Score);
-            gPM.writeGameToFileOld(game);
-            pPM.updatePlayersEloRatingOld(player1,player2,game);
-            return  new APIResult(true,"Game Created");
-
-        } catch (NumberFormatException e ){
-            e.printStackTrace();
-            return new APIResult(false,"Game Unsuccessfully Created");
-        }
-
-    }
 
     @CrossOrigin
     @RequestMapping(method=POST,path="/CreateGame")
@@ -66,61 +34,13 @@ public class GameAPI {
             int player2Score = Integer.parseInt(score2);
 
             PersistenceGame game = new PersistenceGame(gPM.getNextID(),IDplayer1,IDplayer2,player1Score,player2Score);
-            gPM.writeGameToFileNew(game);
+            gPM.writeGameToFile(game);
             return  new APIResult(true,"Game Created");
 
         } catch (NumberFormatException e ){
             e.printStackTrace();
             return new APIResult(false,"Game Unsuccessfully Created");
         }
-
-    }
-
-    @CrossOrigin()
-    @RequestMapping(method=POST,path="/EditGameOld")
-    public APIResult editGameOld(@RequestParam(value="iD",required=true) int gameID,
-                              @RequestParam(value="player1ID",required = false) Optional<Integer> player1ID,
-                              @RequestParam(value="player2ID",required = false) Optional<Integer> player2ID,
-                              @RequestParam(value="score1",required = false) Optional<Integer> score1,
-                              @RequestParam(value="score2",required = false) Optional<Integer> score2){
-        GamePersistenceManager gPM = new GamePersistenceManager();
-        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        PingPongGame game = gPM.getGameByIDOld(gameID);
-        Player newPlayer1;
-        Player newPlayer2;
-        int newScore1;
-        int newScore2;
-
-        if(game.getiD()!=0){
-            if(player1ID.isPresent() && player1ID.get()!=game.getPlayer1().getiD()){
-                newPlayer1=pPM.getPlayerByIDOld(player1ID.get());
-            } else {
-                newPlayer1 = game.getPlayer1();
-            }
-
-            if(player2ID.isPresent()&& player2ID.get()!=game.getPlayer2().getiD()){
-                newPlayer2=pPM.getPlayerByIDOld(player2ID.get());
-            } else {
-                newPlayer2 = game.getPlayer2();
-            }
-
-            if(score1.isPresent()){
-                newScore1=score1.get();
-            } else {
-                newScore1 = game.getPlayer1Score();
-            }
-
-            if(score2.isPresent()){
-                newScore2=score2.get();
-            } else {
-                newScore2 = game.getPlayer2Score();
-            }
-
-            PingPongGame newGame = new PingPongGame(game.getiD(),newPlayer1,newPlayer2,newScore1,newScore2);
-            gPM.editWriteGameToFile(game,newGame);
-            return new APIResult(true,"Game Edited");
-        }
-            return new APIResult(false,"Game Unsuccessfully Edited");
 
     }
 
@@ -159,7 +79,7 @@ public class GameAPI {
             PersistenceGame newGame = new PersistenceGame(game.getiD(), newPlayerID1, newPlayerID2, newScore1,
                     newScore2,game.getTime());
 
-            gPM.editWriteGameToFileNew(newGame);
+            gPM.editWriteGameToFileNew(newGame, game);
             return new APIResult(true, "Game Edited");
 
         }
@@ -169,13 +89,7 @@ public class GameAPI {
 
     @RequestMapping(path = "EditGameJson", method = POST, consumes = "application/json")
     public APIResult editGameJson(@RequestBody PingPongGame game){
-        if(game.getiD()>0) {
-            GamePersistenceManager gPM = new GamePersistenceManager();
-            PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-            List<PingPongGame> oldGames = gPM.getGamesOld();
-            gPM.editWriteGameToFile(gPM.getGameByIDOld(game.getiD()), game);
-            return new APIResult(true,"Game Edited");
-        }
+
         return new APIResult(false,"Game Unsuccessfully Edited");
 
     }
@@ -205,7 +119,7 @@ public class GameAPI {
     @RequestMapping(path = "/GetGames", method=GET)
     public APIResult getGames() {
         GamePersistenceManager gPM = new GamePersistenceManager();
-        List<PingPongGame> games = gPM.getGamesOld();
+        List<PingPongGame> games = gPM.getGamesView();
         return new APIResult(true, gPM.writeGamesToJsonOld(games));
 
     }

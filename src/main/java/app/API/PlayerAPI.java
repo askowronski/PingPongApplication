@@ -25,23 +25,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RestController
 public class PlayerAPI {
 
-
-    @CrossOrigin(origins = "http://localhost:3000")
-    @RequestMapping(method=POST,path="/CreatePlayerOld")
-    public APIResult createPlayerOld(@RequestParam(value="newUsername",required=true) String username) {
-        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-
-        int id = pPM.getNextID();
-        EloRating elo = new EloRating();
-        if(pPM.checkUsernameExists(username)){
-            return new APIResult(false, "Username Taken");
-        }
-
-        Player player = new Player(elo,id,username);
-        pPM.writePlayerToFile(player);
-        return new APIResult(true, "Player Created with Username "+username);
-    }
-
     @CrossOrigin
     @RequestMapping(method=POST,path="/CreatePlayer")
     public APIResult createPlayer(@RequestParam(value="username",required=true) String username) {
@@ -69,7 +52,9 @@ public class PlayerAPI {
     @RequestMapping("/GetPlayer")
     public APIResult getPlayer(@RequestParam(value="id", required=true) int id) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        Player player = pPM.getPlayerByIDOld(id);
+        GamePersistenceManager gPM = new GamePersistenceManager();
+        int gameId = gPM.getGamesNew().get(gPM.getGamesNew().size()-1).getiD();
+        Player player = pPM.getViewPlayerByID(id,gameId);
         if(player.getiD()==0){
             return new APIResult(false,"Player with ID "+id+" not found");
         }
@@ -94,7 +79,7 @@ public class PlayerAPI {
     public APIResult editPlayer(@RequestParam(value="id",required=true) int id,
             @RequestParam(value="newUsername",required=true) String newUsername) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        if(pPM.editPlayerNew(id,newUsername)) {
+        if(pPM.editPlayer(id,newUsername)) {
             return new APIResult(true,"Player Edited");
         }
         return new APIResult(false,"Player Unsuccessfully Edited");
@@ -156,7 +141,7 @@ public class PlayerAPI {
     @RequestMapping(path = "/GetPlayers",method=GET)
     public APIResult getPlayers() {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        List<Player> players = pPM.getPlayersOld();
+        List<Player> players = pPM.getViewPlayers();
         return new APIResult(true,pPM.writePlayerArrayToJson(players));
     }
 

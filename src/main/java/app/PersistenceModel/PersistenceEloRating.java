@@ -38,11 +38,16 @@ public class PersistenceEloRating {
         return this.getEloRating()/(this.getEloRating()+rating2.getEloRating());
     }
 
+    public PersistenceEloRating newRating(GameOutcomeEnum outcome, PersistenceEloRating rating2,int gameID) {
+        double expectedScore = this.expectedScore(rating2);
+        return new PersistenceEloRating(this.getEloRating() + EloRating.K_FACTOR * (outcome.getFactor() - expectedScore),
+                this.getPlayerID(),gameID);
+    }
+
     public PersistenceEloRating newRating(GameOutcomeEnum outcome, PersistenceEloRating rating2) {
         double expectedScore = this.expectedScore(rating2);
         return new PersistenceEloRating(this.getEloRating() + EloRating.K_FACTOR * (outcome.getFactor() - expectedScore),
-                this.getPlayerID(),this.gameID+1);
-
+                this.getPlayerID(),gameID+1);
     }
 
     @Override

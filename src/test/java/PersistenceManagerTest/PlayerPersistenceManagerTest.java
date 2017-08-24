@@ -3,6 +3,7 @@ package PersistenceManagerTest;
 
 import app.PersistenceManagers.GamePersistenceManager;
 import app.PersistenceManagers.PlayerPersistenceManager;
+import app.PersistenceModel.PersistencePlayer;
 import app.ViewModel.EloRating;
 import app.ViewModel.PingPongGame;
 import app.ViewModel.Player;
@@ -47,7 +48,7 @@ public class PlayerPersistenceManagerTest {
         players.add(player);
 
         pPM.writePlayerToFile(player);
-        List<Player> playersRead = pPM.getPlayersOld();
+        List<Player> playersRead = pPM.getViewPlayers();
 
         assertTrue(player.equals(playersRead.get(0)));
 
@@ -104,7 +105,7 @@ public class PlayerPersistenceManagerTest {
         pPM.writePlayerToFile(player2);
         pPM.writePlayerToFile(player3);
 
-        List<Player> playersRead = pPM.getPlayersOld();
+        List<Player> playersRead = pPM.getViewPlayers();
 
         assertEquals(players.get(0),playersRead.get(0));
         assertEquals(players.get(1),playersRead.get(1));
@@ -117,13 +118,26 @@ public class PlayerPersistenceManagerTest {
     public void testFindPlayersAsOfAGame() {
         GamePersistenceManager gPM = new GamePersistenceManager();
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        List<PingPongGame> games = gPM.getGamesOld();
+        List<PingPongGame> games = gPM.getGamesView();
         PingPongGame game = new PingPongGame(games.get(0).getiD(),games.get(0).getPlayer1(),
                 games.get(0).getPlayer2(),games.get(0).getPlayer1Score(),games.get(0).getPlayer2Score());
 
         List<Player> players = pPM.getPlayersPriorToAGame(game);
 
-        assertTrue(players.size() == pPM.getPlayersOld().size());
+        assertTrue(players.size() == pPM.getViewPlayers().size());
+    }
+
+    @Test
+    public void testReadViewPlayers() {
+
+        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
+        List<Player> viewPlayers = pPM.getViewPlayers();
+        List<PersistencePlayer> players = pPM.getPlayersNew();
+
+        for(int i = 0; i < viewPlayers.size(); i++) {
+            assertTrue(viewPlayers.get(i).getiD() == players.get(i).getId());
+            assertTrue(viewPlayers.get(i).getUsername().equals(players.get(i).getUsername()));
+        }
     }
 
 

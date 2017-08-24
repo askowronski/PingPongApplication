@@ -38,6 +38,15 @@ public class EloRatingPersistenceManager {
 
     }
 
+    public void deleteEloRating(int gameId) {
+        PersistenceEloRating rating = this.getRatingByGameID(gameId);
+
+        PersistencePlayerEloRatingList list = this.getEloRatingList();
+
+        list.deleteRating(rating);
+        this.writeEloRatingListToFile(list);
+    }
+
     public File getFile() {
         return file;
     }
@@ -54,6 +63,10 @@ public class EloRatingPersistenceManager {
         }
     }
 
+    public void writeEloRatingListToFile(PersistencePlayerEloRatingList ratings) {
+        this.getFile().writeFile(this.writeEloRatingListToJson(ratings),false);
+    }
+
     public PersistencePlayerEloRatingList getEloRatingList() {
         ObjectMapper mapper = new ObjectMapper();
         String json = this.readFile();
@@ -67,6 +80,11 @@ public class EloRatingPersistenceManager {
             PersistencePlayerEloRatingList ratings = new PersistencePlayerEloRatingList(new LinkedList<PersistenceEloRating>());
             return ratings;
         }
+    }
+
+    public PersistenceEloRating getRatingByGameID(int gameID) {
+        PersistencePlayerEloRatingList list = this.getEloRatingList();
+        return list.getRating(list.getIndexOfGame(gameID));
     }
 
     public String writeEloRatingListToJson(PersistencePlayerEloRatingList ratings) {

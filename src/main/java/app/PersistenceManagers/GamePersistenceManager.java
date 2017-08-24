@@ -1,7 +1,9 @@
 package app.PersistenceManagers;
 
 
+import app.PersistenceModel.PersistenceEloRating;
 import app.PersistenceModel.PersistenceGame;
+import app.PersistenceModel.PersistencePlayer;
 import app.PersistenceModel.PersistencePlayerEloRatingList;
 import app.ViewModel.EloRating;
 import app.ViewModel.PingPongGame;
@@ -13,7 +15,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class GamePersistenceManager {
@@ -30,26 +31,14 @@ public class GamePersistenceManager {
         this.file = new File(filePath);
     }
 
-    public void writeGameToFileOld(PingPongGame game) {
-        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        List<PingPongGame> games = this.getGamesOld();
-        Player player1 = game.getPlayer1();
-        Player player2 = game.getPlayer2();
-
-
-        pPM.updatePlayersEloRatingOld(player1,player2,game);
-
-        this.getFile().writeFile(this.writeCurrentGameToGamesJsonOld(game),false);
-    }
-
-    public void writeGameToFileNew(PersistenceGame game) {
+    public void writeGameToFile(PersistenceGame game) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         List<PersistenceGame> games = this.getGamesNew();
 
         games.add(game);
 
         this.getFile().writeFile(this.writeCurrentGameToGamesJsonNew(game),false);
-        pPM.updatePlayersEloRatingNew(game);
+        pPM.updatePlayersEloOnCreateGame(game,this);
 
     }
 
@@ -63,7 +52,7 @@ public class GamePersistenceManager {
         if(json.equals("")){
             return 1;
         }
-        List<PingPongGame> games = this.getGamesOld();
+        List<PingPongGame> games = this.getGamesView();
 
         List<Integer> ids = new ArrayList<>();
         int highestID = 0;
@@ -76,7 +65,7 @@ public class GamePersistenceManager {
     }
 
     public PingPongGame getGameByIDOld(int id) {
-        List<PingPongGame> games = this.getGamesOld();
+        List<PingPongGame> games = this.getGamesView();
         for(PingPongGame game:games){
             if(game.getiD()==id){
                 return game;
@@ -99,7 +88,7 @@ public class GamePersistenceManager {
 
     public String writeCurrentGameToGamesJsonOld(PingPongGame game) {
         ObjectMapper mapper = new ObjectMapper();
-        List<PingPongGame> games = this.getGamesOld();
+        List<PingPongGame> games = this.getGamesView();
         games.add(game);
 
         try {
@@ -149,17 +138,25 @@ public class GamePersistenceManager {
         }
     }
 
-    public List<PingPongGame> getGamesOld() {
+    public List<PingPongGame> getGamesView() {
         ObjectMapper mapper = new ObjectMapper();
-        TypeReference<List<PingPongGame>> mapType;
-        mapType = new TypeReference<List<PingPongGame>>(){};
+        TypeReference<List<PersistenceGame>> mapType;
+        mapType = new TypeReference<List<PersistenceGame>>(){};
+        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
+
         try {
             String json = this.readFile();
             if(json.equals("")){
                 return new ArrayList<PingPongGame>();
             }
-            List<PingPongGame> games = mapper.readValue(this.readFile(), mapType);
-            return games;
+            List<PersistenceGame> games = mapper.readValue(this.readFile(), mapType);
+            List<PingPongGame> viewGames = new ArrayList<>();
+            for(PersistenceGame game:games){
+                Player player1 = pPM.getViewPlayerByID(game.getPlayer1ID(),game.getiD());
+                Player player2 = pPM.getViewPlayerByID(game.getPlayer2ID(),game.getiD());
+                viewGames.add(new PingPongGame(game.getiD(),player1,player2,game.getPlayer1Score(),game.getPlayer2Score()));
+            }
+            return viewGames;
         } catch(IOException e){
             List<PingPongGame> games = new ArrayList<>();
             e.printStackTrace();
@@ -195,41 +192,19 @@ public class GamePersistenceManager {
         }
     }
 
-    public void editWriteGameToFile(PingPongGame oldGame, PingPongGame newGame) {
-        List<PingPongGame> games = this.getGamesOld();
+    public void editWriteGameToFileNew(PersistenceGame newGame,
+            PersistenceGame oldGame) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-
-        List<Player> playersPriorToGame = pPM.getPlayersPriorToAGame(oldGame);
-
-        pPM.writePlayersToFile(playersPriorToGame);
-
-
-        if(newGame == null){
-            games.remove(oldGame);
-        } else {
-            games.set(games.indexOf(oldGame), newGame);
+        if(oldGame.getPlayer1ID() != newGame.getPlayer1ID() &&
+                oldGame.getPlayer1ID() != newGame.getPlayer2ID()  ) {
+            EloRatingPersistenceManager eRPM = new EloRatingPersistenceManager(oldGame.getPlayer1ID());
+            eRPM.deleteEloRating(oldGame.getiD());
         }
-
-        List<PingPongGame> copyOfGames = new ArrayList<>(games);
-
-        for(int i = games.indexOf(newGame); i< games.size(); i++){
-
-            PingPongGame gameToEdit = games.get(i);
-            Player  player1PriorToGame = pPM.getPlayerByIDOld(gameToEdit.getPlayer1().getiD());
-            Player player2PriorToGame = pPM.getPlayerByIDOld(gameToEdit.getPlayer2().getiD());
-            //replace players with new rating before updating again
-            PingPongGame editedGame = new PingPongGame(gameToEdit.getiD(),
-                    player1PriorToGame,
-                    player2PriorToGame,
-                    gameToEdit.getPlayer1Score(),gameToEdit.getPlayer2Score());
-            copyOfGames.set(i,editedGame);
-            pPM.updatePlayersEloRatingOld(player1PriorToGame,player2PriorToGame,copyOfGames.get(i));
+        if(oldGame.getPlayer2ID() != newGame.getPlayer1ID() &&
+                oldGame.getPlayer2ID() != newGame.getPlayer2ID()  ) {
+            EloRatingPersistenceManager eRPM = new EloRatingPersistenceManager(oldGame.getPlayer2ID());
+            eRPM.deleteEloRating(oldGame.getiD());
         }
-        this.writeGamesToFileOld(copyOfGames);
-    }
-
-    public void editWriteGameToFileNew(PersistenceGame newGame) {
-        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
 
         List<PersistenceGame> games = this.getGamesNew();
 
@@ -242,36 +217,13 @@ public class GamePersistenceManager {
 
         this.writeGamesToFileNew(games);
 
-        pPM.updatePlayersEloRatingNew(newGame);
+        pPM.updatePlayersEloRatingEdit(newGame,oldGame,this);
     }
+
+
 
     public void deleteGameWriteToFile(PingPongGame game){
-        this.editWriteGameToFile(game,null);
-    }
 
-    public void editWriteGameToFile(PingPongGame game, Player player1, Player player2, int score1, int score2) {
-        List<PingPongGame> games = this.getGamesOld();
-        List<PingPongGame> gamesPrior = games.subList(0,games.indexOf(game));
-        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-
-        //get the last instance of the player prior to the game being edited
-        for(int i = 0; i< gamesPrior.size(); i++) {
-            if(gamesPrior.get(i).getPlayer1().getiD()==player1.getiD()) {
-                player1 = gamesPrior.get(i).getPlayer1();
-            }
-            if(gamesPrior.get(i).getPlayer2().getiD()==player2.getiD()) {
-                player2 = gamesPrior.get(i).getPlayer2();
-            }
-        }
-        //updated the player persistence layer to be up to date with these two players
-        pPM.writePlayerToFile(player1);
-        pPM.writePlayerToFile(player2);
-        PingPongGame updatedGame = new PingPongGame(game.getiD(),player1, player2,score1, score2);
-        this.writeGameToFileOld(updatedGame);
-    }
-
-    public void writeGamesToFileOld(List<PingPongGame> games) {
-        this.getFile().writeFile(this.writeGamesToJsonOld(games),false);
     }
 
     public void writeGamesToFileNew(List<PersistenceGame> games) {
@@ -283,7 +235,7 @@ public class GamePersistenceManager {
     }
 
     public List<PingPongGame> getGamesForPlayer(Player player) {
-        List<PingPongGame> games = this.getGamesOld();
+        List<PingPongGame> games = this.getGamesView();
         List<PingPongGame> gamesForPlayer = new ArrayList<>();
 
         for(PingPongGame game:games){
@@ -292,26 +244,6 @@ public class GamePersistenceManager {
             }
         }
         return gamesForPlayer;
-    }
-
-    public void editPlayerUsername(Player newPlayer) {
-        List<PingPongGame> games = this.getGamesOld();
-        Player player1;
-        Player player2;
-        for(PingPongGame game:games) {
-            if(game.getPlayer1().getiD() == newPlayer.getiD()) {
-                player1 = new Player(game.getPlayer1().getEloRating(),game.getPlayer1().getiD(),newPlayer.getUsername());
-                player2 = game.getPlayer2();
-                PingPongGame newGame = new PingPongGame(game.getiD(),player1,player2,game.getPlayer1Score(),game.getPlayer2Score());
-                games.set(games.indexOf(game),newGame);
-            } else if(game.getPlayer2().getiD() == newPlayer.getiD()) {
-                player2 = new Player(game.getPlayer2().getEloRating(),game.getPlayer2().getiD(),newPlayer.getUsername());
-                player1 = game.getPlayer1();
-                PingPongGame newGame = new PingPongGame(game.getiD(),player1,player2,game.getPlayer1Score(),game.getPlayer2Score());
-                games.set(games.indexOf(game),newGame);
-            }
-        }
-        this.writeGamesToFileOld(games);
     }
 
     public Player getViewPlayerPriorToGame(int playerId,int gameID){
