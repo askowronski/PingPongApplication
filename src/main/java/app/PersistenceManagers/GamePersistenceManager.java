@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class GamePersistenceManager {
 
@@ -74,14 +75,16 @@ public class GamePersistenceManager {
         return new PingPongGame();
     }
 
-    public PersistenceGame getGameByIDNew(int id) {
+    public PersistenceGame getGameByIDNew(final int id) {
         List<PersistenceGame> games = this.getGamesNew();
-        for(PersistenceGame game:games){
-            if(game.getiD()==id){
-                return game;
-            }
+
+        Optional<PersistenceGame> game = games.stream().filter(g -> g.getiD() == id).findFirst();
+
+        if(game.isPresent()) {
+            return game.get();
+        } else {
+            return new PersistenceGame();
         }
-        return new PersistenceGame();
     }
 
 
@@ -195,17 +198,6 @@ public class GamePersistenceManager {
     public void editWriteGameToFileNew(PersistenceGame newGame,
             PersistenceGame oldGame) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        if(oldGame.getPlayer1ID() != newGame.getPlayer1ID() &&
-                oldGame.getPlayer1ID() != newGame.getPlayer2ID()  ) {
-            EloRatingPersistenceManager eRPM = new EloRatingPersistenceManager(oldGame.getPlayer1ID());
-            eRPM.deleteEloRating(oldGame.getiD());
-        }
-        if(oldGame.getPlayer2ID() != newGame.getPlayer1ID() &&
-                oldGame.getPlayer2ID() != newGame.getPlayer2ID()  ) {
-            EloRatingPersistenceManager eRPM = new EloRatingPersistenceManager(oldGame.getPlayer2ID());
-            eRPM.deleteEloRating(oldGame.getiD());
-        }
-
         List<PersistenceGame> games = this.getGamesNew();
 
         for(int i = 0; i< games.size(); i++){

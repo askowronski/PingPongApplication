@@ -176,14 +176,15 @@ public class StatsAPI {
     @RequestMapping("/GetAverageScores")
     public APIResult getAverageScores(@RequestParam(value="id") int playerID) {
         GamePersistenceManager gPM = new GamePersistenceManager();
+        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
+
         List<PingPongGame> gamesForPlayer = gPM.getGamesForPlayer(gPM.getPlayer(playerID));
-        Player player = gPM.getPlayer(playerID);
+        Player player = pPM.getViewPlayerByID(playerID,gamesForPlayer.get(gamesForPlayer.size()-1).getiD());
 
         if(gamesForPlayer.size()==0){
             return new APIResult(false,"No Games For Player");
         }
 
-        String json = "[{\"averageScore\":"+0+",\"game\":"+0+",\"label\":0,\"score\":"+0+",\"opponent score\":"+0+"},";
         int i = 1;
         List<PingPongGame> runningGameList = new ArrayList<>();
         List<AverageScorePerGameData> dataList = new ArrayList<>();
@@ -192,6 +193,7 @@ public class StatsAPI {
         dataList.add(new AverageScorePerGameData(0,0,0,
                 0,new PingPongGame(0,player,player,0,0),0,
                 1500.00,gamesForPlayer.get(0).getOpponent(player).getEloRating().getRating()));
+
         for(PingPongGame game:gamesForPlayer){
             int score = 0;
             int oppScore = 0;
@@ -207,18 +209,14 @@ public class StatsAPI {
 
             runningGameList.add(game);
             SinglePlayerStatisticsCalculator calc = new SinglePlayerStatisticsCalculator(runningGameList,player);
-            json = json+"{\"averageScore\":"+calc.getAverageScore()+",\"game\":"
-                    +gPM.writeGameToJson(gamesForPlayer.get(i-1))+",\"label\":"+i+",\"score\":"+score+",\"opponent score\":"+oppScore+"},";
             AverageScorePerGameData data = new AverageScorePerGameData(calc.getAverageScore(),
                     score,- calc.getOpponentAverageScore(),oppScore,game,i,player.getEloRating().getRating(),opponent.getEloRating().getRating());
             dataList.add(data);
             i++;
         }
 
-        json = json.substring(0,json.length()-1);
-        json= json+"]";
-
         ObjectMapper mapper = new ObjectMapper();
+        String json = "";
         try {
             json= mapper.writeValueAsString(dataList);
         } catch(JsonProcessingException e){

@@ -35,7 +35,7 @@ public class PersistenceEloRating {
     }
 
     public double expectedScore(PersistenceEloRating rating2){
-        return this.getEloRating()/(this.getEloRating()+rating2.getEloRating());
+        return this.getEloRating() / (this.getEloRating()+rating2.getEloRating());
     }
 
     public PersistenceEloRating newRating(GameOutcomeEnum outcome, PersistenceEloRating rating2,int gameID) {

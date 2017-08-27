@@ -29,10 +29,7 @@ public class GameAPITest {
 
         GamePersistenceManager gPM = new GamePersistenceManager(filePath);
         GameAPI gameAPI = new GameAPI();
-        gameAPI.createGameOld(Integer.toString(player1ID),
-                Integer.toString(player2ID),
-                Integer.toString(score1),
-                Integer.toString(score2));
+
         String expectedResult = "[{\"id\":1,\"player1\":{\"id\": 0,\"newUsername\":\"Player Does Not Exist\",\"eloRating\":{\"rating\":0.0}}," +
                 "\"player2\":{\"id\":0,\"newUsername\":\"Player Does Not Exist\",\"eloRating\":{\"rating\":0.0}},\"score1\":15,\"score2\":14";
 

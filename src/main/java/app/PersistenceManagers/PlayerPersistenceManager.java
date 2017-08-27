@@ -473,16 +473,20 @@ public class PlayerPersistenceManager {
 
         int indexOfGame = games.indexOf(game);
 
+        boolean editPlayer1 = false;
+        boolean editPlayer2 = false;
         if(oldGame.getPlayer1ID() != game.getPlayer1ID() &&
                 oldGame.getPlayer1ID() != game.getPlayer2ID()) {
             EloRatingPersistenceManager eRPM = new EloRatingPersistenceManager(oldGame.getPlayer1ID());
             eRPM.deleteEloRating(game.getiD());
+            editPlayer1 = true;
         }
 
         if(oldGame.getPlayer2ID() != game.getPlayer1ID() &&
                 oldGame.getPlayer2ID() != game.getPlayer2ID()) {
             EloRatingPersistenceManager eRPM = new EloRatingPersistenceManager(oldGame.getPlayer2ID());
             eRPM.deleteEloRating(game.getiD());
+            editPlayer2 = true;
         }
 
         for(int i = indexOfGame; i < games.size(); i++){
@@ -519,13 +523,15 @@ public class PlayerPersistenceManager {
                     listPlayer2.getRating(indexOfElo2),
                     listPlayer1.getRating(indexOfElo1));
 
-            if(indexOfGame1<=0) {
+            if(indexOfGame1<=0 || editPlayer1) {
                 listPlayer1.addEloRating(newRating1);
+                editPlayer1=false;
             } else {
                 listPlayer1.replaceEloRating(indexOfGame1,newRating1);
             }
-            if(indexOfGame2 <=0) {
+            if(indexOfGame2 <=0 || editPlayer2) {
                 listPlayer2.addEloRating(newRating2);
+                editPlayer2=false;
             } else {
                 listPlayer2.replaceEloRating(indexOfGame2, newRating2);
             }
