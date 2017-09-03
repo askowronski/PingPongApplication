@@ -1,5 +1,5 @@
 import {Header} from '../ReactComponents/displayComponents.js';
-
+import {PlayerTypeAhead} from "./PlayerProfilePage";
 const React = require('react');
 const jQuery = require('jquery');
 const css = require("css-loader");
@@ -13,12 +13,32 @@ class CreateGameForm extends React.Component {
             player2ID:'',
             result:'',
             score1:'',
-            score2:''
+            score2:'',
+            players:[],
+            resultPlayers:''
         };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
+
+    componentDidMount = () => {
+        jQuery.ajax({
+
+            url: "http://localhost:8080/GetPlayers",
+            type:"GET",
+            dataType:"json",
+            async:false,
+            success: function(data){
+                this.setState({
+                    players:JSON.parse(data.message),
+                    resultPlayers:data.success,
+                });
+            }.bind(this)
+        });
+    };
+
+
 
 
 
@@ -43,7 +63,21 @@ class CreateGameForm extends React.Component {
                 score2: event.target.value
             });
         }
-    }
+    };
+
+    setPlayer1 = (event) => {
+        let id = event.id;
+        this.setState({
+            player1ID: id,
+        });
+    };
+
+    setPlayer2 = (event) => {
+        let id = event.id;
+        this.setState({
+            player2ID: id,
+        });
+    };
 
     handleSubmit(event) {
         console.log(this.state.value);
@@ -70,23 +104,29 @@ class CreateGameForm extends React.Component {
         return (
             <div>
                 <form onSubmit={this.handleSubmit}>
-                    <label>
-                        Player 1 ID:
-                        <input id="player1IDInput" type="text" value={this.state.player1ID} onChange={this.handleChange} />
+                    <label className="inputGameLabel">
+                        <text className="inputGameLabel"> Player 1: </text>
+                        <div className="choosePlayerTypeAhead">
+                        <PlayerTypeAhead id="player1IDInput" players={this.state.players}
+                                         onOptionSelected = {(event) => this.setPlayer1(event)}/>
+                        </div>
                     </label>
                     <br/>
                     <label>
-                        Player 2 ID:
-                        <input id="player2IDInput" type="text" value={this.state.player2ID} onChange={this.handleChange} />
+                        <text className="inputGameLabel"> Player 2: </text>
+                        <div className="choosePlayerTypeAhead">
+                        <PlayerTypeAhead id="player1IDInput" players={this.state.players}
+                                         onOptionSelected = {(event) => this.setPlayer2(event)}/>
+                        </div>
                     </label>
                     <br/>
                     <label>
-                        Score 1:
+                        <text className="inputGameLabel">   Score 1: </text>
                         <input id="score1Input" type="text" value={this.state.score1} onChange={this.handleChange} />
                     </label>
                     <br/>
                     <label>
-                        Score 2:
+                        <text className="inputGameLabel">  Score 2: </text>
                         <input id="score2Input" type="text" value={this.state.score2} onChange={this.handleChange} />
                     </label>
                     <input type="submit" value="Submit" />

@@ -3,10 +3,11 @@ import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Area, AreaChart, Tooltip,BarChart,Bar,Legend,ReferenceLine,ComposedChart
 } from 'recharts';
 import pureRender from 'react-pure-render';
-import {AverageScorePerGame} from "../PlayerProfileGraphComponents/ScorePerGame/ScorePerGameGraph";
+import {AverageScorePerGame} from "../PlayerProfileGraphComponents/ScorePerGameGraph";
 import {EloRatingPerGame} from "../PlayerProfileGraphComponents/EloRatingGraph";
 import {Typeahead} from "react-typeahead";
 import history from '../history.js';
+import {NetWinsGraph} from "../PlayerProfileGraphComponents/NetWinsGraph";
 
 const React = require('react');
 const jQuery = require('jquery');
@@ -19,158 +20,7 @@ const charts = require('fusioncharts/fusioncharts.charts');
 const {PropTypes} = React;
 
 
-export class NetWinsGraph extends React.Component {
-    state = {
-        dataset:[],
-        result:'',
-        games:[],
-        showBar:true,
-        buttonValue: "Show Line Chart",
-        playerID:0
-    };
-
-
-    returnData = () => {
-        return this.state.dataset
-    };
-
-    componentWillReceiveProps = (nextProps) => {
-        const playerID = nextProps.playerID;
-        if(playerID !== this.props) {
-            this.setState({
-                playerID: playerID
-            });
-            jQuery.ajax({
-
-                url: "http://localhost:8080/GetPlayerOutcomes?id="+playerID,
-                type: "GET",
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    this.setState({
-                        dataset: JSON.parse(data.message),
-                        result: data.success,
-                    });
-
-                }.bind(this)
-            });
-            // jQuery.ajax({
-            //
-            //     url: "http://localhost:8080/GetGamesForPlayerChart?id="+playerID,
-            //     type:"GET",
-            //     dataType:"json",
-            //     async:false,
-            //     success: function(data){
-            //         this.setState({
-            //             games:JSON.parse(data.message),
-            //             result:data.success,
-            //         });
-            //
-            //     }.bind(this)
-            // });
-        }
-
-    };
-
-
-
-
-    returnYLabel = (x,y) => {
-        return(
-            <text x={x} y={y} textAnchor="left">Net</text>
-        )
-    };
-
-    returnXLabel = (x,y) => {
-        return(
-            <text x={x} y={y} textAnchor="center">Game</text>
-        )
-    };
-
-    returnBar = (state) => {
-        if(state===true) {
-            return <Bar dataKey="wins" barSize={60} fill="#8884d8"/>
-        }
-        return  <Line dataKey="wins"   fill="#8884d8" />
-
-    };
-
-    toggleBarLine = () => {
-        let check = !this.state.showBar;
-        let buttonVal = "Show Bar Chart";
-        if(check){
-            buttonVal="Show Line Chart";
-        }
-        this.setState({
-            showBar:check,
-            buttonValue:buttonVal
-        })
-    };
-
-
-
-
-    render() {
-        return (
-         <div className="PlayerChartContainer">
-             <div className="PlayerGraph">
-                     <span ><text >Net Wins/Losses</text></span>
-             <ComposedChart width={1000} height={400} data={this.state.dataset}
-                       margin={{top: 5, right: 30, left: 20, bottom: 5}}
-             label={"Net Wins/Losses"}>
-                 <XAxis dataKey="label" label={this.returnXLabel(500,400)} />
-                 <YAxis domain={['auto', 'auto']} label={this.returnYLabel(20,150)}  tickCount={7} />
-                 <CartesianGrid strokeDasharray="3 3"/>
-                 <ReferenceLine y={0} stroke='#000'/>
-                 <div className="legendWinsLosses">
-                 <Legend />
-                 </div>
-                 {this.returnBar(this.state.showBar)}
-                 <Tooltip position={{ x: 1000, y: 0 }}  content={<CustomToolTipDisplayNet/>} />
-             </ComposedChart>
-                 <div className="netWinsToggleButtons">
-                     <button onClick={() => this.toggleBarLine()}>{this.state.buttonValue}</button>
-                 </div>
-             </div>
-
-         </div>
-        )
-    }
-}
-
-const CustomTooltipWins  = React.createClass({
-    propTypes: {
-        type: PropTypes.string,
-        payload: PropTypes.array,
-        label: PropTypes.number,
-    },
-
-    getIntroOfPage(label) {
-        return "Game "+label;
-    },
-
-    render() {
-        const { active } = this.props;
-
-        if (active) {
-            const { payload, label } = this.props;
-            return (
-                <div className="custom-tooltip">
-                    <p className="TooltipTitle">{this.getIntroOfPage(label)}</p>
-                    <p className="TooltipText">Wins/Losses : {payload[0].value}</p>
-                    <p className="TooltipText">{payload[0].payload.game.player1.username} :
-                        {payload[0].payload.game.score1}</p>
-                    <p className="TooltipText">{payload[0].payload.game.player2.username} :
-                        {payload[0].payload.game.score2}</p>
-                </div>
-            );
-        }
-
-        return null;
-    }
-});
-
-const CustomToolTipDisplayNet  = React.createClass({
+export const CustomToolTipDisplayNet  = React.createClass({
     propTypes: {
         type: PropTypes.string,
         payload: PropTypes.array,
@@ -205,8 +55,7 @@ const CustomToolTipDisplayNet  = React.createClass({
                                 </td>
                                 <td>
                                 </td>
-                                <td>
-                                </td>
+
                             </tr>
                             <tr>
                                 <td colSpan={5} className="GameDisplayHeader">
@@ -333,19 +182,6 @@ export const CustomToolTipDisplayGame  = React.createClass({
     }
 });
 
-const CustomizedLabel = React.createClass({
-
-    render () {
-        const {x, y, value,data} = this.props;
-        return <text
-            x={x}
-            y={y}
-            fontSize='16'
-            fontFamily='sans-serif'
-            textAnchor="middle">{value}</text>
-    }
-});
-
 export class AverageScoreGraph extends React.Component {
     state = {
         dataset:[],
@@ -427,11 +263,20 @@ export class AverageScoreGraph extends React.Component {
     }
 }
 
-const PlayerProfileSelect = (props) => {
+export const PlayerTypeAhead = (props) => {
     let options = props.players;
 
     let displayOption = (option) => {
         return option.username;
+    };
+
+    let handleHint = (option) => {
+        for (let i = 0; i<options.length; i++) {
+            if (new RegExp('^' + option).test(options[0])) {
+                props.currentPlayer=options[i];
+            }
+        }
+        return '';
     };
 
     return (
@@ -442,6 +287,11 @@ const PlayerProfileSelect = (props) => {
             value = {props.currentPlayer}
             id = {props.id}
             onOptionSelected = {props.onOptionSelected}
+            inputDisplayOption={handleHint}
+            customClasses={{
+                input:"typeAheadInput"
+            }}
+
         />
     );
 };
@@ -492,8 +342,13 @@ export class PlayerGraphTable extends React.Component {
                     <th className="playerProfileHeader">Player Profile <spam className="UsernameHeader">{this.state.playerUsername}</spam></th>
                 </tr>
                 <tr>
-                    <PlayerProfileSelect onOptionSelected = {(event) => this.setPlayer(event)}
-                    players = {this.state.players}/>
+                    <div className = "choosePlayerContainer">
+                    <text className="choosePlayer">Choose Player </text>
+                        <div className="choosePlayerTypeAhead">
+                    <PlayerTypeAhead onOptionSelected = {(event) => this.setPlayer(event)}
+                                     players = {this.state.players}/>
+                        </div>
+                    </div>
                 </tr>
                 </thead>
 

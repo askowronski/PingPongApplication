@@ -27,6 +27,7 @@ export default class GamesList extends React.Component {
     };
 
     componentDidMount = () => {
+        jQuery('tbody.reactable-pagination tr td').addClass('custom-pagination');
         jQuery.ajax({
 
             url: "http://localhost:8080/GetGames",
@@ -153,7 +154,7 @@ export default class GamesList extends React.Component {
 
         return (
             <div className="tableHolder">
-                <Table className="table" border="true" itemsPerPage={4}>
+                <Table className="table" border="true" itemsPerPage={8}>
 
                     {this.state.games.map((game,i) =>
                         <Tr>
@@ -247,6 +248,12 @@ const EditUsernameTypeAhead = (props) => {
             value = {props.currentPlayer}
             id = {props.id}
             onOptionSelected = {props.onOptionSelected}
+            customClasses={{
+                input: "typeahead-text-input",
+                results: "typeahead-list__container",
+                listItem: "typeahead-list__item",
+                hover: "typeahead-active",
+            }}
         />
     );
 };

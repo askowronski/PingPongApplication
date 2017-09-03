@@ -513,13 +513,13 @@ public class PlayerPersistenceManager {
             }
 
 
-            newRating1 = this.getNewRating(game,
-                    game.getPlayer1ID(),
+            newRating1 = this.getNewRating(currentGame,
+                    currentGame.getPlayer1ID(),
                     listPlayer1.getRating(indexOfElo1),
                     listPlayer2.getRating(indexOfElo2));
 
-            newRating2 = this.getNewRating(game,
-                    game.getPlayer2ID(),
+            newRating2 = this.getNewRating(currentGame,
+                    currentGame.getPlayer2ID(),
                     listPlayer2.getRating(indexOfElo2),
                     listPlayer1.getRating(indexOfElo1));
 

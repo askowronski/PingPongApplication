@@ -17,6 +17,7 @@ export default class PlayersList extends React.Component {
     };
 
     componentDidMount = () => {
+        jQuery('tbody.reactable-pagination tr td').addClass('custom-pagination');
         jQuery.ajax({
 
             url: "http://localhost:8080/GetPlayers",
@@ -106,10 +107,10 @@ export default class PlayersList extends React.Component {
 
               {this.state.players.map((player,i) =>
                   <Tr className="PlayersRow">
-                      <Td className="PlayersCell" column="ID"  >
+                      <Td  column="ID"  >
                           {player.id}
                       </Td>
-                      <Td className="PlayersCell" column="Username" >
+                      <Td  column="Username" >
                           <div>
                           <ToggleDisplay id="usernameToggleDisplay" show={this.state.showUsername[i]}>
                               {player.username}
@@ -119,8 +120,8 @@ export default class PlayersList extends React.Component {
                           </ToggleDisplay>
                           </div>
                       </Td>
-                      <Td className="PlayersCell" column="Elo Rating">{player.eloRating.rating}</Td>
-                      <Td className="PlayersCell" column="Actions" id={player.id}  >
+                      <Td  column="Elo Rating">{player.eloRating.rating}</Td>
+                      <Td column="Actions" id={player.id}  >
                           <div>
                               <a style={{cursor: 'pointer'}} onClick={() => this.showEditPlayer(i)} >Edit</a>
                               &nbsp;
@@ -200,20 +201,7 @@ class EditPlayer extends React.Component {
     }
 }
 
-const EditUsernameInput = (props) => {
 
-    const onSubmit = () => {
-
-    };
-    return (
-        <div id="editUsernameContainer">
-            <form onSubmit={onSubmit}>
-                <input type="text" defaultValue={props.username} />
-                <input type="submit" value="Submit" />
-            </form>
-        </div>
-    );
-};
 
 
 

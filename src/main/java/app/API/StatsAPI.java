@@ -236,7 +236,9 @@ public class StatsAPI {
 
         List<EloRatingGraphData> data = new ArrayList<>();
 
-        int i = 0;
+        data.add(new EloRatingGraphData(new PingPongGame(0,player,player,0,0),0,1500,-1500));
+
+        int i = 1;
         for(PingPongGame game:gamesForPlayer){
             Player opponenet = game.getOpponent(player);
             Player player1;

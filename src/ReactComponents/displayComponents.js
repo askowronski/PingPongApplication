@@ -293,6 +293,7 @@ export class HeaderButtons extends React.Component {
                 <div  className="header-button-holder"> <button className="header-button" onClick={() => this.onInputClick()} id={this.state.buttonDisplayNames[0]} >{this.state.buttonDisplayNames[0]}</button> </div>
                 <div  className="header-button-holder"> <button className="header-button" onClick={() =>this. goToGames()} id={this.state.buttonDisplayNames[1]} >{this.state.buttonDisplayNames[1]}</button> </div>
                 <div  className="header-button-holder"> <button className="header-button" onClick={() => this.goToPlayers()} id={this.state.buttonDisplayNames[2]} >{this.state.buttonDisplayNames[2]}</button> </div>
+                <div className="header-button-holder"><img src={require('../images/paddle.png')} /></div>
             </div>
                 <div id="inputButtonContainer">
                     <InputButtons showInputButtons={this.state.showInputButtons}/>

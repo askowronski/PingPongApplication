@@ -151,7 +151,7 @@ export class EloRatingPerGame extends React.Component {
                     <span ><text >Elo Rating Per Game</text></span>
                     <LineChart width={1000} height={400} data={this.state.dataset}
                                    margins={{top: 5, right: 30,  bottom: 5}} >
-                        <XAxis type="number" dataKey="label" domain={[0,'auto']} label={this.returnXLabel(475,375)} padding={{bottom: 50,right:10}} labelStyle = {{paddingTop:20,color : '#32CD32'}}/>
+                        <XAxis allowDecimals={false} type="number" dataKey="label" domain={[0,'auto']} label={this.returnXLabel(475,375)} padding={{bottom: 50,right:10}} labelStyle = {{paddingTop:20,color : '#32CD32'}}/>
                         <YAxis domain={['auto','auto']} label={this.returnYLabel(30,150)} />
                         <Tooltip position={{ x: 1000, y: 0 }} content={<CustomToolTipDisplayGameElo setGameDisplay = {this.setGameDisplayState}/>}/>
                         <CartesianGrid strokeDasharray="3 3"/>

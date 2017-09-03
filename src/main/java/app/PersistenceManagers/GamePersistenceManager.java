@@ -231,8 +231,12 @@ public class GamePersistenceManager {
         List<PingPongGame> gamesForPlayer = new ArrayList<>();
 
         for(PingPongGame game:games){
-            if(game.getPlayer1().equals(player) || game.getPlayer2().equals(player)) {
+            if(game.getPlayer1().getiD() == player.getiD()) {
                 gamesForPlayer.add(game);
+            } else if (game.getPlayer2().getiD() == player.getiD()) {
+                PingPongGame newGame = new PingPongGame(game.getiD(),game.getPlayer2(),
+                        game.getPlayer1(),game.getPlayer2Score(),game.getPlayer1Score());
+                gamesForPlayer.add(newGame);
             }
         }
         return gamesForPlayer;

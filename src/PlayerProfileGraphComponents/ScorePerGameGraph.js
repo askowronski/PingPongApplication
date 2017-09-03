@@ -1,5 +1,5 @@
 
-import {CustomToolTipDisplayGame} from "../../Pages/PlayerPage";
+import {CustomToolTipDisplayGame} from "../Pages/PlayerProfilePage";
 import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Area, AreaChart, Tooltip,BarChart,Bar,Legend,ReferenceLine,ComposedChart
 } from 'recharts';
@@ -7,7 +7,7 @@ const React = require('react');
 const jQuery = require('jquery');
 const css = require("css-loader");
 const Reactable = require('reactable');
-require("../../stylesheet.css");
+require("../stylesheet.css");
 const ReactFC = require('react-fusioncharts');
 const fusioncharts = require('fusioncharts');
 const charts = require('fusioncharts/fusioncharts.charts');
@@ -202,7 +202,7 @@ export class AverageScorePerGame extends React.Component {
                     <span ><text >Score Per Game</text></span>
                     <ComposedChart width={1000} height={400} data={this.state.dataset}
                                    margins={{top: 5, right: 30,  bottom: 5}} >
-                        <XAxis type="number" dataKey="label" domain={[0,'auto']} label={this.returnXLabel(475,375)} padding={{bottom: 50,right:10}} labelStyle = {{paddingTop:20,color : '#32CD32'}}/>
+                        <XAxis allowDecimals={false} type="number" dataKey="label" domain={[0,'auto']} label={this.returnXLabel(475,375)} padding={{bottom: 50,right:10}} labelStyle = {{paddingTop:20,color : '#32CD32'}}/>
                         <YAxis domain={[-30,30]} label={this.returnYLabel(30,150)} ticks={[-30,-20,-10,0,10,20,30]} />
                         <Tooltip position={{ x: 1000, y: 0 }} content={<CustomToolTipDisplayGame setGameDisplay = {this.setGameDisplayState}/>}/>
                         <CartesianGrid strokeDasharray="3 3"/>

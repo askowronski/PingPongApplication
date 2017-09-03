@@ -36,14 +36,16 @@
 }
 
 .header-button {
-    background-color: #32CD32;
-    width:150px;
-    height:60px;
-    font-size:18px;
+    background-color: white;
+    width:200px;
+    height:80px;
+    font-size:24px;
+    font-weight: bold;
+    font-style: italic;
 }
 
 .header-button-input {
-    background-color: #32CD32;
+    background-color: white;
     width:75px;
     height:30px;
     font-size:14px;
@@ -98,6 +100,10 @@ td {
     padding: 30px 75px;
 }
 
+tr:hover {
+    background-color: #ccebff;
+}
+
 
 
 table {
@@ -105,6 +111,7 @@ table {
     margin-left:auto;
     margin-right:auto;
     width:100%;
+    height:200px;
 }
 
 .GameDisplayTable {
@@ -112,6 +119,7 @@ table {
     margin-left:auto;
     margin-right:auto;
     width:65%;
+    height:50%;
 }
 
 .GameDisplayHeader {
@@ -133,9 +141,15 @@ Table {
     border-collapse: collapse;
     padding-top:50px;
     margin-top:50px;
+    height: 450px;
 }
 
 Th, Td {
+    padding:10px;
+    border: 2px groove #C1DAD7;
+}
+
+.toolTipTd {
     padding:10px;
     border: 2px solid #C1DAD7;
 }
@@ -146,6 +160,7 @@ Th {
 
 .tableHolder {
     padding-top:1px;
+    height: 100%;
 }
 
 
@@ -247,3 +262,116 @@ span text {
     padding: 6px 6px 6px 12px;
     color: black;
 }
+
+.PlayersTable {
+    border: 2px groove;
+    height: 100%;
+}
+
+.choosePlayerContainer {
+    display: inline-block;
+    float:left;
+    color:blue;
+    font-weight: bold;
+    font-size:18px;
+}
+
+.choosePlayerTypeAhead {
+    display: inline-block;
+}
+
+.typeAheadInput {
+    border: 2px groove;
+    margin-bottom: auto;
+}
+
+.custom-pagination > .reactable-current-page {
+color: #fff;
+cursor: default;
+background-color: #337ab7;
+border-color: #337ab7;
+}
+
+.custom-pagination > a:first-child {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.custom-pagination > a:last-child {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-right-width: 1px;
+}
+
+.custom-pagination > a {
+    position: relative;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    color: blue;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-right-width: 0px;
+}
+
+.UsernameLabel {
+    font-weight:bold;
+    font-style: italic;
+    font-size:30px;
+}
+
+.inputGameLabel {
+    font-weight:bold;
+    font-style: italic;
+    font-size:22px;
+}
+
+.typeahead-selector {
+
+}
+
+.typeahead-option {
+    padding: 3px 20px;
+    font-size: 18px;
+    line-height: 24px;
+}
+
+.typeahead-hint {
+    width: 396px;
+    height: 30px;
+    padding: 8px 12px;
+    font-size: 24px;
+    line-height: 30px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+}
+
+.typeahead-selector { /* UPDATE: newer versions use tt-menu instead of tt-dropdown-menu */
+    width: 200px;
+    margin-top: 5px;
+    padding: 8px 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    position: absolute;
+    list-style: none;
+}
+
+.tt-suggestion {
+
+}
+
+.tt-suggestion.tt-is-under-cursor { /* UPDATE: newer versions use .tt-suggestion.tt-cursor */
+    color: #fff;
+    background-color: #0097cf;
+
+}
+
+.tt-suggestion p {
+    margin: 0;
+}
+
+
