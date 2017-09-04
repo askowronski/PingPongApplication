@@ -154,12 +154,14 @@ export default class GamesList extends React.Component {
 
         return (
             <div className="tableHolder">
-                <Table className="table" border="true" itemsPerPage={8}>
+                <Table className="GameTable" border="true" itemsPerPage={8}>
 
                     {this.state.games.map((game,i) =>
                         <Tr>
-                            <Td column="ID" >{game.iD}</Td>
-                            <Td column="Player 1 Username" >
+                            <Td column="Date" className="firstCell">
+                                {game.timeString}
+                            </Td>
+                            <Td column="Player 1" className="player1Cell">
                                 <div>
                                     <ToggleDisplay show={!this.state.showEdit[i]}>
                                         {game.player1.username}
@@ -171,7 +173,7 @@ export default class GamesList extends React.Component {
                                     </ToggleDisplay>
                                 </div>
                             </Td>
-                            <Td column="Player 2 Username" >
+                            <Td column="Player 2" className="player1Cell">
                                 <div>
                                     <ToggleDisplay show={!this.state.showEdit[i]}>
                                         {game.player2.username}
@@ -184,7 +186,7 @@ export default class GamesList extends React.Component {
                                     </ToggleDisplay>
                                 </div>
                             </Td>
-                            <Td column="Score 1">
+                            <Td column="Score 1" className="player1Cell">
                                 <div>
                                     <ToggleDisplay show = {!this.state.showEdit[i]}>
                                         {game.score1}
@@ -196,7 +198,7 @@ export default class GamesList extends React.Component {
                                     </ToggleDisplay>
                                 </div>
                             </Td>
-                            <Td column="Score 2">
+                            <Td column="Score 2" className="player1Cell">
                                 <div>
                                     <ToggleDisplay show = {!this.state.showEdit[i]}>
                                         {game.score2}
@@ -208,6 +210,7 @@ export default class GamesList extends React.Component {
                                     </ToggleDisplay>
                                 </div>
                             </Td>
+
                             <Td column="Actions" >
                                 <div>
                                     <ToggleDisplay show={this.state.showEdit[i]}>
@@ -216,15 +219,22 @@ export default class GamesList extends React.Component {
                                         &nbsp;
                                         </div>
                                     </ToggleDisplay>
+                                    <div className="editContainer">
                                     <a style={{cursor: 'pointer'}} onClick={() => this.showEditGame(i,game)} >Edit</a>
+                                    </div>
                                     &nbsp;
+                                    <div className="cancelContainer">
                                     <a style={{cursor: 'pointer'}} onClick={() => this.cancelEditGame(i)}>Cancel</a>
+                                    </div>
                                     &nbsp;
                                     &nbsp;
                                     &nbsp;
+                                    <div className="deleteContainer">
                                     <a style={{cursor: 'pointer'}} onClick={() => this.deleteGame(game.iD)} >Delete</a>
+                                    </div>
                                 </div>
                             </Td>
+
                         </Tr>
                     )};
                 </Table>

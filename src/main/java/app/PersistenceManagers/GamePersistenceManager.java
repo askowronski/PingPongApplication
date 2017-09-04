@@ -157,7 +157,7 @@ public class GamePersistenceManager {
             for(PersistenceGame game:games){
                 Player player1 = pPM.getViewPlayerByID(game.getPlayer1ID(),game.getiD());
                 Player player2 = pPM.getViewPlayerByID(game.getPlayer2ID(),game.getiD());
-                viewGames.add(new PingPongGame(game.getiD(),player1,player2,game.getPlayer1Score(),game.getPlayer2Score()));
+                viewGames.add(new PingPongGame(game.getiD(),player1,player2,game.getPlayer1Score(),game.getPlayer2Score(),game.getTime()));
             }
             return viewGames;
         } catch(IOException e){

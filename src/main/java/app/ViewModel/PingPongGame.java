@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.text.DateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class PingPongGame {
@@ -16,6 +18,7 @@ public class PingPongGame {
     @JsonProperty("score1") private final int player1Score;
     @JsonProperty("score2") private final int player2Score;
     @JsonProperty("time") private final Date time;
+    @JsonProperty("timeString") private final String timeString;
 
     @JsonIgnoreProperties(ignoreUnknown=true)
     @JsonCreator
@@ -29,6 +32,8 @@ public class PingPongGame {
         this.player1Score=score1;
         this.player2Score=score2;
         this.time = new Date();
+        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, Locale.US);
+        this.timeString = df.format(this.time);
     }
 
     public PingPongGame() {
@@ -38,6 +43,8 @@ public class PingPongGame {
         this.player1Score=0;
         this.player2Score=0;
         this.time= new Date();
+        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, Locale.US);
+        this.timeString = df.format(this.time);
 
     }
 
@@ -48,6 +55,9 @@ public class PingPongGame {
         this.player1Score=score1;
         this.player2Score=score2;
         this.time= time;
+        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, Locale.US);
+        this.timeString = df.format(this.time);
+
 
     }
 

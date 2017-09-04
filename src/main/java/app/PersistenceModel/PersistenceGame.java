@@ -23,22 +23,23 @@ public class PersistenceGame {
     public PersistenceGame(@JsonProperty("iD") int iD,@JsonProperty("player1ID")  int player1ID,
             @JsonProperty("player2ID") int player2ID,
             @JsonProperty("score1") int score1,
-            @JsonProperty("score2") int score2){
+            @JsonProperty("score2") int score2,
+            @JsonProperty("time") Date time){
         this.iD=iD;
         this.player1ID=player1ID;
         this.player2ID=player2ID;
         this.player1Score=score1;
         this.player2Score=score2;
-        this.time = new Date();
+        this.time = time;
     }
 
-    public PersistenceGame(int iD,int player1ID, int player2ID, int score1, int score2, Date time) {
+    public PersistenceGame(int iD,int player1ID, int player2ID, int score1, int score2) {
         this.iD = iD;
         this.player1ID = player1ID;
         this.player2ID = player2ID;
         this.player1Score = score1;
         this.player2Score = score2;
-        this.time = time;
+        this.time = new Date();
     }
 
     public PersistenceGame() {

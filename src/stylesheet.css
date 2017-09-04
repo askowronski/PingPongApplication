@@ -22,7 +22,7 @@
     float:left;
     width:20px;
     height:20px;
-    border:10px;
+    border:14px;
 }
 
 .header-button-input-holder {
@@ -31,7 +31,7 @@
     margin-right:5%;
     width:20px;
     height:20px;
-    border:10px;
+    border:14px;
     display:inline;
 }
 
@@ -46,8 +46,8 @@
 
 .header-button-input {
     background-color: white;
-    width:75px;
-    height:30px;
+    width:100px;
+    height:40px;
     font-size:14px;
     margin-top:5%;
     visibility: hidden;
@@ -61,7 +61,7 @@
     width: 100%;
     heigh:100%;
     background-color: #fff;
-    border:12px solid #B22226;
+    border:12px solid #636363;
 }
 
 .recharts-label{
@@ -144,18 +144,29 @@ Table {
     height: 450px;
 }
 
-Th, Td {
+Td {
     padding:10px;
-    border: 2px groove #C1DAD7;
+    border-left: 2px groove;
+    border-right:2px groove;
+}
+
+.firstCell {
+    border-left: none;
+    font-size:18px;
 }
 
 .toolTipTd {
     padding:10px;
-    border: 2px solid #C1DAD7;
+    border: none;
 }
 
 Th {
     padding:15px;
+    border-bottom: 2px groove;
+}
+
+Tr {
+    border-left: 2px groove;
 }
 
 .tableHolder {
@@ -268,10 +279,15 @@ span text {
     height: 100%;
 }
 
+.GameTable {
+    border: 2px groove;
+    height: 100%;
+}
+
 .choosePlayerContainer {
     display: inline-block;
     float:left;
-    color:blue;
+    color:black;
     font-weight: bold;
     font-size:18px;
 }
@@ -280,16 +296,16 @@ span text {
     display: inline-block;
 }
 
-.typeAheadInput {
-    border: 2px groove;
-    margin-bottom: auto;
-}
+/*.typeAheadInput {*/
+    /*border: 2px groove;*/
+    /*margin-bottom: auto;*/
+/*}*/
 
 .custom-pagination > .reactable-current-page {
 color: #fff;
 cursor: default;
-background-color: #337ab7;
-border-color: #337ab7;
+background-color: rgba(0, 38, 113, 0.99);
+border-color: #020104;
 }
 
 .custom-pagination > a:first-child {
@@ -307,11 +323,17 @@ border-color: #337ab7;
     position: relative;
     padding: 6px 12px;
     line-height: 1.42857143;
-    color: blue;
+    color: #00205f;
     text-decoration: none;
     background-color: #fff;
     border: 1px solid #ddd;
     border-right-width: 0px;
+}
+
+.custom-pagination {
+    border-top:2px groove;
+    border-bottom: 2px groove;
+
 }
 
 .UsernameLabel {
@@ -360,18 +382,67 @@ border-color: #337ab7;
     list-style: none;
 }
 
-.tt-suggestion {
+.homePageTable {
+    border: none;
+}
+
+.homePageTd {
+    border: none;
+}
+
+.infoDisplay {
+    background-color: white;
+    height: 100%;
+    line-height: 45px;
+}
+
+.infoDisplayHeader {
+    font-style: italic;
+    font-weight: bold;
+    font-size: 26px;
 
 }
 
-.tt-suggestion.tt-is-under-cursor { /* UPDATE: newer versions use .tt-suggestion.tt-cursor */
-    color: #fff;
-    background-color: #0097cf;
+.longestStreakUsername {
+    font-size: 22px;
+    font-weight: 200;
 
 }
 
-.tt-suggestion p {
-    margin: 0;
+.reactable-column-header {
+    font-size:24px;
 }
 
+.editContainer {
+    background-color: #05ceff;
+    display: inline-block;
+    padding: 5px;
+    border-style: groove;
 
+
+}
+
+.cancelContainer {
+    background-color: darkgray;
+    padding: 5px;
+    border-style: groove;
+    display: inline-block;
+}
+
+.profileContainer {
+    padding: 5px;
+    border-style: groove;
+    display: inline-block;
+}
+
+.deleteContainer {
+    background-color: black;
+    color:white;
+    padding: 5px;
+    border-style: groove;
+    display: inline-block;
+}
+
+.player1Cell {
+    font-size:18px;
+}

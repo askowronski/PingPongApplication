@@ -41,10 +41,10 @@ class InfoDisplayPlayer extends React.Component {
     render() {
         return (
 
-            <div className="square">
-                <span>Username: {this.state.username} </span>
+            <div className="infoDisplay">
+                <span className="infoDisplayHeader">Longest Streak </span>
                 <br/>
-                <span>Rating: {this.state.eloRating}</span>
+                <span className="longestStreakUsername">Username: {this.state.username}</span>
                 <br/>
                 <span>ID: {this.state.id}</span>
             </div>
@@ -91,7 +91,7 @@ class InfoDisplayGame extends React.Component  {
     render(){
         return (
 
-            <div id="displayGameContainer" className="square">
+            <div id="infoDisplay" className="square">
                 <span>id: {this.state.id} </span>
                 <br/>
                 <span>Player1 ID: {this.state.player1ID}</span>
@@ -191,8 +191,8 @@ class InfoDisplayTotalGameStats extends React.Component  {
     render(){
         return (
 
-            <div className="square">
-                <span>Total Game Stats</span>
+            <div className="infoDisplay">
+                <span className="infoDisplayHeader">Total Game Stats</span>
                 <br/>
                 <span>Total Games Played: {this.state.totalGamesPlayed} </span>
                 <br/>
@@ -210,21 +210,16 @@ class InfoDisplayTotalGameStats extends React.Component  {
 
 export const InfoDisplayTable = (props) => {
     return (
-        <div id = "displayTable" className="displayTable">
-            <table >
-                <thead>
-                <tr>
-                    <th colSpan={2}>Home Page</th>
-                </tr>
-                </thead>
+        <div id = "homePageTableContainer" className="displayTable">
+            <table className="homePageTable">
                 <tbody>
                 <tr id="infoDisplay" className="infoDisplay">
-                    <td><InfoDisplayPlayer/></td>
-                    <td><InfoDisplayGame/></td>
+                    <td className="homePageTd"><InfoDisplayPlayer/></td>
+                    <td className="homePageTd"><InfoDisplayGame/></td>
                 </tr>
                 <tr id="infoDisplay" className="infoDisplay">
-                    <td><InfoDisplayHighestRating/></td>
-                    <td><InfoDisplayTotalGameStats/></td>
+                    <td className="homePageTd"><InfoDisplayHighestRating/></td>
+                    <td className="homePageTd"><InfoDisplayTotalGameStats/></td>
                 </tr>
                 </tbody>
             </table>
@@ -286,6 +281,10 @@ export class HeaderButtons extends React.Component {
         }
     };
 
+    goToHomePage = () => {
+        history.push('/Home');
+    };
+
     render(){
         return (
             <div id="headerContainer">
@@ -293,7 +292,7 @@ export class HeaderButtons extends React.Component {
                 <div  className="header-button-holder"> <button className="header-button" onClick={() => this.onInputClick()} id={this.state.buttonDisplayNames[0]} >{this.state.buttonDisplayNames[0]}</button> </div>
                 <div  className="header-button-holder"> <button className="header-button" onClick={() =>this. goToGames()} id={this.state.buttonDisplayNames[1]} >{this.state.buttonDisplayNames[1]}</button> </div>
                 <div  className="header-button-holder"> <button className="header-button" onClick={() => this.goToPlayers()} id={this.state.buttonDisplayNames[2]} >{this.state.buttonDisplayNames[2]}</button> </div>
-                <div className="header-button-holder"><img src={require('../images/paddle.png')} /></div>
+                <div className="header-button-holder"><img src={require('../images/paddle.png')} onClick={() => this.goToHomePage()}/></div>
             </div>
                 <div id="inputButtonContainer">
                     <InputButtons showInputButtons={this.state.showInputButtons}/>

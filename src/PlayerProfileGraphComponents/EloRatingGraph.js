@@ -23,6 +23,7 @@ export class EloRatingPerGame extends React.Component {
         opacity: 1,
         eloRatingButton:"Hide Elo Rating",
         oppEloRatingButton:"Hide Opp Elo Rating",
+        oppDataSet:[],
 
         gameDisplayStats: {
             number:0,
@@ -64,9 +65,17 @@ export class EloRatingPerGame extends React.Component {
                 dataType:"json",
                 async:false,
                 success: function(data){
+                    let oppDataSet = [];
+                    let dataSet = JSON.parse(data.message);
+                    for (let i = 0; i < dataSet.length; i++) {
+                        let newData = dataSet[i];
+                        newData.opponentEloRating = newData.opponentEloRating*-1;
+                        oppDataSet.push(newData);
+                    }
                     this.setState({
                         dataset:JSON.parse(data.message),
                         result:data.success,
+                        oppDataSet:oppDataSet
                     });
 
                 }.bind(this)
@@ -97,7 +106,10 @@ export class EloRatingPerGame extends React.Component {
         this.setState({
             showEloRating:toggle,
             eloRatingButton:text
-        })
+        });
+        if (toggle === false) {
+            this.checkOppScoreIsOnlyOneOut(toggle,this.state.showOppEloRating);
+        }
 
     };
 
@@ -112,10 +124,31 @@ export class EloRatingPerGame extends React.Component {
         this.setState({
             showOppEloRating:toggle,
             oppEloRatingButton:text
-        })
+        });
 
     };
 
+    checkOppScoreIsOnlyOneOut = (elo,oppElo) => {
+        let multiplier = 1;
+      if (elo ===false &&
+      oppElo === true) {
+          let oppDataSet = this.state.oppDataSet;
+          let dataSet = this.state.dataset;
+          this.setState({
+              dataset:oppDataSet,
+              oppDataSet:dataSet
+          });
+      } else {
+          let oppDataSet = this.state.oppDataSet;
+          let dataSet = this.state.dataset;
+          this.setState({
+              dataset:oppDataSet,
+              oppDataSet:dataSet
+          });
+      }
+
+
+    };
 
     renderEloRating = (state) => {
         if(state === true) {

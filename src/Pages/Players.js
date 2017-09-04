@@ -123,16 +123,23 @@ export default class PlayersList extends React.Component {
                       <Td  column="Elo Rating">{player.eloRating.rating}</Td>
                       <Td column="Actions" id={player.id}  >
                           <div>
-                              <a style={{cursor: 'pointer'}} onClick={() => this.showEditPlayer(i)} >Edit</a>
+                              <div className="editContainer">
+                              <a className="editPlayer" style={{cursor: 'pointer'}} onClick={() => this.showEditPlayer(i)} >Edit</a>
+                              </div>
                               &nbsp;
+                              <div className="cancelContainer">
                               <a style={{cursor: 'pointer'}} onClick={() => this.cancelEditPlayer(i)}>Cancel</a>
+                              </div>
                               &nbsp;
+                              <div className="profileContainer">
                               <a style={{cursor: 'pointer'}} onClick={() => this.playerProfile(player)}>Profile</a>
+                              </div>
+                                  &nbsp;
                               &nbsp;
                               &nbsp;
-                              &nbsp;
+                              <div className="deleteContainer">
                               <a style={{cursor: 'pointer'}} onClick={() => this.processDeletePlayer(player.id,player.username)}>Delete</a>
-
+                              </div>
                           </div>
                       </Td>
                   </Tr>
