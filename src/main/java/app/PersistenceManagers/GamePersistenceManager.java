@@ -199,6 +199,7 @@ public class GamePersistenceManager {
             PersistenceGame oldGame) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         List<PersistenceGame> games = this.getGamesNew();
+        games = this.reorderGames(games,newGame);
 
         for(int i = 0; i< games.size(); i++){
             if(games.get(i).getiD() == newGame.getiD()){
@@ -214,8 +215,22 @@ public class GamePersistenceManager {
 
 
 
-    public void deleteGameWriteToFile(PingPongGame game){
+    public void deleteGameWriteToFile(PersistenceGame game){
+        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
+        EloRatingPersistenceManager eRPM1 = new EloRatingPersistenceManager(game.getPlayer1ID());
+        eRPM1.deleteEloRating(game.getiD());
+        EloRatingPersistenceManager eRPM2 = new EloRatingPersistenceManager(game.getPlayer2ID());
+        eRPM2.deleteEloRating(game.getiD());
 
+        List<PersistenceGame> games = this.getGamesNew();
+        int indexOfGame = games.indexOf(game);
+        games.remove(game);
+
+        this.writeGamesToFileNew(games);
+
+        if (indexOfGame < games.size()) {
+            pPM.updatePlayersEloRatingEdit(games.get(indexOfGame), games.get(indexOfGame), this);
+        }
     }
 
     public void writeGamesToFileNew(List<PersistenceGame> games) {
@@ -240,6 +255,29 @@ public class GamePersistenceManager {
             }
         }
         return gamesForPlayer;
+    }
+
+    public List<PersistenceGame> reorderGames(List<PersistenceGame> games, PersistenceGame newGame) {
+        List<PersistenceGame> orderedGames = new ArrayList<>();
+        games = this.removeGameById(games,newGame.getiD());
+        for(int i = 0 ;i < games.size(); i++){
+            if(games.get(i).getTime().compareTo(newGame.getTime()) > 0) {
+                games.add(i,newGame);
+                break;
+            }
+        }
+
+        return games;
+    }
+
+    private List<PersistenceGame> removeGameById(List<PersistenceGame> games, int id) {
+        for(PersistenceGame game:games){
+            if(game.getiD() == id){
+                games.remove(game);
+                break;
+            }
+        }
+        return games;
     }
 
     public Player getViewPlayerPriorToGame(int playerId,int gameID){

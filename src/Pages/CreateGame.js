@@ -1,5 +1,6 @@
 import {Header} from '../ReactComponents/displayComponents.js';
 import {PlayerTypeAhead} from "./PlayerProfilePage";
+import {DateInput} from "./Games";
 const React = require('react');
 const jQuery = require('jquery');
 const css = require("css-loader");
@@ -15,7 +16,8 @@ class CreateGameForm extends React.Component {
             score1:'',
             score2:'',
             players:[],
-            resultPlayers:''
+            resultPlayers:'',
+            date:''
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -104,6 +106,10 @@ class CreateGameForm extends React.Component {
         return (
             <div>
                 <form onSubmit={this.handleSubmit}>
+                    <label className="inputGameLabel">
+                    <text className="inputGameLabel"> Date :</text>
+                        <DateInput/>
+                    </label>
                     <label className="inputGameLabel">
                         <text className="inputGameLabel"> Player 1: </text>
                         <div className="choosePlayerTypeAhead">

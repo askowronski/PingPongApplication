@@ -24,6 +24,8 @@ export class EloRatingPerGame extends React.Component {
         eloRatingButton:"Hide Elo Rating",
         oppEloRatingButton:"Hide Opp Elo Rating",
         oppDataSet:[],
+        negativeSet:[],
+        positiveSet: [],
 
         gameDisplayStats: {
             number:0,
@@ -75,7 +77,9 @@ export class EloRatingPerGame extends React.Component {
                     this.setState({
                         dataset:JSON.parse(data.message),
                         result:data.success,
-                        oppDataSet:oppDataSet
+                        oppDataSet:oppDataSet,
+                        negativeSet:oppDataSet,
+                        positiveSet:JSON.parse(data.message)
                     });
 
                 }.bind(this)
@@ -129,21 +133,24 @@ export class EloRatingPerGame extends React.Component {
     };
 
     checkOppScoreIsOnlyOneOut = (elo,oppElo) => {
-        let multiplier = 1;
       if (elo ===false &&
       oppElo === true) {
-          let oppDataSet = this.state.oppDataSet;
-          let dataSet = this.state.dataset;
-          this.setState({
-              dataset:oppDataSet,
-              oppDataSet:dataSet
-          });
+          if (this.state.dataset === this.state.negativeSet) {
+              let positive = this.state.positiveSet;
+              this.setState({
+                  dataset: positive
+              });
+          } else {
+
+              let negative = this.state.negativeSet;
+              this.setState({
+                  dataset: negative
+              });
+          }
       } else {
-          let oppDataSet = this.state.oppDataSet;
-          let dataSet = this.state.dataset;
+          let positive = this.state.positiveSet;
           this.setState({
-              dataset:oppDataSet,
-              oppDataSet:dataSet
+              dataSet:positive
           });
       }
 
@@ -162,6 +169,7 @@ export class EloRatingPerGame extends React.Component {
             )
         }
     };
+
 
     setGameDisplayState = (number,player1Username,player2Username,score1,score2) => {
         this.setState({

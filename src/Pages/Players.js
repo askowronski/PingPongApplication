@@ -127,9 +127,11 @@ export default class PlayersList extends React.Component {
                               <a className="editPlayer" style={{cursor: 'pointer'}} onClick={() => this.showEditPlayer(i)} >Edit</a>
                               </div>
                               &nbsp;
+                              <ToggleDisplay show={this.state.showEditPlayer[i]}>
                               <div className="cancelContainer">
                               <a style={{cursor: 'pointer'}} onClick={() => this.cancelEditPlayer(i)}>Cancel</a>
                               </div>
+                              </ToggleDisplay>
                               &nbsp;
                               <div className="profileContainer">
                               <a style={{cursor: 'pointer'}} onClick={() => this.playerProfile(player)}>Profile</a>

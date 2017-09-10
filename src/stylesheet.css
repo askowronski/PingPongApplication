@@ -110,7 +110,7 @@ table {
     margin-top: 5px;
     margin-left:auto;
     margin-right:auto;
-    width:100%;
+    width:95%;
     height:200px;
 }
 
@@ -131,6 +131,11 @@ table {
 
 .AverageUserHeader {
     width:100%;
+    border:2px groove;
+}
+
+.GameDisplayAverageRow {
+    border:2px groove;
 }
 
 .You {
@@ -208,6 +213,7 @@ Tr {
     opacity: 1;
     background-color: #fff;
     width:300px;
+    border:2px groove;
 }
 
 span text {
@@ -296,10 +302,11 @@ span text {
     display: inline-block;
 }
 
-/*.typeAheadInput {*/
-    /*border: 2px groove;*/
-    /*margin-bottom: auto;*/
-/*}*/
+.typeAheadInput {
+    border: 2px groove;
+    height:30px;
+    margin-bottom: auto;
+}
 
 .custom-pagination > .reactable-current-page {
 color: #fff;
@@ -445,4 +452,11 @@ border-color: #020104;
 
 .player1Cell {
     font-size:18px;
+}
+
+.editButton {
+    margin-bottom: 1px;
+    font-size:14px;
+    background-color: #11933f;
+    border: 2px groove;
 }

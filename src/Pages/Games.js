@@ -1,4 +1,8 @@
 import ToggleDisplay from 'react-toggle-display';
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
+
+import 'react-datepicker/dist/react-datepicker.css';
 
 const React = require('react');
 const jQuery = require('jquery');
@@ -22,8 +26,10 @@ export default class GamesList extends React.Component {
         editScore1:0,
         editScore2:0,
         editGameID:0,
+        editGameTime:'',
         resultEditGame:'',
-        resultDelete:''
+        resultDelete:'',
+        editDate: ''
     };
 
     componentDidMount = () => {
@@ -79,7 +85,8 @@ export default class GamesList extends React.Component {
             editPlayer1ID:game.player1.id,
             editPlayer2ID:game.player2.id,
             editScore1:game.score1,
-            editScore2:game.score2
+            editScore2:game.score2,
+            editDate:game.timeString,
         });
     };
 
@@ -101,9 +108,7 @@ export default class GamesList extends React.Component {
             dataType:"json",
             async:false,
             success: function(data){
-                this.setState({
-                    resultDelete:JSON.parse(data.message),
-                });
+                alert(data.message);
             }.bind(this)
         });
     };
@@ -139,12 +144,19 @@ export default class GamesList extends React.Component {
     handleSubmit = () => {
         jQuery.ajax({
             url: "http://localhost:8080/EditGame?iD="+this.state.editGameID+"&player1ID="+this.state.editPlayer1ID
-            +"&player2ID="+this.state.editPlayer2ID+"&score1="+this.state.editScore1+"&score2="+this.state.editScore2,
+            +"&player2ID="+this.state.editPlayer2ID+"&score1="+this.state.editScore1+"&score2="+this.state.editScore2+
+            "&time="+this.state.editDate.format('YYYYMMMDD'),
             type:"POST",
             dataType:"json",
             async:false,
             success: this.componentDidMount
         });
+    };
+
+    handleDateChange = (date) => {
+      this.setState({
+          editDate:date
+      });
     };
 
     render() {
@@ -154,12 +166,19 @@ export default class GamesList extends React.Component {
 
         return (
             <div className="tableHolder">
-                <Table className="GameTable" border="true" itemsPerPage={8}>
+                <Table className="GameTable" border="true" itemsPerPage={8} sortable={true} >
 
                     {this.state.games.map((game,i) =>
-                        <Tr>
-                            <Td column="Date" className="firstCell">
+                        <Tr className="firstCell" >
+                            <Td column="Date" >
+                                <div>
+                                <ToggleDisplay show={!this.state.showEdit[i]}>
                                 {game.timeString}
+                                </ToggleDisplay>
+                                <ToggleDisplay show={this.state.showEdit[i]} >
+                                    <DateInput startDate={this.state.editDate} onChange={this.handleDateChange} />
+                                </ToggleDisplay>
+                                </div>
                             </Td>
                             <Td column="Player 1" className="player1Cell">
                                 <div>
@@ -215,7 +234,7 @@ export default class GamesList extends React.Component {
                                 <div>
                                     <ToggleDisplay show={this.state.showEdit[i]}>
                                         <div>
-                                        <input type="button" value="Submit" onClick={this.handleSubmit}/>
+                                        <input type="button" value="Submit" className = "editButton" onClick={this.handleSubmit}/>
                                         &nbsp;
                                         </div>
                                     </ToggleDisplay>
@@ -223,9 +242,12 @@ export default class GamesList extends React.Component {
                                     <a style={{cursor: 'pointer'}} onClick={() => this.showEditGame(i,game)} >Edit</a>
                                     </div>
                                     &nbsp;
+                                    <ToggleDisplay show={this.state.showEdit[i]}>
+
                                     <div className="cancelContainer">
                                     <a style={{cursor: 'pointer'}} onClick={() => this.cancelEditGame(i)}>Cancel</a>
                                     </div>
+                                    </ToggleDisplay>
                                     &nbsp;
                                     &nbsp;
                                     &nbsp;
@@ -273,5 +295,18 @@ const EditScoreInput = (props) => {
            <input type = "number" defaultValue = {props.score} onChange={props.onChange}/>
     )
 };
+
+export class DateInput extends React.Component {
+    constructor (props) {
+        super(props);
+    }
+
+    render() {
+        return <DatePicker
+            selected= {moment(this.props.startDate)}
+            onChange={this.props.onChange}
+        />;
+    }
+}
 
 
