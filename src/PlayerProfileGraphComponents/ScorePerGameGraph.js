@@ -203,7 +203,7 @@ export class AverageScorePerGame extends React.Component {
                     <ComposedChart width={1000} height={400} data={this.state.dataset}
                                    margins={{top: 5, right: 30,  bottom: 5}} >
                         <XAxis allowDecimals={false} type="number" dataKey="label" domain={[0,'auto']} label={this.returnXLabel(475,375)} padding={{bottom: 50,right:10}} labelStyle = {{paddingTop:20,color : '#32CD32'}}/>
-                        <YAxis domain={[-30,30]} label={this.returnYLabel(30,150)} ticks={[-30,-20,-10,0,10,20,30]} />
+                        <YAxis domain={[0,20]} label={this.returnYLabel(30,150)} ticks={[0,10,20]} />
                         <Tooltip position={{ x: 1000, y: 0 }} content={<CustomToolTipDisplayGame setGameDisplay = {this.setGameDisplayState}/>}/>
                         <CartesianGrid strokeDasharray="3 3"/>
                         <ReferenceLine y={0} stroke='#000'/>

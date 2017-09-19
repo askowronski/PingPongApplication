@@ -133,26 +133,26 @@ export class EloRatingPerGame extends React.Component {
     };
 
     checkOppScoreIsOnlyOneOut = (elo,oppElo) => {
-      if (elo ===false &&
-      oppElo === true) {
-          if (this.state.dataset === this.state.negativeSet) {
-              let positive = this.state.positiveSet;
-              this.setState({
-                  dataset: positive
-              });
-          } else {
-
-              let negative = this.state.negativeSet;
-              this.setState({
-                  dataset: negative
-              });
-          }
-      } else {
-          let positive = this.state.positiveSet;
-          this.setState({
-              dataSet:positive
-          });
-      }
+      // if (elo ===false &&
+      // oppElo === true) {
+      //     if (this.state.dataset === this.state.negativeSet) {
+      //         let positive = this.state.positiveSet;
+      //         this.setState({
+      //             dataset: positive
+      //         });
+      //     } else {
+      //
+      //         let negative = this.state.negativeSet;
+      //         this.setState({
+      //             dataset: negative
+      //         });
+      //     }
+      // } else {
+      //     let positive = this.state.positiveSet;
+      //     this.setState({
+      //         dataSet:positive
+      //     });
+      // }
 
 
     };
@@ -165,7 +165,7 @@ export class EloRatingPerGame extends React.Component {
 
     renderOppEloRating = (state) => {
         if(state === true) {
-            return (<Line dataKey ="opponentEloRating"  fill='#ad0505'/>
+            return (<Line dataKey ="opponentEloRating"  fill='#4d004d' stroke='#4d004d' />
             )
         }
     };
@@ -196,7 +196,7 @@ export class EloRatingPerGame extends React.Component {
                         <YAxis domain={['auto','auto']} label={this.returnYLabel(30,150)} />
                         <Tooltip position={{ x: 1000, y: 0 }} content={<CustomToolTipDisplayGameElo setGameDisplay = {this.setGameDisplayState}/>}/>
                         <CartesianGrid strokeDasharray="3 3"/>
-                        <ReferenceLine y={0} stroke='#000'/>
+                        <ReferenceLine y={0} className="referenceLine"  stroke='#000'/>
                         {this.renderEloRating(this.state.showEloRating)}
                         {this.renderOppEloRating(this.state.showOppEloRating)}
                         <Legend margins={{top: 15, right: 15,  bottom: 5}} />
@@ -219,8 +219,8 @@ export const CustomToolTipDisplayGameElo  = React.createClass({
     },
 
 
-    getIntroOfPage(label) {
-        return "Game "+label;
+    getIntroOfPage(label,timeString) {
+        return "Game "+label + " -" + timeString;
     },
 
     render() {
@@ -257,13 +257,13 @@ export const CustomToolTipDisplayGameElo  = React.createClass({
                                     {payload[0].payload.eloRating}
                                 </td>
                                 <td colSpan={2}>
-                                    {-1 * payload[0].payload.opponentEloRating}
+                                    {payload[0].payload.opponentEloRating}
                                 </td>
 
                             </tr>
                             <tr>
                                 <td colSpan={5} className="GameDisplayHeader">
-                                    <span className="HeaderText">{this.getIntroOfPage(label)}</span>
+                                    <span className="HeaderText">{this.getIntroOfPage(label,game.timeString)}</span>
                                 </td>
                             </tr>
                             <tr>

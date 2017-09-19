@@ -1,5 +1,6 @@
 package app.API;
 
+import app.Exceptions.InvalidParameterException;
 import app.PersistenceManagers.GamePersistenceManager;
 import app.PersistenceManagers.PlayerPersistenceManager;
 import app.PersistenceModel.PersistenceGame;
@@ -26,9 +27,9 @@ public class GameAPI {
     public APIResult createGame(@RequestParam(value="player1ID",required = true) String player1ID,
             @RequestParam(value="player2ID",required = true) String player2ID,
             @RequestParam(value="score1",required = true) String score1,
-            @RequestParam(value="score2",required = true) String score2) {
+            @RequestParam(value="score2",required = true) String score2,
+            @RequestParam(value="time", required=true) String time) {
         GamePersistenceManager gPM = new GamePersistenceManager();
-        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
 
         try {
             int IDplayer1 = Integer.parseInt(player1ID);
@@ -36,14 +37,17 @@ public class GameAPI {
 
             int player1Score = Integer.parseInt(score1);
             int player2Score = Integer.parseInt(score2);
+            Date newTime = new SimpleDateFormat("yyyyMMMdd").parse(time);
 
-            PersistenceGame game = new PersistenceGame(gPM.getNextID(),IDplayer1,IDplayer2,player1Score,player2Score);
+            PersistenceGame game = new PersistenceGame(gPM.getNextID(),IDplayer1,IDplayer2,player1Score,player2Score,newTime);
             gPM.writeGameToFile(game);
             return  new APIResult(true,"Game Created");
 
-        } catch (NumberFormatException e ){
+        } catch (NumberFormatException | ParseException e ){
             e.printStackTrace();
             return new APIResult(false,"Game Unsuccessfully Created");
+        } catch (InvalidParameterException e) {
+            return new APIResult(false,e.getMessage());
         }
 
     }
@@ -57,7 +61,6 @@ public class GameAPI {
             @RequestParam(value="score2",required = false) Optional<Integer> score2,
             @RequestParam(value="time", required = false) Optional<String> time ) {
         GamePersistenceManager gPM = new GamePersistenceManager();
-        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         PersistenceGame game = gPM.getGameByIDNew(gameID);
         int newPlayerID1 = game.getPlayer1ID();
         int newPlayerID2 = game.getPlayer2ID();
@@ -110,7 +113,7 @@ public class GameAPI {
         if(game.getiD()==0){
             return new APIResult(false,"Game Not Found");
         }
-        
+
         gPM.deleteGameWriteToFile(game);
         return new APIResult(true,"Game Deleted");
     }

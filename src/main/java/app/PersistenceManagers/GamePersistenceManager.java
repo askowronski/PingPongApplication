@@ -1,6 +1,7 @@
 package app.PersistenceManagers;
 
 
+import app.Exceptions.InvalidParameterException;
 import app.PersistenceModel.PersistenceEloRating;
 import app.PersistenceModel.PersistenceGame;
 import app.PersistenceModel.PersistencePlayer;
@@ -15,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,13 +34,16 @@ public class GamePersistenceManager {
         this.file = new File(filePath);
     }
 
-    public void writeGameToFile(PersistenceGame game) {
+    public void writeGameToFile(PersistenceGame game) throws InvalidParameterException {
+        if (game.getTime().compareTo(new Date()) > 0) {
+            throw new InvalidParameterException("Date cannot be greater than now.");
+        }
+
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         List<PersistenceGame> games = this.getGamesNew();
 
-        games.add(game);
-
-        this.getFile().writeFile(this.writeCurrentGameToGamesJsonNew(game),false);
+        games = this.reorderGames(games,game);
+        this.writeGamesToFileNew(games);
         pPM.updatePlayersEloOnCreateGame(game,this);
 
     }
@@ -167,6 +172,20 @@ public class GamePersistenceManager {
         }
     }
 
+    public List<PingPongGame> getGamesInBetweenDates(Date beginning,Date end) {
+        List<PingPongGame> games = this.getGamesView();
+        List<PingPongGame> gamesInBetween = new ArrayList<>();
+
+        for (PingPongGame game:games) {
+            if (game.getTime().compareTo(beginning) > 0 &&
+                    game.getTime().compareTo(end) < 0) {
+                gamesInBetween.add(game);
+            }
+        }
+
+        return gamesInBetween;
+    }
+
     public List<PersistenceGame> getGamesNew() {
         ObjectMapper mapper = new ObjectMapper();
         TypeReference<List<PersistenceGame>> mapType;
@@ -250,8 +269,28 @@ public class GamePersistenceManager {
                 gamesForPlayer.add(game);
             } else if (game.getPlayer2().getiD() == player.getiD()) {
                 PingPongGame newGame = new PingPongGame(game.getiD(),game.getPlayer2(),
-                        game.getPlayer1(),game.getPlayer2Score(),game.getPlayer1Score());
+                        game.getPlayer1(),game.getPlayer2Score(),game.getPlayer1Score(),game.getTime());
                 gamesForPlayer.add(newGame);
+            }
+        }
+        return gamesForPlayer;
+    }
+
+    public List<PingPongGame> getGamesForPlayer(Player player, Date beginning, Date end) {
+        List<PingPongGame> games = this.getGamesView();
+        List<PingPongGame> gamesForPlayer = new ArrayList<>();
+
+        for(PingPongGame game:games){
+            if(game.getPlayer1().getiD() == player.getiD()) {
+                if (game.getTime().compareTo(beginning) > 0 && game.getTime().compareTo(end) < 0) {
+                    gamesForPlayer.add(game);
+                }
+            } else if (game.getPlayer2().getiD() == player.getiD()) {
+                PingPongGame newGame = new PingPongGame(game.getiD(),game.getPlayer2(),
+                        game.getPlayer1(),game.getPlayer2Score(),game.getPlayer1Score(),game.getTime());
+                if (game.getTime().compareTo(beginning) > 0 && game.getTime().compareTo(end) < 0) {
+                    gamesForPlayer.add(newGame);
+                }
             }
         }
         return gamesForPlayer;
@@ -265,6 +304,9 @@ public class GamePersistenceManager {
                 games.add(i,newGame);
                 break;
             }
+        }
+        if (games.indexOf(newGame) < 0) {
+            games.add(newGame);
         }
 
         return games;

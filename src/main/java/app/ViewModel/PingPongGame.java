@@ -25,13 +25,14 @@ public class PingPongGame {
     public PingPongGame(@JsonProperty("iD") int iD,@JsonProperty("player1")  Player player1,
                         @JsonProperty("player2") Player player2,
                         @JsonProperty("score1") int score1,
-                        @JsonProperty("score2") int score2){
+                        @JsonProperty("score2") int score2,
+            @JsonProperty("time") Date time){
          this.iD=iD;
         this.player1=player1;
         this.player2=player2;
         this.player1Score=score1;
         this.player2Score=score2;
-        this.time = new Date();
+        this.time = time;
         DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, Locale.US);
         this.timeString = df.format(this.time);
     }
@@ -48,13 +49,13 @@ public class PingPongGame {
 
     }
 
-    public PingPongGame(int id, Player player1, Player player2, int score1, int score2, Date time) {
+    public PingPongGame(int id, Player player1, Player player2, int score1, int score2) {
         this.iD=id;
         this.player1= player1;
         this.player2= player2;
         this.player1Score=score1;
         this.player2Score=score2;
-        this.time= time;
+        this.time= new Date();
         DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, Locale.US);
         this.timeString = df.format(this.time);
 

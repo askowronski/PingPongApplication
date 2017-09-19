@@ -53,9 +53,9 @@ class CreatePlayerForm extends React.Component {
                 <form onSubmit={this.handleSubmit}>
                     <label className="UsernameLabel">
                         Username: &nbsp;
-                        <input type="text" value={this.state.value} onChange={this.handleChange} />
+                        <input type="text" value={this.state.value} onChange={this.handleChange} className="createPlayerInput"/>
                     </label>
-                    <input type="submit" value="Submit" />
+                    <input type="submit" value="Submit" className="createPlayerButton"/>
                 </form>
             </div>
         );

@@ -8,6 +8,7 @@ import {EloRatingPerGame} from "../PlayerProfileGraphComponents/EloRatingGraph";
 import {Typeahead} from "react-typeahead";
 import history from '../history.js';
 import {NetWinsGraph} from "../PlayerProfileGraphComponents/NetWinsGraph";
+import {DateInput} from "./Games";
 
 const React = require('react');
 const jQuery = require('jquery');
@@ -28,8 +29,8 @@ export const CustomToolTipDisplayNet  = React.createClass({
     },
 
 
-    getIntroOfPage(label) {
-        return "Game "+label;
+    getIntroOfPage(label,timeString) {
+        return "Game "+label + " -"+timeString;
     },
 
     render() {
@@ -59,7 +60,7 @@ export const CustomToolTipDisplayNet  = React.createClass({
                             </tr>
                             <tr>
                                 <td colSpan={5} className="GameDisplayHeader">
-                                    <span className="HeaderText">{this.getIntroOfPage(label)}</span>
+                                    <span className="HeaderText">{this.getIntroOfPage(label,game.timeString)}</span>
                                 </td>
                             </tr>
                             <tr>
@@ -102,8 +103,8 @@ export const CustomToolTipDisplayGame  = React.createClass({
     },
 
 
-    getIntroOfPage(label) {
-        return "Game "+label;
+    getIntroOfPage(label,timeString) {
+        return "Game "+label + " - "+ timeString;
     },
 
     render() {
@@ -119,9 +120,12 @@ export const CustomToolTipDisplayGame  = React.createClass({
                 return (
                     <div className="custom-tooltip-average">
                         <table className="GameDisplayTable">
+                            <thead>
                             <th className="GameDisplayHeader" colSpan={5}>
                                 <span className="HeaderText">Average</span>
                             </th>
+                            </thead>
+                            <tbody>
                             <tr>
                                 <td>
                                 </td>
@@ -141,13 +145,13 @@ export const CustomToolTipDisplayGame  = React.createClass({
                                     {payload[0].payload.averageScore}
                                 </td>
                                 <td colSpan={2}>
-                                    {-1 * payload[0].payload.opponentAverageScore}
+                                    {payload[0].payload.opponentAverageScore}
                                 </td>
 
                             </tr>
                             <tr>
                                 <td colSpan={5} className="GameDisplayHeader">
-                                    <span className="HeaderText">{this.getIntroOfPage(label)}</span>
+                                    <span className="HeaderText">{this.getIntroOfPage(label,game.timeString)}</span>
                                 </td>
                             </tr>
                             <tr>
@@ -170,9 +174,10 @@ export const CustomToolTipDisplayGame  = React.createClass({
                                     {payload[0].payload.score}
                                 </td>
                                 <td colSpan={2}>
-                                    {-1 * payload[0].payload.opponentScore}
+                                    {payload[0].payload.opponentScore}
                                 </td>
                             </tr>
+                            </tbody>
                         </table>
                     </div>
                 );
@@ -347,6 +352,17 @@ export class PlayerGraphTable extends React.Component {
                         <div className="choosePlayerTypeAhead">
                     <PlayerTypeAhead onOptionSelected = {(event) => this.setPlayer(event)}
                                      players = {this.state.players}/>
+                        </div>
+                    </div>
+                    <div className="dateInputContainer">
+
+                    <div className="dateInput">
+                        <text className="choosePlayer"> End Date </text>
+                        <DateInput />
+                    </div>
+                        <div className="dateInput">
+                            <text className="choosePlayer"> Start Date </text>
+                            <DateInput />
                         </div>
                     </div>
                 </tr>

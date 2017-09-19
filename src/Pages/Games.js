@@ -86,7 +86,7 @@ export default class GamesList extends React.Component {
             editPlayer2ID:game.player2.id,
             editScore1:game.score1,
             editScore2:game.score2,
-            editDate:game.timeString,
+            editDate:moment(game.timeString),
         });
     };
 
@@ -170,17 +170,17 @@ export default class GamesList extends React.Component {
 
                     {this.state.games.map((game,i) =>
                         <Tr className="firstCell" >
-                            <Td column="Date" >
+                            <Td column="Date" value={moment(game.timeString)} sortFunction={Date} >
                                 <div>
                                 <ToggleDisplay show={!this.state.showEdit[i]}>
                                 {game.timeString}
                                 </ToggleDisplay>
                                 <ToggleDisplay show={this.state.showEdit[i]} >
-                                    <DateInput startDate={this.state.editDate} onChange={this.handleDateChange} />
+                                    <DateInput startDate={this.state.editDate} onChange={this.handleDateChange}  />
                                 </ToggleDisplay>
                                 </div>
                             </Td>
-                            <Td column="Player 1" className="player1Cell">
+                            <Td column="Player 1" className="player1Cell" value={game.player1.username}>
                                 <div>
                                     <ToggleDisplay show={!this.state.showEdit[i]}>
                                         {game.player1.username}
@@ -192,7 +192,7 @@ export default class GamesList extends React.Component {
                                     </ToggleDisplay>
                                 </div>
                             </Td>
-                            <Td column="Player 2" className="player1Cell">
+                            <Td column="Player 2" className="player1Cell" value={game.player2.username}>
                                 <div>
                                     <ToggleDisplay show={!this.state.showEdit[i]}>
                                         {game.player2.username}
@@ -205,7 +205,7 @@ export default class GamesList extends React.Component {
                                     </ToggleDisplay>
                                 </div>
                             </Td>
-                            <Td column="Score 1" className="player1Cell">
+                            <Td column="Score 1" className="player1Cell" value={game.score1}>
                                 <div>
                                     <ToggleDisplay show = {!this.state.showEdit[i]}>
                                         {game.score1}
@@ -217,7 +217,7 @@ export default class GamesList extends React.Component {
                                     </ToggleDisplay>
                                 </div>
                             </Td>
-                            <Td column="Score 2" className="player1Cell">
+                            <Td column="Score 2" className="player1Cell" value={game.score2}>
                                 <div>
                                     <ToggleDisplay show = {!this.state.showEdit[i]}>
                                         {game.score2}
@@ -265,7 +265,7 @@ export default class GamesList extends React.Component {
     }
 }
 
-const EditUsernameTypeAhead = (props) => {
+export const EditUsernameTypeAhead = (props) => {
     let options = props.players;
 
     let displayOption = (option) => {
@@ -292,7 +292,7 @@ const EditUsernameTypeAhead = (props) => {
 
 const EditScoreInput = (props) => {
     return (
-           <input type = "number" defaultValue = {props.score} onChange={props.onChange}/>
+           <input className="editScoreInput" type = "number" defaultValue = {props.score} onChange={props.onChange}/>
     )
 };
 
@@ -305,6 +305,7 @@ export class DateInput extends React.Component {
         return <DatePicker
             selected= {moment(this.props.startDate)}
             onChange={this.props.onChange}
+            className="editDateInput"
         />;
     }
 }

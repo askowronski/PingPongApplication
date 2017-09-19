@@ -167,11 +167,12 @@ Td {
 
 Th {
     padding:15px;
-    border-bottom: 2px groove;
+    border: 2px groove;
 }
 
 Tr {
     border-left: 2px groove;
+    border-right:2px groove;
 }
 
 .tableHolder {
@@ -202,6 +203,7 @@ Tr {
     margin-top: 10%;
     margin-left:10%;
     margin-right:auto;
+    z-index: 0;
 }
 
 .custom-tooltip {
@@ -455,8 +457,74 @@ border-color: #020104;
 }
 
 .editButton {
-    margin-bottom: 1px;
+    display:inline-block;
+    margin-bottom:5px;
     font-size:14px;
-    background-color: #11933f;
+    background-color: cyan;
     border: 2px groove;
+}
+
+.referenceLine {
+    opacity: 20;
+
+}
+
+.dateInput {
+    display:inline-block;
+    float: right;
+}
+
+.dateInputContainer {
+    display:inline-block;
+    float: right;
+}
+
+.choosePlayer {
+    color:black;
+    font-weight: bold;
+    font-size:18px;
+}
+
+.eloRatingText {
+    font-size:16px;
+    color:black;
+}
+
+.homePageBody {
+    border:2px groove;
+}
+
+.playersTableColumn {
+    font-size:20px;
+}
+
+.editUsernameInput {
+    font-size:18px;
+    width:30%;
+}
+
+.typeahead-text-input,.react-datepicker-ignore-onclickoutside,.editDateInput,.editScoreInput {
+    font-size:14px;
+    height:20px;
+}
+
+.createPlayerButton {
+    border-style: groove;
+    background-color: white;
+    font-weight: bold;
+    font-size: 16px;
+    font-style: italic;
+    margin-left:15px;
+}
+
+.createPlayerInput {
+    height:20px;
+    font-size:16px;
+}
+
+.react-datepicker-popper {
+    transform: translate3d(780px, 380px, 0px);
+    top: 0px;
+    left: 0px;
+    will-change: transform;
 }

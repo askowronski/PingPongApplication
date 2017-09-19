@@ -1,0 +1,24 @@
+.inputTable {
+  border:2px groove;
+  row-span: 3;
+}
+
+.inputRow {
+  border:none;
+}
+
+.inputCell {
+  border:none;
+}
+
+.createGameForm {
+  width:50%;
+}
+
+.createButton {
+  border-style: groove;
+  background-color: white;
+  font-weight: bold;
+  font-size: 22px;
+  font-style: italic;
+}

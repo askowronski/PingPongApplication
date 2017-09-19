@@ -568,34 +568,35 @@ public class PlayerPersistenceManager {
     }
 
     public void updatePlayersEloOnCreateGame(PersistenceGame game, GamePersistenceManager gPM) {
-        List<PersistenceGame> games = gPM.getGamesNew();
-
-        EloRatingPersistenceManager eRPM1 = new EloRatingPersistenceManager(games.get(games.size()-1).getPlayer1ID());
-        EloRatingPersistenceManager eRPM2 = new EloRatingPersistenceManager(games.get(games.size()-1).getPlayer2ID());
-        PersistencePlayerEloRatingList listPlayer1 = eRPM1.getEloRatingList();
-        PersistencePlayerEloRatingList listPlayer2 = eRPM2.getEloRatingList();
-
-        PersistenceEloRating newRating1;
-        PersistenceEloRating newRating2;
-
-        int indexOfPlayer1CurrentElo = listPlayer1.getListSize() - 1;
-        int indexOfPlayer2CurrentElo = listPlayer2.getListSize() - 1;
-
-        newRating1 = this.getNewRating(game,
-                game.getPlayer1ID(),
-                listPlayer1.getRating(indexOfPlayer1CurrentElo),
-                listPlayer2.getRating(indexOfPlayer2CurrentElo));
-
-        newRating2 = this.getNewRating(game,
-                game.getPlayer2ID(),
-                listPlayer2.getRating(indexOfPlayer2CurrentElo),
-                listPlayer1.getRating(indexOfPlayer1CurrentElo));
-
-        listPlayer1.addEloRating(newRating1);
-        listPlayer2.addEloRating(newRating2);
-
-        eRPM1.writeEloRatingListToFile(listPlayer1);
-        eRPM2.writeEloRatingListToFile(listPlayer2);
+//        List<PersistenceGame> games = gPM.getGamesNew();
+//
+//        EloRatingPersistenceManager eRPM1 = new EloRatingPersistenceManager(games.get(games.size()-1).getPlayer1ID());
+//        EloRatingPersistenceManager eRPM2 = new EloRatingPersistenceManager(games.get(games.size()-1).getPlayer2ID());
+//        PersistencePlayerEloRatingList listPlayer1 = eRPM1.getEloRatingList();
+//        PersistencePlayerEloRatingList listPlayer2 = eRPM2.getEloRatingList();
+//
+//        PersistenceEloRating newRating1;
+//        PersistenceEloRating newRating2;
+//
+//        int indexOfPlayer1CurrentElo = listPlayer1.getListSize() - 1;
+//        int indexOfPlayer2CurrentElo = listPlayer2.getListSize() - 1;
+//
+//        newRating1 = this.getNewRating(game,
+//                game.getPlayer1ID(),
+//                listPlayer1.getRating(indexOfPlayer1CurrentElo),
+//                listPlayer2.getRating(indexOfPlayer2CurrentElo));
+//
+//        newRating2 = this.getNewRating(game,
+//                game.getPlayer2ID(),
+//                listPlayer2.getRating(indexOfPlayer2CurrentElo),
+//                listPlayer1.getRating(indexOfPlayer1CurrentElo));
+//
+//        listPlayer1.addEloRating(newRating1);
+//        listPlayer2.addEloRating(newRating2);
+//
+//        eRPM1.writeEloRatingListToFile(listPlayer1);
+//        eRPM2.writeEloRatingListToFile(listPlayer2);
+        this.updatePlayersEloRatingEdit(game,game,new GamePersistenceManager());
     }
 
     public List<Player> getPlayersPriorToAGame(PingPongGame game) {

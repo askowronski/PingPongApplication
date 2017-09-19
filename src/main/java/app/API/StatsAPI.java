@@ -12,6 +12,10 @@ import app.StatsEngine.SinglePlayerStatisticsCalculator;
 import app.StatsEngine.TotalGamesStatsCalculator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Optional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,7 +29,9 @@ public class StatsAPI {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping("/TotalWins")
-    public APIResult getTotalWins(@RequestParam(value="id") int playerID) {
+    public APIResult getTotalWins(@RequestParam(value="id") int playerID,
+            @RequestParam(value = "beginning", required = false) Optional<String> beginning,
+            @RequestParam(value="end",required = false) Optional<String> end) {
         GamePersistenceManager gPM= new GamePersistenceManager();
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         Player player = pPM.getPlayerByIDOld(playerID);
@@ -33,10 +39,28 @@ public class StatsAPI {
             return new APIResult(false,"Player not found");
         }
 
-        List<PingPongGame> games = gPM.getGamesForPlayer(player);
+        if (beginning.isPresent() && end.isPresent()) {
+            Date beginningTime;
+            Date endTime;
+            try {
 
-        SinglePlayerStatisticsCalculator calc = new SinglePlayerStatisticsCalculator(games,player);
-        return new APIResult(true,Integer.toString(calc.getWins()));
+                beginningTime = new SimpleDateFormat("yyyyMMMdd").parse(beginning.get());
+                endTime = new SimpleDateFormat("yyyyMMMdd").parse(end.get());
+                List<PingPongGame> games = gPM.getGamesForPlayer(player, beginningTime, endTime);
+                SinglePlayerStatisticsCalculator calc = new SinglePlayerStatisticsCalculator(games,
+                        player);
+                return new APIResult(true, Integer.toString(calc.getWins()));
+            } catch (ParseException p) {
+                System.out.println(p.getMessage());
+                return new APIResult(false, p.getMessage());
+
+            }
+        } else {
+            List<PingPongGame> games = gPM.getGamesForPlayer(player);
+            SinglePlayerStatisticsCalculator calc = new SinglePlayerStatisticsCalculator(games,
+                    player);
+            return new APIResult(true, Integer.toString(calc.getWins()));
+        }
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
@@ -200,17 +224,17 @@ public class StatsAPI {
             Player opponent = game.getOpponent(player);
             if(game.getPlayer1().getiD() == playerID){
                 score = game.getPlayer1Score();
-                oppScore = -game.getPlayer2Score();
+                oppScore = game.getPlayer2Score();
             } else {
                 score = game.getPlayer2Score();
-                oppScore = -game.getPlayer1Score();
+                oppScore = game.getPlayer1Score();
             }
 
 
             runningGameList.add(game);
             SinglePlayerStatisticsCalculator calc = new SinglePlayerStatisticsCalculator(runningGameList,player);
             AverageScorePerGameData data = new AverageScorePerGameData(calc.getAverageScore(),
-                    score,- calc.getOpponentAverageScore(),oppScore,game,i,player.getEloRating().getRating(),opponent.getEloRating().getRating());
+                    score,calc.getOpponentAverageScore(),oppScore,game,i,player.getEloRating().getRating(),opponent.getEloRating().getRating());
             dataList.add(data);
             i++;
         }
@@ -236,7 +260,7 @@ public class StatsAPI {
 
         List<EloRatingGraphData> data = new ArrayList<>();
 
-        data.add(new EloRatingGraphData(new PingPongGame(0,player,player,0,0),0,1500,-1500));
+        data.add(new EloRatingGraphData(new PingPongGame(0,player,player,0,0),0,1500,1500));
 
         int i = 1;
         for(PingPongGame game:gamesForPlayer){
@@ -248,7 +272,7 @@ public class StatsAPI {
                 player1 = game.getPlayer1();
             }
 
-            data.add(new EloRatingGraphData(game,i,player1.getEloRating().getRating(),-opponenet.getEloRating().getRating()));
+            data.add(new EloRatingGraphData(game,i,player1.getEloRating().getRating(),opponenet.getEloRating().getRating()));
             i++;
         }
          String json;

@@ -1,10 +1,13 @@
 import {Header} from '../ReactComponents/displayComponents.js';
 import {PlayerTypeAhead} from "./PlayerProfilePage";
-import {DateInput} from "./Games";
+import {DateInput, EditUsernameTypeAhead} from "./Games";
+import moment from 'moment';
+import {Typeahead} from 'react-bootstrap-typeahead';
 const React = require('react');
 const jQuery = require('jquery');
 const css = require("css-loader");
 require("../stylesheet.css");
+require("../CreateGame.css");
 
 class CreateGameForm extends React.Component {
     constructor(props) {
@@ -35,6 +38,7 @@ class CreateGameForm extends React.Component {
                 this.setState({
                     players:JSON.parse(data.message),
                     resultPlayers:data.success,
+                    date:moment()
                 });
             }.bind(this)
         });
@@ -85,9 +89,8 @@ class CreateGameForm extends React.Component {
         console.log(this.state.value);
 
         jQuery.ajax({
-
             url: "http://localhost:8080/CreateGame?player1ID="+this.state.player1ID+"&player2ID="+this.state.player2ID+
-            "&score1="+this.state.score1+"&score2="+this.state.score2,
+            "&score1="+this.state.score1+"&score2="+this.state.score2+"&time="+this.state.date.format('YYYYMMMDD'),
             type:"POST",
             dataType:"json",
             async:false,
@@ -101,41 +104,81 @@ class CreateGameForm extends React.Component {
 
     };
 
+    handleDateChange = (date) => {
+      this.setState({
+          date:moment(date)
+      })
+
+    };
+
 
     render() {
         return (
             <div>
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={this.handleSubmit} className="createGameForm">
+                    <table className = "inputTable">
+                        <tbody>
+                        <tr className="inputRow">
                     <label className="inputGameLabel">
+                        <td className="inputCell">
                     <text className="inputGameLabel"> Date :</text>
-                        <DateInput/>
-                    </label>
-                    <label className="inputGameLabel">
-                        <text className="inputGameLabel"> Player 1: </text>
+                        </td>
+                        <td className="inputCell">
                         <div className="choosePlayerTypeAhead">
-                        <PlayerTypeAhead id="player1IDInput" players={this.state.players}
+                        <DateInput startDate={this.state.date} onChange={this.handleDateChange}/>
+                        </div>
+                        </td>
+                    </label>
+                        </tr>
+                        <tr className="inputRow">
+                    <label className="inputGameLabel">
+                        <td className="inputCell">
+                        <text className="inputGameLabel"> Player 1: </text>
+                        </td>
+                        <td className="inputCell">
+                        <div className="choosePlayerTypeAhead">
+                        <EditUsernameTypeAhead id="player1IDInput" players={this.state.players}
                                          onOptionSelected = {(event) => this.setPlayer1(event)}/>
                         </div>
+                        </td>
                     </label>
-                    <br/>
+                        </tr>
+                        <tr className="inputRow">
                     <label>
+                        <td className="inputCell">
                         <text className="inputGameLabel"> Player 2: </text>
+                        </td>
+                        <td className="inputCell">
                         <div className="choosePlayerTypeAhead">
-                        <PlayerTypeAhead id="player1IDInput" players={this.state.players}
+                        <EditUsernameTypeAhead id="player1IDInput" players={this.state.players}
                                          onOptionSelected = {(event) => this.setPlayer2(event)}/>
                         </div>
+                        </td>
                     </label>
-                    <br/>
+                        </tr>
+                        <tr className="inputRow">
                     <label>
+                        <td className="inputCell"v>
                         <text className="inputGameLabel">   Score 1: </text>
+                        </td>
+                        <td className="inputCell">
                         <input id="score1Input" type="text" value={this.state.score1} onChange={this.handleChange} />
+                        </td>
                     </label>
-                    <br/>
+                        </tr>
+                        <tr className="inputRow">
                     <label>
+                        <td className="inputCell">
                         <text className="inputGameLabel">  Score 2: </text>
+                        </td>
+                        <td className="inputCell">
                         <input id="score2Input" type="text" value={this.state.score2} onChange={this.handleChange} />
+                        </td>
                     </label>
-                    <input type="submit" value="Submit" />
+                    <input type="submit" className="createButton" value="Submit" />
+                        </tr>
+                        </tbody>
+                    </table>
                 </form>
             </div>
         );
@@ -161,5 +204,26 @@ export default class CreateGame extends React.Component {
             </div>
         );
 
+    }
+}
+
+class CreateGamePlayerTypeAhead extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            players:props.players,
+            currentPlayer:props.currentPlayer
+        };
+        this.handleChange = props.handleChange;
+    }
+
+    render() {
+        return (
+            <Typeahead
+
+                onChange={this.handleChange}
+                options={this.state.players}
+            />
+        );
     }
 }

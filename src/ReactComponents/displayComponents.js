@@ -57,29 +57,31 @@ class InfoDisplayGame extends React.Component  {
 
     state = {
         data:"",
-        player1ID:"",
+        player1Username:"",
         id:"" ,
-        player2ID:"",
+        player2Username:"",
         score1:"",
-        score2:""
+        score2:"",
+        time:''
     };
 
     componentDidMount = () => {
 
         jQuery.ajax({
 
-            url: "http://localhost:8080/GetGame?iD=2",
+            url: "http://localhost:8080/GetGame?iD=6",
             type:"GET",
             dataType:"json",
             async:false,
             success: function(data){
                 this.setState({
                     data:data.message,
-                    player1ID:JSON.parse(data.message).player1.id,
-                    player2ID:JSON.parse(data.message).player2.id,
+                    player1Username:JSON.parse(data.message).player1.username,
+                    player2Username:JSON.parse(data.message).player2.username,
                     id: JSON.parse(data.message).iD,
                     score1:JSON.parse(data.message).score1,
-                    score2:JSON.parse(data.message).score2
+                    score2:JSON.parse(data.message).score2,
+                    time:JSON.parse(data.message).timeString
                 });
             }.bind(this)
         });
@@ -91,16 +93,19 @@ class InfoDisplayGame extends React.Component  {
     render(){
         return (
 
-            <div id="infoDisplay" className="square">
-                <span>id: {this.state.id} </span>
+            <div className="infoDisplay" >
+                <span className="infoDisplayHeader"> Game </span>
                 <br/>
-                <span>Player1 ID: {this.state.player1ID}</span>
+                <span className="longestStreakUsername">Date : {this.state.time} </span>
                 <br/>
-                <span>Player2 ID: {this.state.player2ID}</span>
+                <span>score: {this.state.score1}</span>
+                &nbsp;&nbsp;&nbsp;
+                <span>score: {this.state.score2}</span>
                 <br/>
-                <span>score1: {this.state.score1}</span>
-                <br/>
-                <span>score2: {this.state.score2}</span>
+                <span>Player 1: {this.state.player1Username}</span>
+                &nbsp;&nbsp;&nbsp;
+                <span>Player 2: {this.state.player2Username}</span>
+
             </div>
 
         );
@@ -141,14 +146,12 @@ class InfoDisplayHighestRating extends React.Component  {
     render(){
         return (
 
-            <div id="highestEloRatingContainer" className="square">
-                <span id="highestEloRatingHeader">Player With Highest Elo Rating!</span>
+            <div className="infoDisplay" >
+                <span className="infoDisplayHeader">Player With Highest Elo Rating</span>
                 <br/>
-                <span id="highestEloRatingUsername">Username: {this.state.username} </span>
+                <span className="longestStreakUsername">Username: {this.state.username} </span>
                 <br/>
-                <span id="highestEloRatingRating">Rating: {this.state.eloRating}</span>
-                <br/>
-                <span id="highestEloRatingID">ID: {this.state.id}</span>
+                <span className="eloRatingText">Rating: {parseFloat(this.state.eloRating).toFixed(2)}</span>
             </div>
 
         );
@@ -212,7 +215,7 @@ export const InfoDisplayTable = (props) => {
     return (
         <div id = "homePageTableContainer" className="displayTable">
             <table className="homePageTable">
-                <tbody>
+                <tbody className="homePageBody">
                 <tr id="infoDisplay" className="infoDisplay">
                     <td className="homePageTd"><InfoDisplayPlayer/></td>
                     <td className="homePageTd"><InfoDisplayGame/></td>
