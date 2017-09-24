@@ -213,8 +213,8 @@ export class AverageScorePerGame extends React.Component {
                     </ComposedChart>
                 </div>
                 <div className="averageScoreToggleButtons">
-                    <button onClick={() => this.toggleScore()}>{this.state.scoreButtonValue}</button>
-                    <button onClick={() => this.toggleOppScore()}>{this.state.oppScoreButtonValue}</button>
+                    <button className="graphButton" onClick={() => this.toggleScore()}>{this.state.scoreButtonValue}</button>
+                    <button className="graphButton" onClick={() => this.toggleOppScore()}>{this.state.oppScoreButtonValue}</button>
                 </div>
             </div>
         )

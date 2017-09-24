@@ -203,8 +203,8 @@ export class EloRatingPerGame extends React.Component {
                     </LineChart>
                 </div>
                 <div className="averageScoreToggleButtons">
-                    <button onClick={() => this.toggleEloRating()}>{this.state.eloRatingButton}</button>
-                    <button onClick={() => this.toggleOppEloRating()}>{this.state.oppEloRatingButton}</button>
+                    <button className="graphButton" onClick={() => this.toggleEloRating()}>{this.state.eloRatingButton}</button>
+                    <button className="graphButton" onClick={() => this.toggleOppEloRating()}>{this.state.oppEloRatingButton}</button>
                 </div>
             </div>
         )

@@ -89,7 +89,7 @@ export class NetWinsGraph extends React.Component {
         return (
             <div className="PlayerChartContainer">
                 <div className="PlayerGraph">
-                    <span ><text >Net Wins/Losses</text></span>
+                    <span ><text >Net Wins</text></span>
                     <ComposedChart width={1000} height={400} data={this.state.dataset}
                                    margin={{top: 5, right: 30, left: 20, bottom: 5}}
                                    label={"Net Wins/Losses"}>
@@ -104,7 +104,7 @@ export class NetWinsGraph extends React.Component {
                         <Tooltip position={{ x: 1000, y: 0 }}  content={<CustomToolTipDisplayNet/>} />
                     </ComposedChart>
                     <div className="netWinsToggleButtons">
-                        <button onClick={() => this.toggleBarLine()}>{this.state.buttonValue}</button>
+                        <button className="graphButton" onClick={() => this.toggleBarLine()}>{this.state.buttonValue}</button>
                     </div>
                 </div>
 

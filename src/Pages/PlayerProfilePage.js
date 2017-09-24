@@ -1,6 +1,18 @@
 import ToggleDisplay from 'react-toggle-display';
 import {
-    LineChart, Line, XAxis, YAxis, CartesianGrid, Area, AreaChart, Tooltip,BarChart,Bar,Legend,ReferenceLine,ComposedChart
+    LineChart,
+    Line,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Area,
+    AreaChart,
+    Tooltip,
+    BarChart,
+    Bar,
+    Legend,
+    ReferenceLine,
+    ComposedChart
 } from 'recharts';
 import pureRender from 'react-pure-render';
 import {AverageScorePerGame} from "../PlayerProfileGraphComponents/ScorePerGameGraph";
@@ -20,22 +32,19 @@ const fusioncharts = require('fusioncharts');
 const charts = require('fusioncharts/fusioncharts.charts');
 const {PropTypes} = React;
 
-
-export const CustomToolTipDisplayNet  = React.createClass({
+export const CustomToolTipDisplayNet = React.createClass({
     propTypes: {
         type: PropTypes.string,
         payload: PropTypes.array,
         label: PropTypes.number,
     },
 
-
-    getIntroOfPage(label,timeString) {
-        return "Game "+label + " -"+timeString;
+    getIntroOfPage(label, timeString) {
+        return "Game " + label + " -" + timeString;
     },
 
     render() {
-        const { active } = this.props;
-
+        const {active} = this.props;
 
         if (active) {
             const {payload, label} = this.props;
@@ -46,7 +55,8 @@ export const CustomToolTipDisplayNet  = React.createClass({
                     <div className="custom-tooltip-average">
                         <table className="GameDisplayTable">
                             <th className="GameDisplayHeader" colSpan={5}>
-                                <span className="HeaderText">Net Wins/Losses</span>
+                                <span
+                                    className="HeaderText">Net Wins/Losses</span>
                             </th>
                             <tr>
                                 <td>
@@ -60,7 +70,9 @@ export const CustomToolTipDisplayNet  = React.createClass({
                             </tr>
                             <tr>
                                 <td colSpan={5} className="GameDisplayHeader">
-                                    <span className="HeaderText">{this.getIntroOfPage(label,game.timeString)}</span>
+                                    <span
+                                        className="HeaderText">{this.getIntroOfPage(
+                                        label, game.timeString)}</span>
                                 </td>
                             </tr>
                             <tr>
@@ -72,7 +84,8 @@ export const CustomToolTipDisplayNet  = React.createClass({
                                 </td>
 
                                 <td className="AverageUserHeader" colSpan={2}>
-                                    <span className="You">{game.player2.username}</span>
+                                    <span
+                                        className="You">{game.player2.username}</span>
                                 </td>
                             </tr>
                             <tr>
@@ -95,22 +108,20 @@ export const CustomToolTipDisplayNet  = React.createClass({
     }
 });
 
-export const CustomToolTipDisplayGame  = React.createClass({
+export const CustomToolTipDisplayGame = React.createClass({
     propTypes: {
         type: PropTypes.string,
         payload: PropTypes.array,
         label: PropTypes.number,
     },
 
-
-    getIntroOfPage(label,timeString) {
-        return "Game "+label + " - "+ timeString;
+    getIntroOfPage(label, timeString) {
+        return "Game " + label + " - " + timeString;
     },
 
     render() {
 
-        const { active } = this.props;
-
+        const {active} = this.props;
 
         if (active) {
             const {payload, label} = this.props;
@@ -151,7 +162,9 @@ export const CustomToolTipDisplayGame  = React.createClass({
                             </tr>
                             <tr>
                                 <td colSpan={5} className="GameDisplayHeader">
-                                    <span className="HeaderText">{this.getIntroOfPage(label,game.timeString)}</span>
+                                    <span
+                                        className="HeaderText">{this.getIntroOfPage(
+                                        label, game.timeString)}</span>
                                 </td>
                             </tr>
                             <tr>
@@ -163,7 +176,8 @@ export const CustomToolTipDisplayGame  = React.createClass({
                                 </td>
 
                                 <td className="AverageUserHeader" colSpan={2}>
-                                    <span className="You">{game.player2.username}</span>
+                                    <span
+                                        className="You">{game.player2.username}</span>
                                 </td>
                             </tr>
                             <tr>
@@ -189,10 +203,9 @@ export const CustomToolTipDisplayGame  = React.createClass({
 
 export class AverageScoreGraph extends React.Component {
     state = {
-        dataset:[],
-        result:'',
+        dataset: [],
+        result: '',
     };
-
 
     returnData = () => {
         return this.state.dataset
@@ -202,13 +215,13 @@ export class AverageScoreGraph extends React.Component {
         jQuery.ajax({
 
             url: "http://localhost:8080/GetAverageScore?id=2",
-            type:"GET",
-            dataType:"json",
-            async:false,
-            success: function(data){
+            type: "GET",
+            dataType: "json",
+            async: false,
+            success: function(data) {
                 this.setState({
-                    dataset:JSON.parse(data.message),
-                    result:data.success,
+                    dataset: JSON.parse(data.message),
+                    result: data.success,
                 });
 
             }.bind(this)
@@ -216,13 +229,13 @@ export class AverageScoreGraph extends React.Component {
         jQuery.ajax({
 
             url: "http://localhost:8080/GetGamesForPlayerChart?id=2",
-            type:"GET",
-            dataType:"json",
-            async:false,
-            success: function(data){
+            type: "GET",
+            dataType: "json",
+            async: false,
+            success: function(data) {
                 this.setState({
-                    games:JSON.parse(data.message),
-                    result:data.success,
+                    games: JSON.parse(data.message),
+                    result: data.success,
                 });
 
             }.bind(this)
@@ -230,38 +243,37 @@ export class AverageScoreGraph extends React.Component {
 
     };
 
-
-
-
-    returnYLabel = (x,y) => {
+    returnYLabel = (x, y) => {
         return (
             <text x={x} y={y} textAnchor="middle">Score</text>
         )
     };
 
-    returnXLabel = (x,y) => {
+    returnXLabel = (x, y) => {
         return (
             <text x={x} y={y} textAnchor="middle">Through Current Game</text>
         )
     };
 
-
     render() {
         return (
             <div className="PlayerChartContainer">
                 <div className="PlayerGraph">
-                <BarChart width={500} height={400} data={this.state.dataset}
-                margins={{top: 5, right: 30, left: 20, bottom: 5}}
-                 >
-                <XAxis dataKey="label" label={this.returnXLabel(325,262)} />
-                <YAxis domain={[-10,10]} name={"Win/Losses"} ticks={[-10,0,10]} label={this.returnYLabel(0,175)} />
-                <CartesianGrid strokeDasharray="3 3"/>
-                <ReferenceLine y={0} stroke='#000'/>
-                <Legend  />
-                <Bar dataKey="averageScore"  fill="#8884d8" />}/>
-                <Tooltip  />
+                    <BarChart width={500} height={400} data={this.state.dataset}
+                              margins={{top: 5, right: 30, left: 20, bottom: 5}}
+                    >
+                        <XAxis dataKey="label"
+                               label={this.returnXLabel(325, 262)}/>
+                        <YAxis domain={[-10, 10]} name={"Win/Losses"}
+                               ticks={[-10, 0, 10]}
+                               label={this.returnYLabel(0, 175)}/>
+                        <CartesianGrid strokeDasharray="3 3"/>
+                        <ReferenceLine y={0} stroke='#000'/>
+                        <Legend  />
+                        <Bar dataKey="averageScore" fill="#8884d8"/>}/>
+                        <Tooltip  />
 
-                </BarChart>
+                    </BarChart>
                 </div>
             </div>
         )
@@ -276,9 +288,9 @@ export const PlayerTypeAhead = (props) => {
     };
 
     let handleHint = (option) => {
-        for (let i = 0; i<options.length; i++) {
+        for (let i = 0; i < options.length; i++) {
             if (new RegExp('^' + option).test(options[0])) {
-                props.currentPlayer=options[i];
+                props.currentPlayer = options[i];
             }
         }
         return '';
@@ -286,15 +298,15 @@ export const PlayerTypeAhead = (props) => {
 
     return (
         <Typeahead
-            options = {options}
-            displayOption = {displayOption}
-            filterOption = 'username'
-            value = {props.currentPlayer}
-            id = {props.id}
-            onOptionSelected = {props.onOptionSelected}
+            options={options}
+            displayOption={displayOption}
+            filterOption='username'
+            value={props.currentPlayer}
+            id={props.id}
+            onOptionSelected={props.onOptionSelected}
             inputDisplayOption={handleHint}
             customClasses={{
-                input:"typeAheadInput"
+                input: "typeAheadInput"
             }}
 
         />
@@ -306,11 +318,13 @@ export class PlayerGraphTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            playerID:props.history.location.state.player.id,
-            players:[],
-            resultPlayers:'',
-            playerUsername:props.history.location.state.player.username,
-            history:history.state
+            playerID: props.history.location.state.player.id,
+            players: [],
+            resultPlayers: '',
+            playerUsername: props.history.location.state.player.username,
+            history: history.state,
+            startDate:'',
+            endDate:''
         };
     }
 
@@ -318,25 +332,25 @@ export class PlayerGraphTable extends React.Component {
         jQuery.ajax({
 
             url: "http://localhost:8080/GetPlayers",
-            type:"GET",
-            dataType:"json",
-            async:false,
-            success: function(data){
+            type: "GET",
+            dataType: "json",
+            async: false,
+            success: function(data) {
                 this.setState({
-                    players:JSON.parse(data.message),
-                    resultPlayers:data.success,
+                    players: JSON.parse(data.message),
+                    resultPlayers: data.success,
                 });
             }.bind(this)
         });
     };
 
     setPlayer = (event) => {
-      let id = event.id;
-      let username = event.username;
-      this.setState({
-          playerID:id,
-          playerUsername:username
-      })
+        let id = event.id;
+        let username = event.username;
+        this.setState({
+            playerID: id,
+            playerUsername: username
+        })
     };
 
     render() {
@@ -344,25 +358,30 @@ export class PlayerGraphTable extends React.Component {
             <table >
                 <thead>
                 <tr>
-                    <th className="playerProfileHeader">Player Profile <spam className="UsernameHeader">{this.state.playerUsername}</spam></th>
+                    <th className="playerProfileHeader">Player Profile
+                        <span
+                            className="UsernameHeader">{this.state.playerUsername}</span>
+                    </th>
                 </tr>
                 <tr>
-                    <div className = "choosePlayerContainer">
-                    <text className="choosePlayer">Choose Player </text>
+                    <div className="choosePlayerContainer">
+                        <text className="choosePlayer">Choose Player</text>
                         <div className="choosePlayerTypeAhead">
-                    <PlayerTypeAhead onOptionSelected = {(event) => this.setPlayer(event)}
-                                     players = {this.state.players}/>
+                            <PlayerTypeAhead
+                                onOptionSelected={(event) => this.setPlayer(
+                                    event)}
+                                players={this.state.players}/>
                         </div>
                     </div>
                     <div className="dateInputContainer">
 
-                    <div className="dateInput">
-                        <text className="choosePlayer"> End Date </text>
-                        <DateInput />
-                    </div>
                         <div className="dateInput">
-                            <text className="choosePlayer"> Start Date </text>
-                            <DateInput />
+                            <text className="choosePlayer"> End Date</text>
+                            <DateInput startDate={this.state.startDate}/>
+                        </div>
+                        <div className="dateInput">
+                            <text className="choosePlayer"> Start Date</text>
+                            <DateInput startDate={this.state.endDate}/>
                         </div>
                     </div>
                 </tr>
@@ -370,16 +389,18 @@ export class PlayerGraphTable extends React.Component {
 
                 <tbody>
                 <tr id="infoDisplay">
-                    <td><AverageScorePerGame playerID = {this.state.playerID}/></td>
+                    <td><AverageScorePerGame playerID={this.state.playerID}/>
+                    </td>
                 </tr>
                 <tr id="infoDisplay">
-                    <td><NetWinsGraph playerID = {this.state.playerID}/></td>
+                    <td><NetWinsGraph playerID={this.state.playerID}/></td>
                 </tr>
                 <tr>
-                    <td><EloRatingPerGame playerID = {this.state.playerID}/></td>
+                    <td><EloRatingPerGame playerID={this.state.playerID}/></td>
                 </tr>
                 </tbody>
             </table>
         )
     }
-};
+}
+;

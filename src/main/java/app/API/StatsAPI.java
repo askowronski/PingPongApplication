@@ -2,6 +2,7 @@ package app.API;
 
 
 import app.API.GraphData.AverageScorePerGameData;
+import app.API.GraphData.DateRangeData;
 import app.API.GraphData.EloRatingGraphData;
 import app.PersistenceManagers.GamePersistenceManager;
 import app.PersistenceManagers.PlayerPersistenceManager;
@@ -197,13 +198,57 @@ public class StatsAPI {
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
-    @RequestMapping("/GetAverageScores")
-    public APIResult getAverageScores(@RequestParam(value="id") int playerID) {
+    @RequestMapping("/GetPlayersGameDateRange")
+    public APIResult getPlayersGameDateRange(@RequestParam(value="id") int playerID) {
         GamePersistenceManager gPM = new GamePersistenceManager();
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
 
         List<PingPongGame> gamesForPlayer = gPM.getGamesForPlayer(gPM.getPlayer(playerID));
+        Date begTime = gamesForPlayer.get(0).getTime();
+        Date endTime = gamesForPlayer.get(gamesForPlayer.size()-1).getTime();
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        String json="";
+
+        try {
+            json= mapper.writeValueAsString(new DateRangeData(begTime,endTime));
+        } catch(JsonProcessingException e){
+            json= e.getMessage();
+        }
+
+        return new APIResult(true, json);
+
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping("/GetAverageScores")
+    public APIResult getAverageScores(@RequestParam(value="id") int playerID,
+            @RequestParam(value="beginningTime") Optional<String> beginningTime,
+            @RequestParam(value="endingTime") Optional<String> endingTime) {
+        GamePersistenceManager gPM = new GamePersistenceManager();
+        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
+        Date begTime;
+        Date endTime;
+        List<PingPongGame> gamesForPlayer;
+
+        if (beginningTime.isPresent() && endingTime.isPresent()) {
+            try {
+                begTime = new SimpleDateFormat("yyyyMMMdd").parse(beginningTime.get());
+                endTime = new SimpleDateFormat("yyyyMMMdd").parse(endingTime.get());
+                gamesForPlayer = gPM.getGamesForPlayer(gPM.getPlayer(playerID),begTime,endTime);
+
+            } catch (ParseException e) {
+                return new APIResult(false,e.getMessage());
+            }
+
+        } else {
+            gamesForPlayer = gPM.getGamesForPlayer(gPM.getPlayer(playerID));
+        }
         Player player = pPM.getViewPlayerByID(playerID,gamesForPlayer.get(gamesForPlayer.size()-1).getiD());
+
+        Date theFirstDate = gamesForPlayer.get(0).getTime();
+        Date theEndDate = gamesForPlayer.get(gamesForPlayer.size()-1).getTime();
 
         if(gamesForPlayer.size()==0){
             return new APIResult(false,"No Games For Player");
@@ -216,7 +261,7 @@ public class StatsAPI {
 
         dataList.add(new AverageScorePerGameData(0,0,0,
                 0,new PingPongGame(0,player,player,0,0),0,
-                1500.00,gamesForPlayer.get(0).getOpponent(player).getEloRating().getRating()));
+                1500.00,gamesForPlayer.get(0).getOpponent(player).getEloRating().getRating(),theFirstDate,theEndDate));
 
         for(PingPongGame game:gamesForPlayer){
             int score = 0;
@@ -234,7 +279,7 @@ public class StatsAPI {
             runningGameList.add(game);
             SinglePlayerStatisticsCalculator calc = new SinglePlayerStatisticsCalculator(runningGameList,player);
             AverageScorePerGameData data = new AverageScorePerGameData(calc.getAverageScore(),
-                    score,calc.getOpponentAverageScore(),oppScore,game,i,player.getEloRating().getRating(),opponent.getEloRating().getRating());
+                    score,calc.getOpponentAverageScore(),oppScore,game,i,player.getEloRating().getRating(),opponent.getEloRating().getRating(),theFirstDate,theEndDate);
             dataList.add(data);
             i++;
         }
