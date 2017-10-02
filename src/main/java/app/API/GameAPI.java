@@ -2,10 +2,8 @@ package app.API;
 
 import app.Exceptions.InvalidParameterException;
 import app.PersistenceManagers.GamePersistenceManager;
-import app.PersistenceManagers.PlayerPersistenceManager;
 import app.PersistenceModel.PersistenceGame;
 import app.ViewModel.PingPongGame;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -40,7 +38,7 @@ public class GameAPI {
             Date newTime = new SimpleDateFormat("yyyyMMMdd").parse(time);
 
             PersistenceGame game = new PersistenceGame(gPM.getNextID(),IDplayer1,IDplayer2,player1Score,player2Score,newTime);
-            gPM.writeGameToFile(game);
+            gPM.createGame(game);
             return  new APIResult(true,"Game Created");
 
         } catch (NumberFormatException | ParseException e ){
@@ -61,7 +59,7 @@ public class GameAPI {
             @RequestParam(value="score2",required = false) Optional<Integer> score2,
             @RequestParam(value="time", required = false) Optional<String> time ) {
         GamePersistenceManager gPM = new GamePersistenceManager();
-        PersistenceGame game = gPM.getGameByIDNew(gameID);
+        PersistenceGame game = gPM.getGameByID(gameID);
         int newPlayerID1 = game.getPlayer1ID();
         int newPlayerID2 = game.getPlayer2ID();
         int newScore1 = game.getPlayer1Score();
@@ -109,12 +107,12 @@ public class GameAPI {
     @RequestMapping(path = "/DeleteGame",method=DELETE)
     public APIResult deleteGame(@RequestParam("iD") int iD) {
         GamePersistenceManager gPM = new GamePersistenceManager();
-        PersistenceGame game = gPM.getGameByIDNew(iD);
+        PersistenceGame game = gPM.getGameByID(iD);
         if(game.getiD()==0){
             return new APIResult(false,"Game Not Found");
         }
 
-        gPM.deleteGameWriteToFile(game);
+        gPM.deleteGamePropogate(game);
         return new APIResult(true,"Game Deleted");
     }
 
@@ -122,7 +120,7 @@ public class GameAPI {
     @RequestMapping(path = "/GetGame", method=GET)
     public APIResult getGame(@RequestParam("iD") int iD) {
         GamePersistenceManager gPM = new GamePersistenceManager();
-        PingPongGame game = gPM.getGameByIDOld(iD);
+        PingPongGame game = gPM.getViewGameByID(iD);
         return new APIResult(true, gPM.writeGameToJson(game));
 
     }
@@ -132,7 +130,7 @@ public class GameAPI {
     public APIResult getGames() {
         GamePersistenceManager gPM = new GamePersistenceManager();
         List<PingPongGame> games = gPM.getGamesView();
-        return new APIResult(true, gPM.writeGamesToJsonOld(games));
+        return new APIResult(true, gPM.writeViewGamesToJson(games));
 
     }
 
@@ -141,7 +139,7 @@ public class GameAPI {
     public APIResult getGamesForPlayer(@RequestParam(value="id") int id) {
         GamePersistenceManager gPM = new GamePersistenceManager();
         List<PingPongGame> games = gPM.getGamesForPlayer(gPM.getPlayer(id));
-        return new APIResult(true, gPM.writeGamesToJsonOld(games));
+        return new APIResult(true, gPM.writeViewGamesToJson(games));
 
     }
 

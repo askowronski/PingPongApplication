@@ -3,19 +3,37 @@ package app.PersistenceModel;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
+@Entity
+@Table(name = "Player")
 public class PersistencePlayer {
 
-    @JsonProperty("id") private final int id;
-    @JsonProperty("username") private String username;
-    @JsonProperty("deleted") private int deleted;
+    @JsonProperty("id")
+    @Id
+    @Column(name = "id", updatable = false)
+    private int id;
+    @JsonProperty("username")
+    @Column(name = "username")
+    private String username;
+    @JsonProperty("deleted")
+    @Column(name = "deleted")
+    private int deleted;
 
     @JsonCreator
     public PersistencePlayer(@JsonProperty("id") int id,@JsonProperty("username") String username) {
         this.id = id;
         this.username = username;
         this.deleted = 0;
+    }
+
+    public PersistencePlayer() {
+
     }
 
     public int getId() {
@@ -36,6 +54,14 @@ public class PersistencePlayer {
 
     public int getDeleted() {
         return deleted;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setDeleted(int deleted) {
+        this.deleted = deleted;
     }
 
     @Override

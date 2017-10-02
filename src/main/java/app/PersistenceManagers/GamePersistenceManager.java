@@ -2,7 +2,6 @@ package app.PersistenceManagers;
 
 
 import app.Exceptions.InvalidParameterException;
-import app.PersistenceModel.PersistenceEloRating;
 import app.PersistenceModel.PersistenceGame;
 import app.PersistenceModel.PersistencePlayer;
 import app.PersistenceModel.PersistencePlayerEloRatingList;
@@ -19,31 +18,60 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.NoResultException;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
 public class GamePersistenceManager {
 
     private static String FILE_PATH = "pingPongGames.txt";
 
+    public static String GET_GAMES = "from PersistenceGame as games where games.deleted = false";
+    public static String GET_GAME_BY_ID = "from PersistenceGame as game where game.iD = :id";
+
     private final File file;
+
+    private SessionFactory factory;
 
     public GamePersistenceManager() {
         this.file = new File(FILE_PATH);
+        try {
+            Configuration config = new Configuration().configure();
+            config.addAnnotatedClass(PersistenceGame.class);
+            this.factory = config.buildSessionFactory();
+        } catch (HibernateException e ) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
     }
 
     public GamePersistenceManager(String filePath) {
         this.file = new File(filePath);
     }
 
-    public void writeGameToFile(PersistenceGame game) throws InvalidParameterException {
+    public void createGame(PersistenceGame game) throws InvalidParameterException {
         if (game.getTime().compareTo(new Date()) > 0) {
             throw new InvalidParameterException("Date cannot be greater than now.");
         }
 
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        List<PersistenceGame> games = this.getGamesNew();
 
-        games = this.reorderGames(games,game);
-        this.writeGamesToFileNew(games);
+        try {
+            Session session = this.factory.openSession();
+            Transaction transaction = session.beginTransaction();
+            session.save(game);
+            transaction.commit();
+            session.flush();
+            session.close();
+        } catch (HibernateException e) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
+
         pPM.updatePlayersEloOnCreateGame(game,this);
 
     }
@@ -54,15 +82,11 @@ public class GamePersistenceManager {
     }
 
     public int getNextID() {
-        String json = this.readFile();
-        if(json.equals("")){
-            return 1;
-        }
-        List<PingPongGame> games = this.getGamesView();
+        List<PersistenceGame> games = this.getGamesNew();
 
         List<Integer> ids = new ArrayList<>();
         int highestID = 0;
-        for(PingPongGame game:games){
+        for(PersistenceGame game:games){
             if(game.getiD()>highestID){
                 highestID=game.getiD();
             }
@@ -70,7 +94,7 @@ public class GamePersistenceManager {
         return highestID+1;
     }
 
-    public PingPongGame getGameByIDOld(int id) {
+    public PingPongGame getViewGameByID(int id) {
         List<PingPongGame> games = this.getGamesView();
         for(PingPongGame game:games){
             if(game.getiD()==id){
@@ -80,43 +104,19 @@ public class GamePersistenceManager {
         return new PingPongGame();
     }
 
-    public PersistenceGame getGameByIDNew(final int id) {
-        List<PersistenceGame> games = this.getGamesNew();
-
-        Optional<PersistenceGame> game = games.stream().filter(g -> g.getiD() == id).findFirst();
-
-        if(game.isPresent()) {
-            return game.get();
-        } else {
-            return new PersistenceGame();
-        }
-    }
-
-
-
-    public String writeCurrentGameToGamesJsonOld(PingPongGame game) {
-        ObjectMapper mapper = new ObjectMapper();
-        List<PingPongGame> games = this.getGamesView();
-        games.add(game);
-
+    public PersistenceGame getGameByID(final int id) {
         try {
-            return mapper.writeValueAsString(games);
-        } catch(JsonProcessingException e){
-            return e.getMessage();
+            Session session = factory.openSession();
+            Query query = session.createQuery(GET_GAME_BY_ID);
+            query.setParameter("id",id);
+            Object obj = query.getSingleResult();
+            return (PersistenceGame) obj;
+        } catch (NoResultException | HibernateException e) {
+            System.out.println(e.getMessage());
+            throw e;
         }
     }
 
-    public String writeCurrentGameToGamesJsonNew(PersistenceGame game) {
-        ObjectMapper mapper = new ObjectMapper();
-        List<PersistenceGame> games = this.getGamesNew();
-        games.add(game);
-
-        try {
-            return mapper.writeValueAsString(games);
-        } catch(JsonProcessingException e){
-            return e.getMessage();
-        }
-    }
 
     public String writeGameToJson(PingPongGame game) {
         ObjectMapper mapper = new ObjectMapper();
@@ -128,16 +128,7 @@ public class GamePersistenceManager {
         }
     }
 
-    public String writeGamesToJsonOld(List<PingPongGame> games) {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.writeValueAsString(games);
-        } catch(JsonProcessingException e){
-            return e.getMessage();
-        }
-    }
-
-    public String writeGamesToJsonNew(List<PersistenceGame> games) {
+    public String writeViewGamesToJson(List<PingPongGame> games) {
         ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.writeValueAsString(games);
@@ -147,17 +138,11 @@ public class GamePersistenceManager {
     }
 
     public List<PingPongGame> getGamesView() {
-        ObjectMapper mapper = new ObjectMapper();
-        TypeReference<List<PersistenceGame>> mapType;
-        mapType = new TypeReference<List<PersistenceGame>>(){};
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
 
         try {
-            String json = this.readFile();
-            if(json.equals("")){
-                return new ArrayList<PingPongGame>();
-            }
-            List<PersistenceGame> games = mapper.readValue(this.readFile(), mapType);
+
+            List<PersistenceGame> games = this.getGamesNew();
             List<PingPongGame> viewGames = new ArrayList<>();
             for(PersistenceGame game:games){
                 Player player1 = pPM.getViewPlayerByID(game.getPlayer1ID(),game.getiD());
@@ -165,7 +150,7 @@ public class GamePersistenceManager {
                 viewGames.add(new PingPongGame(game.getiD(),player1,player2,game.getPlayer1Score(),game.getPlayer2Score(),game.getTime()));
             }
             return viewGames;
-        } catch(IOException e){
+        } catch(HibernateException | NoResultException e){
             List<PingPongGame> games = new ArrayList<>();
             e.printStackTrace();
             return games;
@@ -187,54 +172,40 @@ public class GamePersistenceManager {
     }
 
     public List<PersistenceGame> getGamesNew() {
-        ObjectMapper mapper = new ObjectMapper();
-        TypeReference<List<PersistenceGame>> mapType;
-        mapType = new TypeReference<List<PersistenceGame>>(){};
-        try {
-            String json = this.readFile();
-            if(json.equals("")){
-                return new ArrayList<PersistenceGame>();
-            }
-            List<PersistenceGame> games = mapper.readValue(this.readFile(), mapType);
-            return games;
-        } catch(IOException e){
-            List<PersistenceGame> games = new ArrayList<>();
-            e.printStackTrace();
-            return games;
+        try{
+            Session session = factory.openSession();
+            Query query = session.createQuery(GET_GAMES);
+            return query.getResultList();
+        } catch (NoResultException | HibernateException e) {
+            System.out.println(e.getMessage());
+            throw e;
         }
     }
 
-    public String readFile() {
-        String json="";
-        try {
-            json = this.getFile().readFile();
-            return json;
-        } catch(NullPointerException e){
-            return json;
-        }
-    }
 
     public void editWriteGameToFileNew(PersistenceGame newGame,
             PersistenceGame oldGame) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        List<PersistenceGame> games = this.getGamesNew();
-        games = this.reorderGames(games,newGame);
 
-        for(int i = 0; i< games.size(); i++){
-            if(games.get(i).getiD() == newGame.getiD()){
-                games.set(i,newGame);
-                break;
-            }
+
+        try {
+            Session session = factory.openSession();
+            Transaction transaction = session.beginTransaction();
+            session.update(newGame);
+            transaction.commit();
+            session.flush();
+            session.close();
+        } catch (HibernateException e ) {
+            System.out.println(e.getMessage());
+            throw e;
         }
-
-        this.writeGamesToFileNew(games);
 
         pPM.updatePlayersEloRatingEdit(newGame,oldGame,this);
     }
 
 
 
-    public void deleteGameWriteToFile(PersistenceGame game){
+    public void deleteGamePropogate(PersistenceGame game){
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         EloRatingPersistenceManager eRPM1 = new EloRatingPersistenceManager(game.getPlayer1ID());
         eRPM1.deleteEloRating(game.getiD());
@@ -243,17 +214,31 @@ public class GamePersistenceManager {
 
         List<PersistenceGame> games = this.getGamesNew();
         int indexOfGame = games.indexOf(game);
-        games.remove(game);
 
-        this.writeGamesToFileNew(games);
-
-        if (indexOfGame < games.size()) {
-            pPM.updatePlayersEloRatingEdit(games.get(indexOfGame), games.get(indexOfGame), this);
+        try {
+            this.deleteGame(game);
+            if (indexOfGame < games.size()) {
+                pPM.updatePlayersEloRatingEdit(games.get(indexOfGame), games.get(indexOfGame), this);
+            }
+        } catch (HibernateException e) {
+            throw e;
         }
+
     }
 
-    public void writeGamesToFileNew(List<PersistenceGame> games) {
-        this.getFile().writeFile(this.writeGamesToJsonNew(games),false);
+    public void deleteGame(PersistenceGame game) {
+        try {
+            Session session = factory.openSession();
+            Transaction transaction = session.beginTransaction();
+            game.setDeleted(true);
+            session.update(game);
+            transaction.commit();
+            session.flush();
+            session.close();
+        } catch (HibernateException e ) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
     }
 
     public File getFile() {
@@ -297,7 +282,6 @@ public class GamePersistenceManager {
     }
 
     public List<PersistenceGame> reorderGames(List<PersistenceGame> games, PersistenceGame newGame) {
-        List<PersistenceGame> orderedGames = new ArrayList<>();
         games = this.removeGameById(games,newGame.getiD());
         for(int i = 0 ;i < games.size(); i++){
             if(games.get(i).getTime().compareTo(newGame.getTime()) > 0) {
@@ -320,15 +304,5 @@ public class GamePersistenceManager {
             }
         }
         return games;
-    }
-
-    public Player getViewPlayerPriorToGame(int playerId,int gameID){
-        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        EloRatingPersistenceManager eRPM = new EloRatingPersistenceManager(playerId);
-        PersistencePlayerEloRatingList ratings = eRPM.getEloRatingList();
-        int indexOfRatingPrior = ratings.getIndexOfGame(gameID)-1;
-
-        return new Player(new EloRating(ratings.getRating(indexOfRatingPrior).getEloRating()),
-                pPM.getPlayerByIDNew(playerId).getId(),pPM.getPlayerByIDNew(playerId).getUsername());
     }
 }

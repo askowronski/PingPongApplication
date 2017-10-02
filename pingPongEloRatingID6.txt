@@ -1,0 +1,1 @@
+{"eloRatingList":[{"rating":1500.0,"playerID":6,"gameID":0}]}

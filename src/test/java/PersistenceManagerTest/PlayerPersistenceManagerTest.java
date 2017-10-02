@@ -37,84 +37,6 @@ public class PlayerPersistenceManagerTest {
     }
 
     @Test
-    public void testReadPlayerArrayToJson() {
-
-        String username = "jaboi";
-        String filePath = "pingPongPlayerTest.txt";
-
-        PlayerPersistenceManager pPM = new PlayerPersistenceManager(filePath);
-        Player player = new Player(new EloRating(),1,username);
-        List<Player> players = new ArrayList<>();
-        players.add(player);
-
-        pPM.writePlayerToFile(player);
-        List<Player> playersRead = pPM.getViewPlayers();
-
-        assertTrue(player.equals(playersRead.get(0)));
-
-    }
-
-    @Test
-    public void testFindPlayerByUsername() {
-
-        String username = "jaboi";
-        String username2 = "matt";
-        String username3 = "etal";
-        String filePath = "pingPongPlayerTest.txt";
-
-        PlayerPersistenceManager pPM = new PlayerPersistenceManager(filePath);
-        Player player = new Player(new EloRating(),1,username);
-        Player player2 = new Player(new EloRating(),2,username);
-        Player player3 = new Player(new EloRating(),3,username);
-        List<Player> players = new ArrayList<>();
-        players.add(player);
-        players.add(player2);
-        players.add(player3);
-
-
-        pPM.writePlayerToFile(player);
-        pPM.writePlayerToFile(player2);
-        pPM.writePlayerToFile(player3);
-
-        Player playerRead = pPM.getPlayerByIDOld(3);
-
-        assertTrue(player3.equals(playerRead));
-
-    }
-
-    @Test
-    public void testFindPlayers() {
-
-        String username = "jaboi";
-        String username2 = "matt";
-        String username3 = "etal";
-        String filePath = "pingPongPlayerTest.txt";
-
-        PlayerPersistenceManager pPM = new PlayerPersistenceManager(filePath);
-        Player player = new Player(new EloRating(),1,username);
-        Player player2 = new Player(new EloRating(),2,username);
-        Player player3 = new Player(new EloRating(),3,username);
-        List<Player> players = new ArrayList<>();
-        players.add(player);
-        players.add(player2);
-        players.add(player3);
-
-        pPM.getFile().writeFile("",false);
-
-        pPM.writePlayerToFile(player);
-        pPM.writePlayerToFile(player2);
-        pPM.writePlayerToFile(player3);
-
-        List<Player> playersRead = pPM.getViewPlayers();
-
-        assertEquals(players.get(0),playersRead.get(0));
-        assertEquals(players.get(1),playersRead.get(1));
-        assertEquals(players.get(2),playersRead.get(2));
-
-
-    }
-
-    @Test
     public void testFindPlayersAsOfAGame() {
         GamePersistenceManager gPM = new GamePersistenceManager();
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
@@ -139,8 +61,4 @@ public class PlayerPersistenceManagerTest {
             assertTrue(viewPlayers.get(i).getUsername().equals(players.get(i).getUsername()));
         }
     }
-
-
-
-
 }

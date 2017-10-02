@@ -39,6 +39,22 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.6.3</version>
         </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.2.11.Final</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/postgresql/postgresql -->
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.4.1208-atlassian-hosted</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>5.2.11.Final</version>
+        </dependency>
     </dependencies>
 
     <properties>

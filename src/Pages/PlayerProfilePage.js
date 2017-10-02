@@ -358,7 +358,7 @@ export class PlayerGraphTable extends React.Component {
             <table >
                 <thead>
                 <tr>
-                    <th className="playerProfileHeader">Player Profile
+                    <th className="playerProfileHeader">Player Profile &nbsp;
                         <span
                             className="UsernameHeader">{this.state.playerUsername}</span>
                     </th>

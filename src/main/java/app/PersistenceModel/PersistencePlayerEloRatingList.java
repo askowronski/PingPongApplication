@@ -14,6 +14,7 @@ public class PersistencePlayerEloRatingList {
     @JsonCreator
     public PersistencePlayerEloRatingList(@JsonProperty("eloRatingList") LinkedList<PersistenceEloRating> eloRatingList) {
         this.eloRatingList = eloRatingList;
+        this.setSortOrder();
     }
 
     @JsonCreator
@@ -23,10 +24,12 @@ public class PersistencePlayerEloRatingList {
 
     public void addEloRating(PersistenceEloRating rating) {
         this.eloRatingList.add(rating);
+        this.setSortOrder();
     }
 
     public void replaceEloRating(int index, PersistenceEloRating rating) {
         this.eloRatingList.set(index,rating);
+        this.setSortOrder();
     }
 
     public int getIndexOfGame(int gameID) {
@@ -47,7 +50,21 @@ public class PersistencePlayerEloRatingList {
     }
 
     public boolean deleteRating(PersistenceEloRating rating) {
-        return this.eloRatingList.remove(rating);
+        boolean check = this.eloRatingList.remove(rating);
+        this.setSortOrder();
+        return check;
+    }
+
+    public LinkedList<PersistenceEloRating> getList() {
+        return this.eloRatingList;
+    }
+
+    public void setSortOrder() {
+        int i = 1;
+        for (PersistenceEloRating rating: this.eloRatingList) {
+            rating.setSortOrder(i);
+            i++;
+        }
     }
 
     @Override

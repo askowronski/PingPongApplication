@@ -2,6 +2,7 @@ package app.PersistenceManagers;
 
 
 import app.PersistenceModel.PersistenceEloRating;
+import app.PersistenceModel.PersistenceGame;
 import app.PersistenceModel.PersistencePlayer;
 import app.PersistenceModel.PersistencePlayerEloRatingList;
 import app.ReadWriteFile.File;
@@ -10,41 +11,84 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import javax.persistence.NoResultException;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
 public class EloRatingPersistenceManager {
 
     private static String FILE_PATH = "pingPongEloRatingID";
     private final int playerID;
 
+    private static String FIND_ELO_RATINGS_FOR_PLAYER = "from PersistenceEloRating as ratings where ratings.playerID = :playerid";
+
     private final File file;
+
+    private SessionFactory factory;
 
     public EloRatingPersistenceManager(String filePath,int playerID) {
         this.file = new File(filePath);
         this.playerID = playerID;
+        try {
+            Configuration config = new Configuration().configure();
+            config.addAnnotatedClass(PersistenceEloRating.class);
+            this.factory = config.buildSessionFactory();
+        } catch (HibernateException e ) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
     }
 
     public EloRatingPersistenceManager(int playerID) {
         String path = FILE_PATH+playerID+".txt";
         this.file = new File(path);
         this.playerID = playerID;
+        try {
+            Configuration config = new Configuration().configure();
+            config.addAnnotatedClass(PersistenceEloRating.class);
+            this.factory = config.buildSessionFactory();
+        } catch (HibernateException e ) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
     }
 
-    public void writeEloRatingToFile(PersistenceEloRating eloRating, int playerID) {
-        PersistencePlayerEloRatingList ratings = this.getEloRatingList();
-        ratings.addEloRating(eloRating);
-        this.getFile().writeFile(this.writeEloRatingListToJson(ratings),false);
-
+    public void createEloRating(PersistenceEloRating eloRating) {
+        try {
+            Session session = factory.openSession();
+            Transaction transaction = session.beginTransaction();
+            session.save(eloRating);
+            transaction.commit();
+            session.flush();
+            session.close();
+        } catch (HibernateException e) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
     }
 
     public void deleteEloRating(int gameId) {
-        PersistenceEloRating rating = this.getRatingByGameID(gameId);
+        try {
+            PersistenceEloRating rating = this.getRatingByGameID(gameId);
+            Session session = factory.openSession();
+            Transaction transaction = session.beginTransaction();
+            session.delete(rating);
+            transaction.commit();
+            session.flush();
+            session.close();
+        } catch (NoResultException | HibernateException e) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
 
-        PersistencePlayerEloRatingList list = this.getEloRatingList();
-
-        list.deleteRating(rating);
-        this.writeEloRatingListToFile(list);
     }
 
     public File getFile() {
@@ -64,21 +108,33 @@ public class EloRatingPersistenceManager {
     }
 
     public void writeEloRatingListToFile(PersistencePlayerEloRatingList ratings) {
-        this.getFile().writeFile(this.writeEloRatingListToJson(ratings),false);
+        try {
+            Session session = factory.openSession();
+            Transaction transaction = session.beginTransaction();
+            ratings.setSortOrder();
+            for (PersistenceEloRating rating: ratings.getList()) {
+                session.saveOrUpdate(rating);
+            }
+            transaction.commit();
+            session.flush();
+            session.close();
+        } catch (HibernateException e) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
     }
 
     public PersistencePlayerEloRatingList getEloRatingList() {
-        ObjectMapper mapper = new ObjectMapper();
-        String json = this.readFile();
-
-        TypeReference<PersistencePlayerEloRatingList> mapType;
-        mapType = new TypeReference<PersistencePlayerEloRatingList>(){};
         try {
-            PersistencePlayerEloRatingList ratings = mapper.readValue(json, mapType);
-            return ratings;
-        } catch(IOException e){
-            PersistencePlayerEloRatingList ratings = new PersistencePlayerEloRatingList(new LinkedList<PersistenceEloRating>());
-            return ratings;
+            Session session = factory.openSession();
+            Query query = session.createQuery(FIND_ELO_RATINGS_FOR_PLAYER);
+            query.setParameter("playerid", this.getPlayerID());
+            List<PersistenceEloRating> ratings = query.list();
+            Collections.sort(ratings, Comparator.comparing((PersistenceEloRating rating) -> rating.getGameID()));
+            return new PersistencePlayerEloRatingList(new LinkedList<>(ratings));
+        } catch (HibernateException e ) {
+            System.out.println(e.getMessage());
+            throw e;
         }
     }
 

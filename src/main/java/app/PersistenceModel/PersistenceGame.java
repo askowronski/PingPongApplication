@@ -7,33 +7,56 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Entity
+@Table( name = "Ping_Pong_Game")
 public class PersistenceGame {
 
-    @JsonProperty("iD") private final int iD;
-    @JsonProperty("player1ID") private final int player1ID;
-    @JsonProperty("player2ID") private final int player2ID;
-    @JsonProperty("score1") private final int player1Score;
-    @JsonProperty("score2") private final int player2Score;
-    @JsonProperty("time") private final Date time;
+    @JsonProperty("iD")
+    @Id
+    @GeneratedValue
+    @Column(name = "gameId")
+    private int iD;
+    @JsonProperty("player1ID")
+    @Column(name = "player1Id")
+    private int player1ID;
+    @JsonProperty("player2ID")
+    @Column(name = "player2Id")
+    private int player2ID;
+    @JsonProperty("score1")
+    @Column(name = "score1")
+    private int player1Score;
+    @JsonProperty("score2")
+    @Column(name = "score2")
+    private int player2Score;
+    @JsonProperty("time")
+    @Column(name = "date")
+    private Date time;
+    @Column(name = "deleted")
+    private boolean deleted;
 
     @JsonCreator
-    @JsonIgnoreProperties(ignoreUnknown=true)
-    public PersistenceGame(@JsonProperty("iD") int iD,@JsonProperty("player1ID")  int player1ID,
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public PersistenceGame(@JsonProperty("iD") int iD, @JsonProperty("player1ID") int player1ID,
             @JsonProperty("player2ID") int player2ID,
             @JsonProperty("score1") int score1,
             @JsonProperty("score2") int score2,
-            @JsonProperty("time") Date time){
-        this.iD=iD;
-        this.player1ID=player1ID;
-        this.player2ID=player2ID;
-        this.player1Score=score1;
-        this.player2Score=score2;
+            @JsonProperty("time") Date time) {
+        this.iD = iD;
+        this.player1ID = player1ID;
+        this.player2ID = player2ID;
+        this.player1Score = score1;
+        this.player2Score = score2;
         this.time = time;
     }
 
-    public PersistenceGame(int iD,int player1ID, int player2ID, int score1, int score2) {
+    public PersistenceGame(int iD, int player1ID, int player2ID, int score1, int score2) {
         this.iD = iD;
         this.player1ID = player1ID;
         this.player2ID = player2ID;
@@ -43,12 +66,7 @@ public class PersistenceGame {
     }
 
     public PersistenceGame() {
-        this.iD = 0;
-        this.player1ID = 0;
-        this.player2ID = 0;
-        this.player1Score = 0;
-        this.player2Score = 0;
-        this.time = new Date();
+
     }
 
     public int getiD() {
@@ -75,31 +93,61 @@ public class PersistenceGame {
         return time;
     }
 
-    public boolean didWin(Player player){
-        if(this.getPlayer1ID() == player.getiD()){
+    public boolean didWin(Player player) {
+        if (this.getPlayer1ID() == player.getiD()) {
             return this.getPlayer1Score() > this.getPlayer2Score();
         }
-        if(this.getPlayer2ID() == player.getiD()){
+        if (this.getPlayer2ID() == player.getiD()) {
             return this.getPlayer2Score() > this.getPlayer1Score();
         }
         return false;
     }
 
-    public boolean didLose(Player player){
-        if(this.getPlayer1ID() == player.getiD()){
+    public boolean didLose(Player player) {
+        if (this.getPlayer1ID() == player.getiD()) {
             return this.getPlayer1Score() < this.getPlayer2Score();
         }
-        if(this.getPlayer2ID() == player.getiD()){
+        if (this.getPlayer2ID() == player.getiD()) {
             return this.getPlayer2Score() < this.getPlayer1Score();
         }
         return false;
     }
 
+    public void setiD(int iD) {
+        this.iD = iD;
+    }
 
+    public void setPlayer1ID(int player1ID) {
+        this.player1ID = player1ID;
+    }
+
+    public void setPlayer2ID(int player2ID) {
+        this.player2ID = player2ID;
+    }
+
+    public void setPlayer1Score(int player1Score) {
+        this.player1Score = player1Score;
+    }
+
+    public void setPlayer2Score(int player2Score) {
+        this.player2Score = player2Score;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 
     @Override
-    public boolean equals(Object o){
-        if(!(o instanceof PersistenceGame)) {
+    public boolean equals(Object o) {
+        if (!(o instanceof PersistenceGame)) {
             return false;
         }
         PersistenceGame game2 = (PersistenceGame) o;

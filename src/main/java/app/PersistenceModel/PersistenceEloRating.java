@@ -6,13 +6,38 @@ import app.ViewModel.GameOutcomeEnum;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 
 @JsonIgnoreProperties(ignoreUnknown=true)
+@Entity
+@Table(name = "Elo_Rating")
 public class PersistenceEloRating {
 
-    @JsonProperty("rating") private final double eloRating;
-    @JsonProperty("playerID") private final int playerID;
-    @JsonProperty("gameID") private final int gameID;
+
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
+    private int id;
+
+    @JsonProperty("rating")
+    @Column(name = "eloRating")
+    private  double eloRating;
+
+    @JsonProperty("playerID")
+    @Column(name = "playerId")
+    private  int playerID;
+
+    @JsonProperty("gameID")
+    @Column(name = "gameId")
+    private  int gameID;
+
+    @Column(name = "sort_order")
+    private  int sortOrder;
 
     @JsonCreator
     public PersistenceEloRating(@JsonProperty("rating") double eloRating, @JsonProperty("playerID") int playerID,
@@ -20,6 +45,10 @@ public class PersistenceEloRating {
         this.eloRating = eloRating;
         this.playerID = playerID;
         this.gameID = gameID;
+    }
+
+    public PersistenceEloRating(){
+
     }
 
     public double getEloRating() {
@@ -48,6 +77,34 @@ public class PersistenceEloRating {
         double expectedScore = this.expectedScore(rating2);
         return new PersistenceEloRating(this.getEloRating() + EloRating.K_FACTOR * (outcome.getFactor() - expectedScore),
                 this.getPlayerID(),gameID+1);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setEloRating(double eloRating) {
+        this.eloRating = eloRating;
+    }
+
+    public void setPlayerID(int playerID) {
+        this.playerID = playerID;
+    }
+
+    public void setGameID(int gameID) {
+        this.gameID = gameID;
+    }
+
+    public int getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(int sortOrder) {
+        this.sortOrder = sortOrder;
     }
 
     @Override

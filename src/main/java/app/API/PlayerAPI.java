@@ -39,8 +39,8 @@ public class PlayerAPI {
         }
 
         PersistencePlayer player = new PersistencePlayer(id,username);
-        pPM.writePlayerToFile(player);
-        eRPM.writeEloRatingToFile(new PersistenceEloRating(EloRating.DEFAULT_RATING,id,0),id);
+        pPM.createPlayer(player);
+        eRPM.createEloRating(new PersistenceEloRating(EloRating.DEFAULT_RATING,id,0));
 
         return new APIResult(true, "Player Created with Username "+username);
     }
@@ -67,7 +67,7 @@ public class PlayerAPI {
     public APIResult editPlayerOld(@RequestParam(value="id",required=true) int id,
                                 @RequestParam(value="newUsername",required=true) String newUsername) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        if(pPM.editPlayer(id,newUsername)) {
+        if(pPM.updatePlayer(id,newUsername)) {
             return new APIResult(true,"Player Edited");
         }
         return new APIResult(false,"Player Unsuccessfully Edited");
@@ -79,32 +79,10 @@ public class PlayerAPI {
     public APIResult editPlayer(@RequestParam(value="id",required=true) int id,
             @RequestParam(value="newUsername",required=true) String newUsername) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        if(pPM.editPlayer(id,newUsername)) {
+        if(pPM.updatePlayer(id,newUsername)) {
             return new APIResult(true,"Player Edited");
         }
         return new APIResult(false,"Player Unsuccessfully Edited");
-    }
-
-
-    @CrossOrigin(origins = "http://localhost:3000")
-    @RequestMapping(path="/DeletePlayerOld",method=DELETE)
-    public APIResult deletePlayerOld(@RequestParam(value="id",required = false) Optional<Integer> id,
-                                  @RequestParam(value="username",required = true) String username) {
-        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        boolean result = false;
-        if(id.isPresent()) {
-            result = pPM.deletePlayerOld(id.get());
-            if(result) {
-                return new APIResult(true,"Player with ID "+id+" was Deleted");
-            }
-        } else {
-            result = pPM.deletePlayerOld(username);
-            if(result) {
-                return new APIResult(true,"Player with newUsername "+ username+" was Deleted");
-            }
-        }
-
-            return new APIResult(false,"Player was not found");
     }
 
     @CrossOrigin
@@ -114,12 +92,12 @@ public class PlayerAPI {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         boolean result = false;
         if(id.isPresent()) {
-            result = pPM.deletePlayerNew(id.get());
+            result = pPM.deletePlayerById(id.get());
             if(result) {
                 return new APIResult(true,"Player with ID "+id.get()+" was Deleted");
             }
         } else {
-            result = pPM.deletePlayerNew(username);
+            result = pPM.deletePlayerByUsername(username);
             if(result) {
                 return new APIResult(true,"Player with newUsername "+ username+" was Deleted");
             }
