@@ -21,6 +21,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
@@ -42,9 +43,7 @@ public class PlayerPersistenceManager {
     public PlayerPersistenceManager() {
         this.file = new File(FILE_PATH);
         try {
-            Configuration config = new Configuration().configure();
-            config.addAnnotatedClass(PersistencePlayer.class);
-            this.factory = config.buildSessionFactory();
+            this.factory = HibernateConfiguration.SESSION_FACTORY;
         } catch (HibernateException e ) {
             System.out.println(e.getMessage());
             throw e;
@@ -55,9 +54,8 @@ public class PlayerPersistenceManager {
     public PlayerPersistenceManager(String filePath) {
         this.file = new File(filePath);
         try {
-            Configuration config = new Configuration().configure();
-            config.addAnnotatedClass(PersistencePlayer.class);
-            this.factory = config.buildSessionFactory();
+            Configuration config = HibernateConfiguration.CONFIG;
+            this.factory = HibernateConfiguration.SESSION_FACTORY;
         } catch (HibernateException e ) {
             System.out.println(e.getMessage());
             throw e;
@@ -73,7 +71,6 @@ public class PlayerPersistenceManager {
             Transaction transaction = session.beginTransaction();
             session.save(player);
             transaction.commit();
-            session.flush();
             session.close();
         } catch (HibernateException he) {
             System.out.println(he.getMessage());
@@ -130,9 +127,9 @@ public class PlayerPersistenceManager {
         List<PersistencePlayer> players = new ArrayList<>();
         try {
             Session session = factory.openSession();
+            Transaction transaction = session.beginTransaction();
             Query query = session.createQuery(FIND_ALL_PLAYERS);
             players = query.getResultList();
-            session.flush();
             session.close();
         } catch (HibernateException e) {
             System.out.println(e.getMessage());
@@ -149,7 +146,6 @@ public class PlayerPersistenceManager {
             Transaction transaction = session.beginTransaction();
             session.update(player);
             transaction.commit();
-            session.flush();
             session.close();
         } catch (HibernateException he) {
             System.out.println(he.getMessage());
@@ -183,7 +179,6 @@ public class PlayerPersistenceManager {
                 session.update(player);
             }
             transaction.commit();
-            session.flush();
             session.close();
         } catch (HibernateException he) {
             System.out.println(he.getMessage());
@@ -273,8 +268,8 @@ public class PlayerPersistenceManager {
     public Player getViewPlayerByID(int id, int gameID) {
         EloRatingPersistenceManager eRPM = new EloRatingPersistenceManager(id);
         PersistencePlayer player = this.getPlayerById(id);
-//        PersistenceEloRating rating = eRPM.getRatingByGameID(gameID);
-        return new Player(new EloRating(),id,player.getUsername());
+        PersistenceEloRating rating = eRPM.getRatingByGameID(gameID);
+        return new Player(new EloRating(rating.getEloRating()),id,player.getUsername());
     }
 
 
@@ -293,7 +288,6 @@ public class PlayerPersistenceManager {
             player.setDeleted(1);
             session.update(player);
             transaction.commit();
-            session.flush();
             session.close();
             return true;
         } catch (HibernateException | NoResultException e ) {
@@ -311,7 +305,6 @@ public class PlayerPersistenceManager {
             player.setDeleted(1);
             session.update(player);
             transaction.commit();
-            session.flush();
             session.close();
             return true;
         } catch (HibernateException | NoResultException e ) {
@@ -385,14 +378,15 @@ public class PlayerPersistenceManager {
             eRPM1.getFile().writeFile(eRPM1.writeEloRatingListToJson(listPlayer1),false);
 
             if(indexOfGame != games.size()-1){
-                this.updatePlayersEloRatingEdit(games.get(indexOfGame+1),oldGame,gPM);
+                this.updatePlayersEloRatingEdit(games.get(indexOfGame+1),oldGame,gPM,false);
             }
     }
 
-    public void updatePlayersEloRatingEdit(PersistenceGame game,PersistenceGame oldGame, GamePersistenceManager gPM) {
+    public void updatePlayersEloRatingEdit(PersistenceGame game,PersistenceGame oldGame, GamePersistenceManager gPM, boolean delete) {
         List<PersistenceGame> games = gPM.getGamesNew();
 
         int indexOfGame = games.indexOf(game);
+
 
         boolean editPlayer1 = false;
         boolean editPlayer2 = false;
@@ -409,7 +403,7 @@ public class PlayerPersistenceManager {
             eRPM.deleteEloRating(game.getiD());
             editPlayer2 = true;
         }
-        if (indexOfGame >= 0) {
+        if (indexOfGame >= 0 || game.equals(oldGame)) {
             for (int i = indexOfGame; i < games.size(); i++) {
 
                 EloRatingPersistenceManager eRPM1 = new EloRatingPersistenceManager(
@@ -419,10 +413,9 @@ public class PlayerPersistenceManager {
                 PersistencePlayerEloRatingList listPlayer1 = eRPM1.getEloRatingList();
                 PersistencePlayerEloRatingList listPlayer2 = eRPM2.getEloRatingList();
                 PersistenceGame currentGame = games.get(i);
-                if(currentGame.equals(oldGame) && currentGame.equals(game)) {
+                if(delete == true && indexOfGame == games.size()-1) {
                     break;
                 }
-
 
                 int indexOfGame1 = listPlayer1.getIndexOfGame(currentGame.getiD());
                 int indexOfGame2 = listPlayer2.getIndexOfGame(currentGame.getiD());
@@ -524,7 +517,7 @@ public class PlayerPersistenceManager {
 //
 //        eRPM1.writeEloRatingListToFile(listPlayer1);
 //        eRPM2.writeEloRatingListToFile(listPlayer2);
-        this.updatePlayersEloRatingEdit(game,game,new GamePersistenceManager());
+        this.updatePlayersEloRatingEdit(game,game,new GamePersistenceManager(),false);
     }
 
     public List<Player> getPlayersPriorToAGame(PingPongGame game) {

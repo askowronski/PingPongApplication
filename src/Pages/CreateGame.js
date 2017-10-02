@@ -1,5 +1,6 @@
 import {Header} from '../ReactComponents/displayComponents.js';
 import {PlayerTypeAhead} from "./PlayerProfilePage";
+import ToggleDisplay from 'react-toggle-display';
 import {DateInput, EditUsernameTypeAhead} from "./Games";
 import moment from 'moment';
 import {Typeahead} from 'react-bootstrap-typeahead';
@@ -20,7 +21,8 @@ class CreateGameForm extends React.Component {
             score2:'',
             players:[],
             resultPlayers:'',
-            date:''
+            date:'',
+            resultText:''
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -97,8 +99,9 @@ class CreateGameForm extends React.Component {
             success: function(data){
                 this.setState({
                     result:data.success,
+                    resultText:data.message
                 });
-                alert(data.message);
+                event.preventDefault();
             }.bind(this)
         });
 
@@ -115,6 +118,9 @@ class CreateGameForm extends React.Component {
     render() {
         return (
             <div>
+                <table className = "createGameTable">
+                    <td>
+                <div>
                 <form onSubmit={this.handleSubmit} className="createGameForm">
                     <table className = "inputTable">
                         <tbody>
@@ -162,7 +168,7 @@ class CreateGameForm extends React.Component {
                         <text className="inputGameLabel">   Score 1: </text>
                         </td>
                         <td className="inputCell">
-                        <input id="score1Input" type="text" value={this.state.score1} onChange={this.handleChange} />
+                        <input className="scoreInput" type="text" id = "score1Input"  value={this.state.score1} onChange={this.handleChange} />
                         </td>
                     </label>
                         </tr>
@@ -172,7 +178,7 @@ class CreateGameForm extends React.Component {
                         <text className="inputGameLabel">  Score 2: </text>
                         </td>
                         <td className="inputCell">
-                        <input id="score2Input" type="text" value={this.state.score2} onChange={this.handleChange} />
+                        <input className="scoreInput" id = "score2Input" type="text" value={this.state.score2} onChange={this.handleChange} />
                         </td>
                     </label>
                     <input type="submit" className="createButton" value="Submit" />
@@ -180,6 +186,13 @@ class CreateGameForm extends React.Component {
                         </tbody>
                     </table>
                 </form>
+            </div>
+
+                    </td>
+                    <td>
+                        <ResultText text = {this.state.resultText}/>
+                    </td>
+                </table>
             </div>
         );
     }
@@ -205,6 +218,39 @@ export default class CreateGame extends React.Component {
         );
 
     }
+}
+
+export class ResultText extends  React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            text:props.text,
+            header:''
+        };
+    }
+    componentWillReceiveProps = (nextProps) => {
+        const resultText = nextProps.text;
+        let show = '';
+        if (resultText.length > 0) {
+            show = 'Result';
+        }
+
+            this.setState({
+                text: resultText,
+                header:show
+            });
+
+    };
+
+    render() {
+        return (
+            <div className = "resultTextContrainer">
+                <span className="ResultHeaderText"> {this.state.header}</span>
+
+                <span className = "resultText">{this.state.text}</span>
+            </div>
+        )
+    };
 }
 
 class CreateGamePlayerTypeAhead extends React.Component {

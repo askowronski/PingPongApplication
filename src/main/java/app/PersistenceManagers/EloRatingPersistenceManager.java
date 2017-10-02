@@ -20,6 +20,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
@@ -38,9 +39,7 @@ public class EloRatingPersistenceManager {
         this.file = new File(filePath);
         this.playerID = playerID;
         try {
-            Configuration config = new Configuration().configure();
-            config.addAnnotatedClass(PersistenceEloRating.class);
-            this.factory = config.buildSessionFactory();
+            this.factory = HibernateConfiguration.SESSION_FACTORY;
         } catch (HibernateException e ) {
             System.out.println(e.getMessage());
             throw e;
@@ -52,9 +51,7 @@ public class EloRatingPersistenceManager {
         this.file = new File(path);
         this.playerID = playerID;
         try {
-            Configuration config = new Configuration().configure();
-            config.addAnnotatedClass(PersistenceEloRating.class);
-            this.factory = config.buildSessionFactory();
+            this.factory = HibernateConfiguration.SESSION_FACTORY;
         } catch (HibernateException e ) {
             System.out.println(e.getMessage());
             throw e;
@@ -67,7 +64,6 @@ public class EloRatingPersistenceManager {
             Transaction transaction = session.beginTransaction();
             session.save(eloRating);
             transaction.commit();
-            session.flush();
             session.close();
         } catch (HibernateException e) {
             System.out.println(e.getMessage());
@@ -82,7 +78,6 @@ public class EloRatingPersistenceManager {
             Transaction transaction = session.beginTransaction();
             session.delete(rating);
             transaction.commit();
-            session.flush();
             session.close();
         } catch (NoResultException | HibernateException e) {
             System.out.println(e.getMessage());
@@ -116,10 +111,10 @@ public class EloRatingPersistenceManager {
                 session.saveOrUpdate(rating);
             }
             transaction.commit();
-            session.flush();
             session.close();
         } catch (HibernateException e) {
             System.out.println(e.getMessage());
+            factory.getCurrentSession().close();
             throw e;
         }
     }
@@ -151,16 +146,5 @@ public class EloRatingPersistenceManager {
             return e.getMessage();
         }
     }
-
-    public void editEloRating(int gameID, double eloRating) {
-        PersistencePlayerEloRatingList ratings = this.getEloRatingList();
-        PersistenceEloRating rating = new PersistenceEloRating(eloRating,this.getPlayerID(),gameID);
-
-        ratings.replaceEloRating(ratings.getIndexOfGame(gameID),rating);
-
-        this.getFile().writeFile(this.writeEloRatingListToJson(ratings),false);
-    }
-
-
 
 }

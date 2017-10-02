@@ -21,6 +21,7 @@ import {Typeahead} from "react-typeahead";
 import history from '../history.js';
 import {NetWinsGraph} from "../PlayerProfileGraphComponents/NetWinsGraph";
 import {DateInput} from "./Games";
+import moment from "moment";
 
 const React = require('react');
 const jQuery = require('jquery');
@@ -323,8 +324,9 @@ export class PlayerGraphTable extends React.Component {
             resultPlayers: '',
             playerUsername: props.history.location.state.player.username,
             history: history.state,
-            startDate:'',
-            endDate:''
+            startDate: '',
+            endDate: '',
+            alert: ''
         };
     }
 
@@ -342,6 +344,35 @@ export class PlayerGraphTable extends React.Component {
                 });
             }.bind(this)
         });
+        jQuery.ajax({
+
+            url: "http://localhost:8080/GetDateRangeForPlayersGames?id="
+            + this.state.playerID,
+            type: "GET",
+            dataType: "json",
+            async: false,
+            success: function(data) {
+                let date1 = moment(data.message.split("=")[0]);
+                let date2 = moment(data.message.split("=")[1]);
+                this.setState({
+                    startDate: date1,
+                    endDate: date2
+                });
+            }.bind(this)
+        });
+
+    };
+
+    onChangeStart = (date) => {
+        this.setState({
+            startDate: date
+        })
+    };
+
+    onChangeEnd = (date) => {
+        this.setState({
+            endDate: date
+        })
     };
 
     setPlayer = (event) => {
@@ -377,11 +408,13 @@ export class PlayerGraphTable extends React.Component {
 
                         <div className="dateInput">
                             <text className="choosePlayer"> End Date</text>
-                            <DateInput startDate={this.state.startDate}/>
+                            <DateInput onChange={this.onChangeEnd}
+                                       startDate={this.state.endDate}/>
                         </div>
                         <div className="dateInput">
                             <text className="choosePlayer"> Start Date</text>
-                            <DateInput startDate={this.state.endDate}/>
+                            <DateInput onChange={this.onChangeStart}
+                                       startDate={this.state.startDate}/>
                         </div>
                     </div>
                 </tr>
@@ -389,14 +422,20 @@ export class PlayerGraphTable extends React.Component {
 
                 <tbody>
                 <tr id="infoDisplay">
-                    <td><AverageScorePerGame playerID={this.state.playerID}/>
+                    <td><AverageScorePerGame startDate={this.state.startDate}
+                                             endDate={this.state.endDate}
+                                             playerID={this.state.playerID}/>
                     </td>
                 </tr>
                 <tr id="infoDisplay">
-                    <td><NetWinsGraph playerID={this.state.playerID}/></td>
+                    <td><NetWinsGraph startDate={this.state.startDate}
+                                      endDate={this.state.endDate}
+                                      playerID={this.state.playerID}/></td>
                 </tr>
                 <tr>
-                    <td><EloRatingPerGame playerID={this.state.playerID}/></td>
+                    <td><EloRatingPerGame playerID={this.state.playerID}
+                                          startDate={this.state.startDate}
+                                          endDate={this.state.endDate}/></td>
                 </tr>
                 </tbody>
             </table>

@@ -7,6 +7,7 @@ import app.ViewModel.PingPongGame;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javafx.util.Pair;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -158,5 +159,14 @@ public class GameAPI {
 
     }
 
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping(path = "/GetDateRangeForPlayersGames", method=GET)
+    public APIResult getDateRangeForPlayersGame(@RequestParam(value="id") int playerId) {
+
+        GamePersistenceManager gPM = new GamePersistenceManager();
+        Pair<Date,Date> dates = gPM.getDateRangeOfGamesForPlayer(gPM.getGamesForPlayer(gPM.getPlayer(playerId)));
+        return new APIResult(true, dates.toString());
+
+    }
 
 }

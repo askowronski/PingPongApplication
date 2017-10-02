@@ -15,14 +15,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import javafx.util.Pair;
 import javax.persistence.NoResultException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
@@ -40,9 +43,7 @@ public class GamePersistenceManager {
     public GamePersistenceManager() {
         this.file = new File(FILE_PATH);
         try {
-            Configuration config = new Configuration().configure();
-            config.addAnnotatedClass(PersistenceGame.class);
-            this.factory = config.buildSessionFactory();
+            this.factory = HibernateConfiguration.SESSION_FACTORY;
         } catch (HibernateException e ) {
             System.out.println(e.getMessage());
             throw e;
@@ -58,6 +59,10 @@ public class GamePersistenceManager {
             throw new InvalidParameterException("Date cannot be greater than now.");
         }
 
+        if(game.getPlayer2ID() == game.getPlayer1ID()) {
+            throw new InvalidParameterException("Players must be different.");
+        }
+
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
 
         try {
@@ -65,10 +70,10 @@ public class GamePersistenceManager {
             Transaction transaction = session.beginTransaction();
             session.save(game);
             transaction.commit();
-            session.flush();
             session.close();
         } catch (HibernateException e) {
             System.out.println(e.getMessage());
+            factory.getCurrentSession().close();
             throw e;
         }
 
@@ -175,7 +180,9 @@ public class GamePersistenceManager {
         try{
             Session session = factory.openSession();
             Query query = session.createQuery(GET_GAMES);
-            return query.getResultList();
+            List<PersistenceGame> games =  query.getResultList();
+            games.sort(Comparator.comparing(PersistenceGame::getTime));
+            return games;
         } catch (NoResultException | HibernateException e) {
             System.out.println(e.getMessage());
             throw e;
@@ -193,14 +200,13 @@ public class GamePersistenceManager {
             Transaction transaction = session.beginTransaction();
             session.update(newGame);
             transaction.commit();
-            session.flush();
             session.close();
         } catch (HibernateException e ) {
             System.out.println(e.getMessage());
             throw e;
         }
 
-        pPM.updatePlayersEloRatingEdit(newGame,oldGame,this);
+        pPM.updatePlayersEloRatingEdit(newGame,oldGame,this,false);
     }
 
 
@@ -218,7 +224,7 @@ public class GamePersistenceManager {
         try {
             this.deleteGame(game);
             if (indexOfGame < games.size()) {
-                pPM.updatePlayersEloRatingEdit(games.get(indexOfGame), games.get(indexOfGame), this);
+                pPM.updatePlayersEloRatingEdit(games.get(indexOfGame), games.get(indexOfGame), this, true);
             }
         } catch (HibernateException e) {
             throw e;
@@ -233,7 +239,6 @@ public class GamePersistenceManager {
             game.setDeleted(true);
             session.update(game);
             transaction.commit();
-            session.flush();
             session.close();
         } catch (HibernateException e ) {
             System.out.println(e.getMessage());
@@ -267,18 +272,24 @@ public class GamePersistenceManager {
 
         for(PingPongGame game:games){
             if(game.getPlayer1().getiD() == player.getiD()) {
-                if (game.getTime().compareTo(beginning) > 0 && game.getTime().compareTo(end) < 0) {
+                if (game.getTime().compareTo(beginning) >= 0 && game.getTime().compareTo(end) <= 0) {
                     gamesForPlayer.add(game);
                 }
             } else if (game.getPlayer2().getiD() == player.getiD()) {
                 PingPongGame newGame = new PingPongGame(game.getiD(),game.getPlayer2(),
                         game.getPlayer1(),game.getPlayer2Score(),game.getPlayer1Score(),game.getTime());
-                if (game.getTime().compareTo(beginning) > 0 && game.getTime().compareTo(end) < 0) {
+                if (game.getTime().compareTo(beginning) >= 0 && game.getTime().compareTo(end) <= 0) {
                     gamesForPlayer.add(newGame);
                 }
             }
         }
         return gamesForPlayer;
+    }
+
+    public Pair<Date,Date> getDateRangeOfGamesForPlayer(List<PingPongGame> games) {
+        Date beginning = games.get(0).getTime();
+        Date end = games.get(games.size()-1).getTime();
+        return new Pair<>(beginning,end);
     }
 
     public List<PersistenceGame> reorderGames(List<PersistenceGame> games, PersistenceGame newGame) {

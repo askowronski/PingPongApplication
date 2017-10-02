@@ -15,7 +15,7 @@ import javax.persistence.Table;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
-@Table( name = "Ping_Pong_Game")
+@Table( name = "ping_pong_game")
 public class PersistenceGame {
 
     @JsonProperty("iD")

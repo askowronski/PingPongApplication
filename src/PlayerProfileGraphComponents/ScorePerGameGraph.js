@@ -3,6 +3,7 @@ import {CustomToolTipDisplayGame} from "../Pages/PlayerProfilePage";
 import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Area, AreaChart, Tooltip,BarChart,Bar,Legend,ReferenceLine,ComposedChart
 } from 'recharts';
+import moment from "moment";
 const React = require('react');
 const jQuery = require('jquery');
 const css = require("css-loader");
@@ -37,6 +38,8 @@ export class AverageScorePerGame extends React.Component {
             score2:0
         },
         playerID:0,
+        startDate:'',
+        endDate:''
     };
 
     hideBarElement = () => {
@@ -58,14 +61,28 @@ export class AverageScorePerGame extends React.Component {
     componentWillReceiveProps = (nextProps) => {
 
         const playerID = nextProps.playerID;
+        const startDate = nextProps.startDate;
+        const endDate = nextProps.endDate;
         if(this.props !== nextProps) {
             this.setState({
-                playerID: playerID
+                playerID: playerID,
+                startDate:startDate,
+                endDate: endDate
             });
+            let timeString = "";
+            if (nextProps.startDate instanceof moment && nextProps.endDate
+                instanceof moment) {
+
+                timeString = "&beginningTime=" +
+                        nextProps.startDate.format("YYYYMMMDD") +
+                    "&endingTime=" + nextProps.endDate.format(
+                        "YYYYMMMDD");
+            }
+
 
             jQuery.ajax({
 
-                url: "http://localhost:8080/GetAverageScores?id="+playerID,
+                url: "http://localhost:8080/GetAverageScores?id="+playerID+timeString,
                 type: "GET",
                 dataType: "json",
                 async: false,

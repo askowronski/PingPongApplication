@@ -157,13 +157,25 @@ public class StatsAPI {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping("/GetPlayerOutcomes")
-    public APIResult getPlayerOutcomes(@RequestParam(value="id") int playerID) {
+    public APIResult getPlayerOutcomes(@RequestParam(value="id") int playerID,
+            @RequestParam(value="beginningTime") Optional<String> beginningTime ,
+            @RequestParam(value="endingTime") Optional<String> endingTime
+            ) {
 
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         GamePersistenceManager gPM = new GamePersistenceManager();
 
         Player player = pPM.getPlayerByIDOld(playerID);
-        List<PingPongGame> gamesForPlayer = gPM.getGamesForPlayer(player);
+        Date begTime;
+        Date endTime;
+        List<PingPongGame> gamesForPlayer;
+
+
+        try {
+            gamesForPlayer = getGamesForPlayerOptionalDates(playerID, beginningTime, endingTime, gPM);
+        } catch (ParseException pe) {
+            return new APIResult(false, pe.getMessage());
+        }
         SinglePlayerStatisticsCalculator calc = new SinglePlayerStatisticsCalculator(gamesForPlayer,player);
 
         List<GameOutcomeEnum> outcomes = calc.getOutcomes();
@@ -195,6 +207,28 @@ public class StatsAPI {
 
 
         return new APIResult(true,json);
+    }
+
+    private List<PingPongGame> getGamesForPlayerOptionalDates(@RequestParam(value = "id") int playerID,
+            @RequestParam(value = "beginningTime") Optional<String> beginningTime,
+            @RequestParam(value = "endingTime") Optional<String> endingTime,
+            GamePersistenceManager gPM) throws ParseException {
+        Date begTime;
+        Date endTime;
+        List<PingPongGame> gamesForPlayer;
+        if (beginningTime.isPresent() && endingTime.isPresent()) {
+            try {
+                begTime = new SimpleDateFormat("yyyyMMMdd").parse(beginningTime.get());
+                endTime = new SimpleDateFormat("yyyyMMMdd").parse(endingTime.get());
+                return gPM.getGamesForPlayer(gPM.getPlayer(playerID),begTime,endTime);
+
+            } catch (ParseException e) {
+                throw e;
+            }
+
+        } else {
+            return gPM.getGamesForPlayer(gPM.getPlayer(playerID));
+        }
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
@@ -297,10 +331,19 @@ public class StatsAPI {
 
     @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping("/GetEloRatings")
-    public APIResult getEloRatings(@RequestParam(value="id") int playerID) {
+    public APIResult getEloRatings(@RequestParam(value="id") int playerID,
+            @RequestParam(value="beginningTime") Optional<String> beginningTime,
+            @RequestParam(value="endingTime") Optional<String> endingTime) {
 
         GamePersistenceManager gPM = new GamePersistenceManager();
-        List<PingPongGame> gamesForPlayer = gPM.getGamesForPlayer(gPM.getPlayer(playerID));
+        List<PingPongGame> gamesForPlayer;
+
+        try {
+            gamesForPlayer = this
+                    .getGamesForPlayerOptionalDates(playerID, beginningTime, endingTime, gPM);
+        } catch (ParseException pe) {
+            return new APIResult(false, pe.getMessage());
+        }
         Player player = gPM.getPlayer(playerID);
 
         List<EloRatingGraphData> data = new ArrayList<>();
