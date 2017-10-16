@@ -19,6 +19,7 @@ import {
 } from 'recharts';
 import {CustomToolTipDisplayNet} from "../Pages/PlayerProfilePage";
 import moment from "moment";
+import {ParseApiMessage} from "./EloRatingGraph";
 const React = require('react');
 const jQuery = require('jquery');
 const css = require("css-loader");
@@ -66,7 +67,7 @@ export class NetWinsGraph extends React.Component {
                 async: false,
                 success: function(data) {
                     this.setState({
-                        dataset: JSON.parse(data.message),
+                        dataset: ParseApiMessage(data),
                         result: data.success,
                     });
 

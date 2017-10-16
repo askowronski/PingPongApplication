@@ -28,7 +28,7 @@ public class TotalGamesStatsCalculator {
         double numerator = 0;
 
         for(Player player:players){
-            numerator+=player.getEloRating().getRating();
+            numerator+=player.getRating().getRating();
         }
         return numerator/players.size();
     }

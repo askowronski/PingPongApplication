@@ -4,8 +4,10 @@ package app.API;
 import app.API.GraphData.AverageScorePerGameData;
 import app.API.GraphData.DateRangeData;
 import app.API.GraphData.EloRatingGraphData;
+import app.PersistenceManagers.EloRatingPersistenceManager;
 import app.PersistenceManagers.GamePersistenceManager;
 import app.PersistenceManagers.PlayerPersistenceManager;
+import app.ViewModel.EloRating;
 import app.ViewModel.GameOutcomeEnum;
 import app.ViewModel.PingPongGame;
 import app.ViewModel.Player;
@@ -295,7 +297,7 @@ public class StatsAPI {
 
         dataList.add(new AverageScorePerGameData(0,0,0,
                 0,new PingPongGame(0,player,player,0,0),0,
-                1500.00,gamesForPlayer.get(0).getOpponent(player).getEloRating().getRating(),theFirstDate,theEndDate));
+                1500.00,gamesForPlayer.get(0).getOpponent(player).getRating().getRating(),theFirstDate,theEndDate));
 
         for(PingPongGame game:gamesForPlayer){
             int score = 0;
@@ -313,7 +315,7 @@ public class StatsAPI {
             runningGameList.add(game);
             SinglePlayerStatisticsCalculator calc = new SinglePlayerStatisticsCalculator(runningGameList,player);
             AverageScorePerGameData data = new AverageScorePerGameData(calc.getAverageScore(),
-                    score,calc.getOpponentAverageScore(),oppScore,game,i,player.getEloRating().getRating(),opponent.getEloRating().getRating(),theFirstDate,theEndDate);
+                    score,calc.getOpponentAverageScore(),oppScore,game,i,player.getRating().getRating(),opponent.getRating().getRating(),theFirstDate,theEndDate);
             dataList.add(data);
             i++;
         }
@@ -360,7 +362,11 @@ public class StatsAPI {
                 player1 = game.getPlayer1();
             }
 
-            data.add(new EloRatingGraphData(game,i,player1.getEloRating().getRating(),opponenet.getEloRating().getRating()));
+            EloRatingPersistenceManager eRPM1 = new EloRatingPersistenceManager(player1.getiD());
+            EloRatingPersistenceManager eRPM2 = new EloRatingPersistenceManager(opponenet.getiD());
+
+            data.add(new EloRatingGraphData(game,i,new EloRating(eRPM1.getRatingByGameID(game.getiD()).getEloRating()).getRating(),
+                    new EloRating(eRPM2.getRatingByGameID(game.getiD()).getEloRating()).getRating()));
             i++;
         }
          String json;

@@ -10,10 +10,6 @@
     <property name="hibernate.connection.password">SweetSwag1!</property>
     <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/PingPong</property>
 
-
-
-
-
     <property name="connection_pool_size">1</property>
 
     <property name="hibernate.hbm2ddl.auto">update</property>

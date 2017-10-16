@@ -4,6 +4,7 @@ import {
     LineChart, Line, XAxis, YAxis, CartesianGrid, Area, AreaChart, Tooltip,BarChart,Bar,Legend,ReferenceLine,ComposedChart
 } from 'recharts';
 import moment from "moment";
+import {ParseApiMessage} from "./EloRatingGraph";
 const React = require('react');
 const jQuery = require('jquery');
 const css = require("css-loader");
@@ -88,7 +89,7 @@ export class AverageScorePerGame extends React.Component {
                 async: false,
                 success: function (data) {
                     this.setState({
-                        dataset: JSON.parse(data.message),
+                        dataset: ParseApiMessage(data),
                         result: data.success,
                     });
 

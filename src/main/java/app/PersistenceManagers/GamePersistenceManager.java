@@ -63,21 +63,31 @@ public class GamePersistenceManager {
             throw new InvalidParameterException("Players must be different.");
         }
 
+        if (game.getPlayer2Score() < 0 || game.getPlayer1Score() < 0) {
+            throw new InvalidParameterException("Scores must be greater than or equal to 0.");
+        }
+
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
 
         try {
+            pPM.getPlayerById(game.getPlayer1ID());
+            pPM.getPlayerById(game.getPlayer2ID());
+
             Session session = this.factory.openSession();
             Transaction transaction = session.beginTransaction();
             session.save(game);
             transaction.commit();
             session.close();
-        } catch (HibernateException e) {
+        } catch (HibernateException | NoResultException e) {
             System.out.println(e.getMessage());
-            factory.getCurrentSession().close();
             throw e;
         }
 
-        pPM.updatePlayersEloOnCreateGame(game,this);
+        EloRatingPersistenceManager eRPM = new EloRatingPersistenceManager(game.getPlayer1ID());
+        EloRatingPersistenceManager eRPM2 = new EloRatingPersistenceManager(game.getPlayer2ID());
+
+
+       eRPM.updateEloRatingListOnCreateGame(game);
 
     }
 
@@ -194,19 +204,32 @@ public class GamePersistenceManager {
             PersistenceGame oldGame) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
 
+        if (newGame.getPlayer2ID() == newGame.getPlayer1ID()) {
+            throw new IllegalArgumentException("Players must be different.");
+        }
+
+        if (newGame.getPlayer1Score() <0 || newGame.getPlayer2Score() < 0) {
+            throw new IllegalArgumentException("Scores must be greater than or equal to 0.");
+        }
+
+
+
 
         try {
+            // validate players exist
+            PersistencePlayer player1 = pPM.getPlayerById(newGame.getPlayer1ID());
+            PersistencePlayer player2 = pPM.getPlayerById(newGame.getPlayer2ID());
             Session session = factory.openSession();
             Transaction transaction = session.beginTransaction();
             session.update(newGame);
             transaction.commit();
             session.close();
-        } catch (HibernateException e ) {
+        } catch (HibernateException | NoResultException e ) {
             System.out.println(e.getMessage());
             throw e;
         }
-
-        pPM.updatePlayersEloRatingEdit(newGame,oldGame,this,false);
+        EloRatingPersistenceManager eRPM = new EloRatingPersistenceManager(-1);
+        eRPM.updateEloRatingsEditGame(oldGame, newGame);
     }
 
 
@@ -214,22 +237,30 @@ public class GamePersistenceManager {
     public void deleteGamePropogate(PersistenceGame game){
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         EloRatingPersistenceManager eRPM1 = new EloRatingPersistenceManager(game.getPlayer1ID());
-        eRPM1.deleteEloRating(game.getiD());
-        EloRatingPersistenceManager eRPM2 = new EloRatingPersistenceManager(game.getPlayer2ID());
-        eRPM2.deleteEloRating(game.getiD());
 
-        List<PersistenceGame> games = this.getGamesNew();
-        int indexOfGame = games.indexOf(game);
 
+        eRPM1.updateEloRatingsOnDeleteGame(game,this.getGamesNew().indexOf(game));
+        this.deleteGame(game);
+    }
+
+    public void hardDeleteGame(PersistenceGame game) {
+        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
+        EloRatingPersistenceManager eRPM1 = new EloRatingPersistenceManager(game.getPlayer1ID());
+
+        GamePersistenceManager gPM = new GamePersistenceManager();
+
+
+        eRPM1.updateEloRatingsOnDeleteGame(game,gPM.getGamesNew().indexOf(game));
         try {
-            this.deleteGame(game);
-            if (indexOfGame < games.size()) {
-                pPM.updatePlayersEloRatingEdit(games.get(indexOfGame), games.get(indexOfGame), this, true);
-            }
-        } catch (HibernateException e) {
+            Session session = factory.openSession();
+            Transaction transaction = session.beginTransaction();
+            session.delete(game);
+            transaction.commit();
+            session.close();
+        } catch (HibernateException e ) {
+            System.out.println(e.getMessage());
             throw e;
         }
-
     }
 
     public void deleteGame(PersistenceGame game) {
@@ -271,6 +302,19 @@ public class GamePersistenceManager {
         List<PingPongGame> gamesForPlayer = new ArrayList<>();
 
         for(PingPongGame game:games){
+            Player player1 = game.getPlayer1();
+            Player player2 = game.getPlayer2();
+            EloRatingPersistenceManager eRPM1 = new EloRatingPersistenceManager(player1.getiD());
+            EloRatingPersistenceManager eRPM2 = new EloRatingPersistenceManager(player2.getiD());
+
+            EloRating rating1 = new EloRating(eRPM1.getRatingByGameID(game.getiD()).getEloRating());
+            EloRating rating2 = new EloRating(eRPM2.getRatingByGameID(game.getiD()).getEloRating());
+
+            player1.setRating(rating1);
+            player2.setRating(rating2);
+
+
+
             if(game.getPlayer1().getiD() == player.getiD()) {
                 if (game.getTime().compareTo(beginning) >= 0 && game.getTime().compareTo(end) <= 0) {
                     gamesForPlayer.add(game);
@@ -281,6 +325,22 @@ public class GamePersistenceManager {
                 if (game.getTime().compareTo(beginning) >= 0 && game.getTime().compareTo(end) <= 0) {
                     gamesForPlayer.add(newGame);
                 }
+            }
+        }
+        return gamesForPlayer;
+    }
+
+    public List<PersistenceGame> getGamesForPlayer(int playerId) {
+        List<PersistenceGame> games = this.getGamesNew();
+        List<PersistenceGame> gamesForPlayer = new ArrayList<>();
+
+        for(PersistenceGame game:games){
+            if(game.getPlayer1ID() == playerId) {
+                    gamesForPlayer.add(game);
+            } else if (game.getPlayer2ID() == playerId) {
+                PersistenceGame newGame = new PersistenceGame(game.getiD(),game.getPlayer2ID(),
+                        game.getPlayer1ID(),game.getPlayer2Score(),game.getPlayer1Score(),game.getTime());
+                    gamesForPlayer.add(newGame);
             }
         }
         return gamesForPlayer;

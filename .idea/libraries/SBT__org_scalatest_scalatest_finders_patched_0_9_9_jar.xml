@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="SBT: org.scalatest:scalatest-finders-patched:0.9.9:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.scalatest/scalatest-finders-patched/jars/scalatest-finders-patched-0.9.9.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.scalatest/scalatest-finders-patched/srcs/scalatest-finders-patched-0.9.9-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ScalaCompilerConfiguration">
+    <profile name="SBT 2" modules="scalaCommunity,nailgunRunners,runners,scalaRunner,decompiler,ideaRunner,jmhBenchmarks,jpsPlugin,jpsShared,pluginCompressorCommunity,pluginPackagerCommunity,repackagedZinc,sbtRuntimeDependencies">
+      <option name="deprecationWarnings" value="true" />
+      <parameters>
+        <parameter value="-target:jvm-1.8" />
+      </parameters>
+    </profile>
+    <profile name="SBT 3" modules="macroAnnotations,scalaImpl">
+      <option name="deprecationWarnings" value="true" />
+      <parameters>
+        <parameter value="-target:jvm-1.8" />
+      </parameters>
+      <plugins>
+        <plugin path="$USER_HOME$/.ivy2/cache/org.scalameta/paradise_2.12.3/jars/paradise_2.12.3-3.0.0-M10.jar" />
+      </plugins>
+    </profile>
+  </component>
+</project>

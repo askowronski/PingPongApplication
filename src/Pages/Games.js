@@ -176,7 +176,7 @@ export default class GamesList extends React.Component {
                                 {game.timeString}
                                 </ToggleDisplay>
                                 <ToggleDisplay show={this.state.showEdit[i]} >
-                                    <DateInput startDate={this.state.editDate} onChange={this.handleDateChange}  />
+                                    <DateInput startDate={this.state.editDate} onChange={this.handleDateChange} />
                                 </ToggleDisplay>
                                 </div>
                             </Td>
@@ -306,6 +306,7 @@ export class DateInput extends React.Component {
             selected= {moment(this.props.startDate)}
             onChange={this.props.onChange}
             className="editDateInput"
+
         />;
     }
 }

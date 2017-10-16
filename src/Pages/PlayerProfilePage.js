@@ -16,7 +16,10 @@ import {
 } from 'recharts';
 import pureRender from 'react-pure-render';
 import {AverageScorePerGame} from "../PlayerProfileGraphComponents/ScorePerGameGraph";
-import {EloRatingPerGame} from "../PlayerProfileGraphComponents/EloRatingGraph";
+import {
+    EloRatingPerGame,
+    ParseApiMessage
+} from "../PlayerProfileGraphComponents/EloRatingGraph";
 import {Typeahead} from "react-typeahead";
 import history from '../history.js';
 import {NetWinsGraph} from "../PlayerProfileGraphComponents/NetWinsGraph";
@@ -41,7 +44,7 @@ export const CustomToolTipDisplayNet = React.createClass({
     },
 
     getIntroOfPage(label, timeString) {
-        return "Game " + label + " -" + timeString;
+        return "Game " + label + " - " + timeString;
     },
 
     render() {
@@ -89,7 +92,7 @@ export const CustomToolTipDisplayNet = React.createClass({
                                         className="You">{game.player2.username}</span>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr className="bottomRow">
                                 <td>
                                     Score
                                 </td>
@@ -181,7 +184,7 @@ export const CustomToolTipDisplayGame = React.createClass({
                                         className="You">{game.player2.username}</span>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr className="bottomRow">
                                 <td>
                                     Score
                                 </td>
@@ -339,7 +342,7 @@ export class PlayerGraphTable extends React.Component {
             async: false,
             success: function(data) {
                 this.setState({
-                    players: JSON.parse(data.message),
+                    players: ParseApiMessage(data),
                     resultPlayers: data.success,
                 });
             }.bind(this)

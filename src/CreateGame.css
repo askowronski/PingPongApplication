@@ -12,7 +12,7 @@
 }
 
 .createGameForm {
-  width:50%;
+  width:100%;
 }
 
 .createButton {
@@ -21,4 +21,34 @@
   font-weight: bold;
   font-size: 22px;
   font-style: italic;
+}
+
+.resultTextContrainer {
+  font-size:24pt;
+  color:deepskyblue;
+  font-weight:bold;
+  align-self: center;
+  float: left;
+}
+
+.createGameTable > td{
+  border:none;
+  flex:auto;
+}
+
+.createGameTable {
+  width: 100%;
+}
+
+.ResultHeaderText {
+  display: inline-block;
+  align-self: center;
+  font-size:26pt;
+  font-weight: bold;
+  color: #00205f;
+}
+
+.creatGameForm {
+  position:absolute;
+  flex:auto;
 }

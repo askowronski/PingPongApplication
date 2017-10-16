@@ -15,14 +15,14 @@ class CreateGameForm extends React.Component {
         super(props);
         this.state = {
             player1ID: '',
-            player2ID:'',
-            result:'',
-            score1:'',
-            score2:'',
-            players:[],
-            resultPlayers:'',
-            date:'',
-            resultText:''
+            player2ID: '',
+            result: '',
+            score1: '',
+            score2: '',
+            players: [],
+            resultPlayers: '',
+            date: '',
+            resultText: ''
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -33,40 +33,36 @@ class CreateGameForm extends React.Component {
         jQuery.ajax({
 
             url: "http://localhost:8080/GetPlayers",
-            type:"GET",
-            dataType:"json",
-            async:false,
-            success: function(data){
+            type: "GET",
+            dataType: "json",
+            async: false,
+            success: function(data) {
                 this.setState({
-                    players:JSON.parse(data.message),
-                    resultPlayers:data.success,
-                    date:moment()
+                    players: JSON.parse(data.message),
+                    resultPlayers: data.success,
+                    date: moment()
                 });
             }.bind(this)
         });
     };
 
-
-
-
-
     handleChange(event) {
-        if(event.target.id === "player1IDInput"){
+        if (event.target.id === "player1IDInput") {
             this.setState({
                 player1ID: event.target.value
             });
         }
-        if(event.target.id === "player2IDInput"){
+        if (event.target.id === "player2IDInput") {
             this.setState({
                 player2ID: event.target.value
             });
         }
-        if(event.target.id === "score1Input"){
+        if (event.target.id === "score1Input") {
             this.setState({
                 score1: event.target.value
             });
         }
-        if(event.target.id === "score2Input"){
+        if (event.target.id === "score2Input") {
             this.setState({
                 score2: event.target.value
             });
@@ -91,15 +87,17 @@ class CreateGameForm extends React.Component {
         console.log(this.state.value);
 
         jQuery.ajax({
-            url: "http://localhost:8080/CreateGame?player1ID="+this.state.player1ID+"&player2ID="+this.state.player2ID+
-            "&score1="+this.state.score1+"&score2="+this.state.score2+"&time="+this.state.date.format('YYYYMMMDD'),
-            type:"POST",
-            dataType:"json",
-            async:false,
-            success: function(data){
+            url: "http://localhost:8080/CreateGame?player1ID="
+            + this.state.player1ID + "&player2ID=" + this.state.player2ID +
+            "&score1=" + this.state.score1 + "&score2=" + this.state.score2
+            + "&time=" + this.state.date.format('YYYYMMMDD'),
+            type: "POST",
+            dataType: "json",
+            async: false,
+            success: function(data) {
                 this.setState({
-                    result:data.success,
-                    resultText:data.message
+                    result: data.success,
+                    resultText: data.message
                 });
                 event.preventDefault();
             }.bind(this)
@@ -108,89 +106,125 @@ class CreateGameForm extends React.Component {
     };
 
     handleDateChange = (date) => {
-      this.setState({
-          date:moment(date)
-      })
+        this.setState({
+            date: moment(date)
+        })
 
     };
-
 
     render() {
         return (
             <div>
-                <table className = "createGameTable">
+                <table className="createGameTable">
                     <td>
-                <div>
-                <form onSubmit={this.handleSubmit} className="createGameForm">
-                    <table className = "inputTable">
-                        <tbody>
-                        <tr className="inputRow">
-                    <label className="inputGameLabel">
-                        <td className="inputCell">
-                    <text className="inputGameLabel"> Date :</text>
-                        </td>
-                        <td className="inputCell">
-                        <div className="choosePlayerTypeAhead">
-                        <DateInput startDate={this.state.date} onChange={this.handleDateChange}/>
+                        <div className="creatGameForm">
+                            <form onSubmit={this.handleSubmit}
+                                  className="createGameForm">
+                                <table className="inputTable">
+                                    <tbody>
+                                    <tr className="inputRow">
+                                        <label className="inputGameLabel">
+                                            <td className="inputCell">
+                                                <text
+                                                    className="inputGameLabel">
+                                                    Date :
+                                                </text>
+                                            </td>
+                                            <td className="inputCell">
+                                                <div
+                                                    className="choosePlayerTypeAhead">
+                                                    <DateInput
+                                                        startDate={this.state.date}
+                                                        onChange={this.handleDateChange}/>
+                                                </div>
+                                            </td>
+                                        </label>
+                                    </tr>
+                                    <tr className="inputRow">
+                                        <label className="inputGameLabel">
+                                            <td className="inputCell">
+                                                <text
+                                                    className="inputGameLabel">
+                                                    Player 1:
+                                                </text>
+                                            </td>
+                                            <td className="inputCell">
+                                                <div
+                                                    className="choosePlayerTypeAhead">
+                                                    <EditUsernameTypeAhead
+                                                        id="player1IDInput"
+                                                        players={this.state.players}
+                                                        onOptionSelected={(event) => this.setPlayer1(
+                                                            event)}/>
+                                                </div>
+                                            </td>
+                                        </label>
+                                    </tr>
+                                    <tr className="inputRow">
+                                        <label>
+                                            <td className="inputCell">
+                                                <text
+                                                    className="inputGameLabel">
+                                                    Player 2:
+                                                </text>
+                                            </td>
+                                            <td className="inputCell">
+                                                <div
+                                                    className="choosePlayerTypeAhead">
+                                                    <EditUsernameTypeAhead
+                                                        id="player1IDInput"
+                                                        players={this.state.players}
+                                                        onOptionSelected={(event) => this.setPlayer2(
+                                                            event)}/>
+                                                </div>
+                                            </td>
+                                        </label>
+                                    </tr>
+                                    <tr className="inputRow">
+                                        <label>
+                                            <td className="inputCell" v>
+                                                <text
+                                                    className="inputGameLabel">
+                                                    Score 1:
+                                                </text>
+                                            </td>
+                                            <td className="inputCell">
+                                                <input className="scoreInput"
+                                                       type="text"
+                                                       id="score1Input"
+                                                       value={this.state.score1}
+                                                       onChange={this.handleChange}/>
+                                            </td>
+                                        </label>
+                                    </tr>
+                                    <tr className="inputRow">
+                                        <label>
+                                            <td className="inputCell">
+                                                <text
+                                                    className="inputGameLabel">
+                                                    Score 2:
+                                                </text>
+                                            </td>
+                                            <td className="inputCell">
+                                                <input className="scoreInput"
+                                                       id="score2Input"
+                                                       type="text"
+                                                       value={this.state.score2}
+                                                       onChange={this.handleChange}/>
+                                            </td>
+                                        </label>
+                                        <input type="submit"
+                                               className="createButton"
+                                               value="Submit"/>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </form>
                         </div>
-                        </td>
-                    </label>
-                        </tr>
-                        <tr className="inputRow">
-                    <label className="inputGameLabel">
-                        <td className="inputCell">
-                        <text className="inputGameLabel"> Player 1: </text>
-                        </td>
-                        <td className="inputCell">
-                        <div className="choosePlayerTypeAhead">
-                        <EditUsernameTypeAhead id="player1IDInput" players={this.state.players}
-                                         onOptionSelected = {(event) => this.setPlayer1(event)}/>
-                        </div>
-                        </td>
-                    </label>
-                        </tr>
-                        <tr className="inputRow">
-                    <label>
-                        <td className="inputCell">
-                        <text className="inputGameLabel"> Player 2: </text>
-                        </td>
-                        <td className="inputCell">
-                        <div className="choosePlayerTypeAhead">
-                        <EditUsernameTypeAhead id="player1IDInput" players={this.state.players}
-                                         onOptionSelected = {(event) => this.setPlayer2(event)}/>
-                        </div>
-                        </td>
-                    </label>
-                        </tr>
-                        <tr className="inputRow">
-                    <label>
-                        <td className="inputCell"v>
-                        <text className="inputGameLabel">   Score 1: </text>
-                        </td>
-                        <td className="inputCell">
-                        <input className="scoreInput" type="text" id = "score1Input"  value={this.state.score1} onChange={this.handleChange} />
-                        </td>
-                    </label>
-                        </tr>
-                        <tr className="inputRow">
-                    <label>
-                        <td className="inputCell">
-                        <text className="inputGameLabel">  Score 2: </text>
-                        </td>
-                        <td className="inputCell">
-                        <input className="scoreInput" id = "score2Input" type="text" value={this.state.score2} onChange={this.handleChange} />
-                        </td>
-                    </label>
-                    <input type="submit" className="createButton" value="Submit" />
-                        </tr>
-                        </tbody>
-                    </table>
-                </form>
-            </div>
 
                     </td>
                     <td>
-                        <ResultText text = {this.state.resultText}/>
+                        <ResultText text={this.state.resultText}/>
                     </td>
                 </table>
             </div>
@@ -200,15 +234,15 @@ class CreateGameForm extends React.Component {
 
 export default class CreateGame extends React.Component {
     state = {
-        buttonNames:["InputPlayer","Scores","Players"]
+        buttonNames: ["InputPlayer", "Scores", "Players"]
     };
 
-    render(){
+    render() {
 
-        return(
+        return (
             <div>
                 <div>
-                    <Header id = "header" className="header"/>
+                    <Header id="header" className="header"/>
                 </div>
                 <br/>
                 <div id="PlayerForm" className="CreatePlayerForm">
@@ -220,14 +254,15 @@ export default class CreateGame extends React.Component {
     }
 }
 
-export class ResultText extends  React.Component {
+export class ResultText extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            text:props.text,
-            header:''
+            text: props.text,
+            header: ''
         };
     }
+
     componentWillReceiveProps = (nextProps) => {
         const resultText = nextProps.text;
         let show = '';
@@ -235,19 +270,19 @@ export class ResultText extends  React.Component {
             show = 'Result';
         }
 
-            this.setState({
-                text: resultText,
-                header:show
-            });
+        this.setState({
+            text: resultText,
+            header: show
+        });
 
     };
 
     render() {
         return (
-            <div className = "resultTextContrainer">
+            <div className="resultTextContrainer">
                 <span className="ResultHeaderText"> {this.state.header}</span>
-
-                <span className = "resultText">{this.state.text}</span>
+                <br/>
+                <span className="resultText">{this.state.text}</span>
             </div>
         )
     };
@@ -257,8 +292,8 @@ class CreateGamePlayerTypeAhead extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            players:props.players,
-            currentPlayer:props.currentPlayer
+            players: props.players,
+            currentPlayer: props.currentPlayer
         };
         this.handleChange = props.handleChange;
     }

@@ -8,9 +8,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class Player {
 
-    @JsonProperty("eloRating") final EloRating rating;
-    @JsonProperty("id") final int iD;
-    @JsonProperty("username") final String username;
+    @JsonProperty("eloRating")  EloRating rating;
+    @JsonProperty("id")  int iD;
+    @JsonProperty("username")  String username;
 
     @JsonIgnoreProperties(ignoreUnknown=true)
     @JsonCreator
@@ -22,16 +22,28 @@ public class Player {
         this.username=username;
     }
 
-    public EloRating getEloRating() {
+    public EloRating getRating() {
         return rating;
+    }
+
+    public void setRating(EloRating rating) {
+        this.rating = rating;
     }
 
     public int getiD() {
         return iD;
     }
 
+    public void setiD(int iD) {
+        this.iD = iD;
+    }
+
     public String getUsername() {
-        return this.username;
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package app.PersistenceModel;
 
 
+import app.ViewModel.GameOutcomeEnum;
 import app.ViewModel.Player;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
@@ -93,24 +94,38 @@ public class PersistenceGame {
         return time;
     }
 
-    public boolean didWin(Player player) {
-        if (this.getPlayer1ID() == player.getiD()) {
+    public boolean didWin(int  playerId) {
+        if (this.getPlayer1ID() == playerId) {
             return this.getPlayer1Score() > this.getPlayer2Score();
         }
-        if (this.getPlayer2ID() == player.getiD()) {
+        if (this.getPlayer2ID() == playerId) {
             return this.getPlayer2Score() > this.getPlayer1Score();
         }
         return false;
     }
 
-    public boolean didLose(Player player) {
-        if (this.getPlayer1ID() == player.getiD()) {
+    public GameOutcomeEnum getOucome(int player1ID) {
+        if (this.didWin(player1ID)) {
+            return GameOutcomeEnum.WIN;
+        } else if (this.didLose(player1ID)) {
+            return GameOutcomeEnum.LOSS;
+        }
+
+        return GameOutcomeEnum.DRAW;
+    }
+
+    public boolean didLose(int playerId) {
+        if (this.getPlayer1ID() == playerId) {
             return this.getPlayer1Score() < this.getPlayer2Score();
         }
-        if (this.getPlayer2ID() == player.getiD()) {
+        if (this.getPlayer2ID() == playerId) {
             return this.getPlayer2Score() < this.getPlayer1Score();
         }
         return false;
+    }
+
+    public boolean isPlayerInGame(int playerId) {
+        return this.getPlayer1ID() == playerId || this.getPlayer2ID() == playerId;
     }
 
     public void setiD(int iD) {

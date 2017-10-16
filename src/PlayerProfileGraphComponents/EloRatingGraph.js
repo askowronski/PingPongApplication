@@ -76,7 +76,7 @@ export class EloRatingPerGame extends React.Component {
                 async: false,
                 success: function(data) {
                     let oppDataSet = [];
-                    let dataSet = JSON.parse(data.message);
+                    let dataSet = ParseApiMessage(data);
                     for (let i = 0; i < dataSet.length; i++) {
                         let newData = dataSet[i];
                         newData.opponentEloRating = newData.opponentEloRating
@@ -84,7 +84,7 @@ export class EloRatingPerGame extends React.Component {
                         oppDataSet.push(newData);
                     }
                     this.setState({
-                        dataset: JSON.parse(data.message),
+                        dataset: ParseApiMessage(data),
                         result: data.success,
                         oppDataSet: oppDataSet,
                         negativeSet: oppDataSet,
@@ -122,9 +122,6 @@ export class EloRatingPerGame extends React.Component {
             showEloRating: toggle,
             eloRatingButton: text
         });
-        if (toggle === false) {
-            this.checkOppScoreIsOnlyOneOut(toggle, this.state.showOppEloRating);
-        }
 
     };
 
@@ -140,30 +137,6 @@ export class EloRatingPerGame extends React.Component {
             showOppEloRating: toggle,
             oppEloRatingButton: text
         });
-
-    };
-
-    checkOppScoreIsOnlyOneOut = (elo, oppElo) => {
-        // if (elo ===false &&
-        // oppElo === true) {
-        //     if (this.state.dataset === this.state.negativeSet) {
-        //         let positive = this.state.positiveSet;
-        //         this.setState({
-        //             dataset: positive
-        //         });
-        //     } else {
-        //
-        //         let negative = this.state.negativeSet;
-        //         this.setState({
-        //             dataset: negative
-        //         });
-        //     }
-        // } else {
-        //     let positive = this.state.positiveSet;
-        //     this.setState({
-        //         dataSet:positive
-        //     });
-        // }
 
     };
 
@@ -231,6 +204,14 @@ export class EloRatingPerGame extends React.Component {
     }
 }
 
+export const ParseApiMessage = (props) => {
+  if (props.success === true) {
+      return JSON.parse(props.message);
+  }  else {
+      return props.message;
+  }
+};
+
 export const CustomToolTipDisplayGameElo = React.createClass({
     propTypes: {
         type: PropTypes.string,
@@ -239,7 +220,7 @@ export const CustomToolTipDisplayGameElo = React.createClass({
     },
 
     getIntroOfPage(label, timeString) {
-        return "Game " + label + " -" + timeString;
+        return "Game " + label + " - " + timeString;
     },
 
     render() {
@@ -254,7 +235,7 @@ export const CustomToolTipDisplayGameElo = React.createClass({
                     <div className="custom-tooltip-average">
                         <table className="GameDisplayTable">
                             <th className="GameDisplayHeader" colSpan={5}>
-                                <span className="HeaderText">Average</span>
+                                <span className="HeaderText">Rating</span>
                             </th>
                             <tr>
                                 <td>
@@ -299,7 +280,7 @@ export const CustomToolTipDisplayGameElo = React.createClass({
                                         className="You">{game.player2.username}</span>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr className="bottomRow">
                                 <td>
                                     Score
                                 </td>

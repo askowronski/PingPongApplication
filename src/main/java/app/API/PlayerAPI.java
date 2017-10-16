@@ -1,5 +1,6 @@
 package app.API;
 
+import app.Exceptions.InvalidParameterException;
 import app.PersistenceManagers.EloRatingPersistenceManager;
 import app.PersistenceManagers.GamePersistenceManager;
 import app.PersistenceModel.PersistenceEloRating;
@@ -30,25 +31,16 @@ public class PlayerAPI {
     public APIResult createPlayer(@RequestParam(value="username",required=true) String username) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
 
-        int id = pPM.getNextID();
-
-        EloRatingPersistenceManager eRPM = new EloRatingPersistenceManager(id);
-
-        if(pPM.checkUsernameExists(username)){
-            return new APIResult(false, "Username Taken");
+        try {
+            pPM.createPlayer(username);
+        } catch (IllegalArgumentException e) {
+            return new APIResult(false, e.getMessage());
         }
-
-        PersistencePlayer player = new PersistencePlayer(id,username);
-        pPM.createPlayer(player);
-        eRPM.createEloRating(new PersistenceEloRating(EloRating.DEFAULT_RATING,id,0));
 
         return new APIResult(true, "Player Created with Username "+username);
     }
 
-
-
-
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin
     @RequestMapping("/GetPlayer")
     public APIResult getPlayer(@RequestParam(value="id", required=true) int id) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
@@ -62,7 +54,21 @@ public class PlayerAPI {
         return new APIResult(true, pPM.writePlayerToJson(player));
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin
+    @RequestMapping("/GetPlayerByUsername")
+    public APIResult getPlayerByUsername(@RequestParam(value="username", required=true) String username) {
+        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
+        GamePersistenceManager gPM = new GamePersistenceManager();
+        int gameId = gPM.getGamesNew().get(gPM.getGamesNew().size()-1).getiD();
+        Player player = pPM.getViewPlayerByUsername(username,gameId);
+        if(player.getiD()==0){
+            return new APIResult(false,"Player with ID "+username+" not found");
+        }
+        System.out.println("GetPlayer called");
+        return new APIResult(true, pPM.writePlayerToJson(player));
+    }
+
+    @CrossOrigin
     @RequestMapping(path="/EditPlayerOld", method=POST)
     public APIResult editPlayerOld(@RequestParam(value="id",required=true) int id,
                                 @RequestParam(value="newUsername",required=true) String newUsername) {
@@ -79,10 +85,14 @@ public class PlayerAPI {
     public APIResult editPlayer(@RequestParam(value="id",required=true) int id,
             @RequestParam(value="newUsername",required=true) String newUsername) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        if(pPM.updatePlayer(id,newUsername)) {
-            return new APIResult(true,"Player Edited");
+        try {
+            if (pPM.updatePlayer(id, newUsername)) {
+                return new APIResult(true, "Player Edited");
+            }
+        } catch (IllegalArgumentException e) {
+            return new APIResult(false, "Player Unsuccessfully Edited. "+e.getMessage());
         }
-        return new APIResult(false,"Player Unsuccessfully Edited");
+        return new APIResult(false, "Player Unsuccessfully Edited.");
     }
 
     @CrossOrigin
@@ -108,14 +118,13 @@ public class PlayerAPI {
 
 
 
-    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping("/GetPlayerWithHighestRating")
     public APIResult getPlayerWithHighestRating() {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         return new APIResult(true,pPM.writePlayerToJson(pPM.getPlayerWithHighestRating()));
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin
     @RequestMapping(path = "/GetPlayers",method=GET)
     public APIResult getPlayers() {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
@@ -132,5 +141,26 @@ public class PlayerAPI {
         SinglePlayerStatisticsCalculator calc = new SinglePlayerStatisticsCalculator(gamesForPlayer,player);
 
         return new APIResult(true,"[{ \"averageScore\" : \""+calc.getAverageScore()+"\"}]");
+    }
+
+    @CrossOrigin
+    @RequestMapping(path = "HardDeletePlayer", method=DELETE)
+    public APIResult hardDeletePlayer(@RequestParam(value="id",required = false) Optional<Integer> id,
+            @RequestParam(value="username",required = false) String username) {
+        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
+        boolean result = false;
+        if (id.isPresent()) {
+            result = pPM.hardDeletePlayerById(id.get());
+            if (result) {
+                return new APIResult(true, "Player with ID " + id.get() + " was Deleted");
+            }
+        } else {
+            result = pPM.hardDeletePlayerByUsername(username);
+            if (result) {
+                return new APIResult(true, "Player with newUsername " + username + " was Deleted");
+            }
+        }
+
+        return new APIResult(false, "Player was not found");
     }
 }

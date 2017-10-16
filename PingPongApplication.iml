@@ -55,6 +55,144 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="SBT: org.scala-lang:scala-library:2.12.3:jar" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/lib/tools.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/aether-1.1.0-all.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/aether-dependency-resolver.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/annotations.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/asm-5.0.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/asm-all.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/asm-analysis-5.0.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/asm-tree-5.0.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/automaton.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/batik-all.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/bcprov-jdk15on-155.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/boot.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/bootstrap.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/cglib-nodep-3.2.4.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/cli-parser-1.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/common-image-3.2.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/common-io-3.2.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/common-lang-3.2.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/commons-codec-1.9.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/commons-compress-1.10.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/commons-httpclient-3.1-patched.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/commons-imaging-1.0-SNAPSHOT.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/commons-logging-1.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/commons-net-3.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/constraint-layout.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/coverage-agent.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/coverage-instrumenter.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/coverage-util.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/ecj-4.6.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/extensions.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/external-system-rt.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/fluent-hc-4.5.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/forms_rt.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/google-analytics-library.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/groovy-all-2.4.12.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/gson-2.8.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/guava-21.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/hamcrest-core-1.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/httpclient-4.5.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/httpcore-4.4.5.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/httpmime-4.5.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/icons.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/idea.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/idea_rt.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/imageio-core-3.2.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/imageio-metadata-3.2.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/imageio-tiff-3.2.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/imgscalr-lib-4.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/ini4j-0.5.2-patched.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/isorelax.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/javac2.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jaxen-1.1.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jayatana-1.2.4.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jcip-annotations.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jdkAnnotations.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jdom.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jediterm-pty-2.5.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jgoodies-common-1.2.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jgoodies-forms.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jgoodies-looks-2.4.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jh.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jimfs-1.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jing.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jna-platform.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jna.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jps-builders-6.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jps-builders.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jps-launcher.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jps-model.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jsch-0.1.54.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jsch.agentproxy.connector-factory.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jsch.agentproxy.core.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jsch.agentproxy.jsch.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jsch.agentproxy.pageant.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jsch.agentproxy.sshagent.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jsch.agentproxy.usocket-jna.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jsch.agentproxy.usocket-nc.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jshell-frontend.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jshell-protocol.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jsr173_1.0_api.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/jsr305.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/junit-4.12.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/junit.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/kotlin-reflect.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/kotlin-runtime.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/log4j.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/lz4-java-1.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/markdownj-core-0.4.2-SNAPSHOT.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/maven-aether-provider-3.3.9-all.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/microba.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/miglayout-core-5.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/miglayout-swing-5.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/nanoxml-2.2.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/nekohtml-1.9.14.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/netty-all-4.1.13.Final.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/openapi.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/optimizedFileManager.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/oromatcher.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/picocontainer.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/protobuf-2.5.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/proxy-vole-1.0.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/pty4j-0.7.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/purejavacomm.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/resolver.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/resources.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/resources_en.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/rngom-20051226-patched.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/serviceMessages.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/slf4j-api-1.7.10.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/slf4j-log4j12-1.7.10.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/snakeyaml-1.17.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/snappy-in-java-0.5.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/sqlite-jdbc-3.16.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/streamex-0.6.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/studio-profiler-grpc-1.0-jarjar.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/swingx-core-1.6.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/trang-core.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/trilead-ssh2.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/trove4j.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/util.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/velocity.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/wadl-core.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/winp-1.23.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/xbean.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/xercesImpl.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/xmlgraphics-commons-1.5.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/xmlrpc-2.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/xpp3-1.1.4-min.jar!/" />
+          <root url="jar://$MODULE_DIR$/intellij-scala/SDK/ideaSDK/173.2463.16/lib/xstream-1.4.8.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-web:1.5.2.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:1.5.2.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:1.5.2.RELEASE" level="project" />
@@ -81,10 +219,11 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-starter-test:1.5.2.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test:1.5.2.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test-autoconfigure:1.5.2.RELEASE" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.12" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.assertj:assertj-core:2.6.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-core:1.10.19" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.objenesis:objenesis:2.1" level="project" />
-    <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-core:1.3" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:1.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-library:1.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.skyscreamer:jsonassert:1.4.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.vaadin.external.google:android-json:0.0.20131108.vaadin1" level="project" />
@@ -95,7 +234,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: net.minidev:accessors-smart:1.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.ow2.asm:asm:5.0.3" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.24" level="project" />
-    <orderEntry type="library" name="Maven: junit:junit:4.12" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.6.3" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.8.0" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.8.7" level="project" />
@@ -112,5 +250,14 @@
     <orderEntry type="library" name="Maven: postgresql:postgresql:9.4.1208-atlassian-hosted" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate:hibernate-entitymanager:5.2.11.Final" level="project" />
     <orderEntry type="library" name="Maven: net.bytebuddy:byte-buddy:1.6.14" level="project" />
+    <orderEntry type="library" name="Maven: org.junit.jupiter:junit-jupiter-api:5.0.0-M3" level="project" />
+    <orderEntry type="library" name="Maven: org.opentest4j:opentest4j:1.0.0-M1" level="project" />
+    <orderEntry type="library" name="Maven: org.junit.platform:junit-platform-commons:1.0.0-M3" level="project" />
+    <orderEntry type="library" name="Maven: org.junit.jupiter:junit-jupiter-engine:5.0.0-M3" level="project" />
+    <orderEntry type="library" name="Maven: org.junit.platform:junit-platform-engine:1.0.0-M3" level="project" />
+    <orderEntry type="library" name="Maven: org.junit.platform:junit-platform-launcher:1.0.0-M3" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.apache.httpcomponents:httpcore:4.4.4" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.5.3" level="project" />
+    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.10" level="project" />
   </component>
 </module>

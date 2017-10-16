@@ -119,6 +119,7 @@ table {
     margin-left:auto;
     margin-right:auto;
     width:65%;
+    border:none;
     height:50%;
 }
 
@@ -131,11 +132,9 @@ table {
 
 .AverageUserHeader {
     width:100%;
-    border:2px groove;
 }
 
 .GameDisplayAverageRow {
-    border:2px groove;
 }
 
 .You {
@@ -188,6 +187,7 @@ Tr {
 .HeaderText {
     text-decoration: underline;
     font-weight:bold;
+    font-size:18px;
 }
 
 .square {
@@ -215,7 +215,6 @@ Tr {
     opacity: 1;
     background-color: #fff;
     width:300px;
-    border:2px groove;
 }
 
 span text {
@@ -503,9 +502,9 @@ border-color: #020104;
     width:30%;
 }
 
-.typeahead-text-input,.react-datepicker-ignore-onclickoutside,.editDateInput,.editScoreInput, scoreInput {
-    font-size:14px;
-    height:20px;
+.typeahead-text-input,.react-datepicker-ignore-onclickoutside,.editDateInput,.editScoreInput, .scoreInput {
+    font-size: 14px;
+    height: 20px;
 }
 
 .createPlayerButton {
@@ -517,39 +516,26 @@ border-color: #020104;
     margin-left:15px;
 }
 
-.createPlayerInput, scoreInput {
+.createPlayerInput, .scoreInput {
     height:20px;
     font-size:16px;
 }
 
 .react-datepicker-popper {
-    transform: translate3d(780px, 380px, 0px);
-    top: 0px;
-    left: 0px;
-    will-change: transform;
+    position:fixed;
+
 }
 
 .graphButton {
 background-color: white;
 }
 
-.resultTextContrainer {
-    font-size:24pt;
-    color:deepskyblue;
-    font-weight:bold;
-    align-self: center;
-    float: left;
+.react-datepicker__input-container {
+    display: table;
 }
 
-.createGameTable > td{
-    border:none;
-    width:100%;
+.bottomRow {
+    border-bottom:2px groove;
 }
 
-.ResultHeaderText {
-    display:inline-block;
-    align-self: center;
-    font-size:26pt;
-    font-weight: bold;
-    color: #00205f;
-}
+

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="SBT: org.scalamacros:scalamacros_2.12:2.0.0-94-f03bbf3a:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.scalamacros/scalamacros_2.12/jars/scalamacros_2.12-2.0.0-94-f03bbf3a.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.scalamacros/scalamacros_2.12/srcs/scalamacros_2.12-2.0.0-94-f03bbf3a-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

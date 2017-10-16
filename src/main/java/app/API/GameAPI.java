@@ -95,9 +95,12 @@ public class GameAPI {
 
             PersistenceGame newGame = new PersistenceGame(game.getiD(), newPlayerID1, newPlayerID2, newScore1,
                     newScore2,newTime);
-
-            gPM.editWriteGameToFileNew(newGame, game);
-            return new APIResult(true, "Game Edited");
+            try {
+                gPM.editWriteGameToFileNew(newGame, game);
+                return new APIResult(true, "Game Edited");
+            } catch (IllegalArgumentException e) {
+                return new APIResult(false, e.getMessage());
+            }
 
         }
         return new APIResult(false, "Game Not Edited");
@@ -117,7 +120,20 @@ public class GameAPI {
         return new APIResult(true,"Game Deleted");
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin()
+    @RequestMapping(path = "/HardDeleteGame",method=DELETE)
+    public APIResult hardDeleteGame(@RequestParam("iD") int iD) {
+        GamePersistenceManager gPM = new GamePersistenceManager();
+        PersistenceGame game = gPM.getGameByID(iD);
+        if(game.getiD()==0){
+            return new APIResult(false,"Game Not Found");
+        }
+
+        gPM.hardDeleteGame(game);
+        return new APIResult(true,"Game Deleted");
+    }
+
+    @CrossOrigin()
     @RequestMapping(path = "/GetGame", method=GET)
     public APIResult getGame(@RequestParam("iD") int iD) {
         GamePersistenceManager gPM = new GamePersistenceManager();
@@ -126,7 +142,7 @@ public class GameAPI {
 
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin
     @RequestMapping(path = "/GetGames", method=GET)
     public APIResult getGames() {
         GamePersistenceManager gPM = new GamePersistenceManager();
@@ -135,7 +151,7 @@ public class GameAPI {
 
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin
     @RequestMapping(path = "/GetGamesForPlayer", method=GET)
     public APIResult getGamesForPlayer(@RequestParam(value="id") int id) {
         GamePersistenceManager gPM = new GamePersistenceManager();
@@ -144,7 +160,7 @@ public class GameAPI {
 
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin
     @RequestMapping(path = "/GetGamesForPlayerChart", method=GET)
     public APIResult getGamesForPlayerChart(@RequestParam(value="id") int id) {
         GamePersistenceManager gPM = new GamePersistenceManager();
@@ -159,7 +175,7 @@ public class GameAPI {
 
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin
     @RequestMapping(path = "/GetDateRangeForPlayersGames", method=GET)
     public APIResult getDateRangeForPlayersGame(@RequestParam(value="id") int playerId) {
 
@@ -168,5 +184,7 @@ public class GameAPI {
         return new APIResult(true, dates.toString());
 
     }
+
+
 
 }
