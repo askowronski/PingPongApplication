@@ -12,8 +12,8 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class EloRatingAPITest {
 
@@ -150,10 +150,32 @@ public class EloRatingAPITest {
     // game date edit
 
     @Test
-    public void testEloRatingReOrderUponGameReorder() throws  IOException {
+    public void testEloRatingGameIdReOrderUponGameReorder() throws  IOException {
+        gameApi.createGame(player1.getiD(), player2.getiD(), 15, 14);
+
         List<PingPongGame> gamesForPlayer = gameApi.getGamesForPlayer(player1.getiD());
+        if (gamesForPlayer.size() == 1) {
+            gameApi.createGame(player1.getiD(), player2.getiD(), 15, 14);
+            gamesForPlayer = gameApi.getGamesForPlayer(player1.getiD());
+        }
 
+        gameApi.editGame(gamesForPlayer.get(1).getiD(),"2016MAR05");
 
+        List<PersistenceEloRating> ratings = eloApi.getRatings(player1.getiD());
+
+        assertTrue(ratings.get(1).getGameID() == gamesForPlayer.get(1).getiD());
     }
 
+    @Test
+    public void testEloRatingReOrderUponGameReorder() throws  IOException {
+        gameApi.createGame(player1.getiD(), player2.getiD(), 15, 14);
+
+        List<PingPongGame> gamesForPlayer = gameApi.getGamesForPlayer(player1.getiD());
+
+        gameApi.editGame(gamesForPlayer.get(1).getiD(),"2016MAR05");
+
+        List<PersistenceEloRating> ratings = eloApi.getRatings(player1.getiD());
+
+        assertTrue(ratings.get(1).getEloRating() == 1508.0);
+    }
 }

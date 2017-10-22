@@ -20,7 +20,7 @@ public class EloRatingApiRequester {
 
     public List<PersistenceEloRating> getRatings(int playerId) throws IOException {
         HttpUriRequest getRatings = new HttpGet(
-                HOST + "GetEloRatings?playerId="+playerId);
+                HOST + "GetEloRatingsTest?playerId="+playerId);
         HttpResponse response = HttpClientBuilder.create().build()
                 .execute(getRatings);
 

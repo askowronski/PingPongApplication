@@ -172,7 +172,7 @@ export class EloRatingPerGame extends React.Component {
             <div className="PlayerChartContainer">
                 <div className="PlayerGraph">
                     <span ><text >Elo Rating Per Game</text></span>
-                    <LineChart width={1000} height={400}
+                    <LineChart width={1300} height={400}
                                data={this.state.dataset}
                                margins={{top: 5, right: 30, bottom: 5}}>
                         <XAxis allowDecimals={false} type="number"
@@ -182,7 +182,7 @@ export class EloRatingPerGame extends React.Component {
                                labelStyle={{paddingTop: 20, color: '#32CD32'}}/>
                         <YAxis domain={['auto', 'auto']}
                                label={this.returnYLabel(30, 150)}/>
-                        <Tooltip position={{x: 1000, y: 0}}
+                        <Tooltip position={{x: 1300, y: 0}}
                                  content={<CustomToolTipDisplayGameElo
                                      setGameDisplay={this.setGameDisplayState}/>}/>
                         <CartesianGrid strokeDasharray="3 3"/>

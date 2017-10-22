@@ -218,11 +218,11 @@ export class AverageScorePerGame extends React.Component {
             <div className="PlayerChartContainer">
                 <div className="PlayerGraph">
                     <span ><text >Score Per Game</text></span>
-                    <ComposedChart width={1000} height={400} data={this.state.dataset}
+                    <ComposedChart width={1300} height={400} data={this.state.dataset}
                                    margins={{top: 5, right: 30,  bottom: 5}} >
                         <XAxis allowDecimals={false} type="number" dataKey="label" domain={[0,'auto']} label={this.returnXLabel(475,375)} padding={{bottom: 50,right:10}} labelStyle = {{paddingTop:20,color : '#32CD32'}}/>
                         <YAxis domain={[0,20]} label={this.returnYLabel(30,150)} ticks={[0,10,20]} />
-                        <Tooltip position={{ x: 1000, y: 0 }} content={<CustomToolTipDisplayGame setGameDisplay = {this.setGameDisplayState}/>}/>
+                        <Tooltip position={{ x: 1300, y: 0 }} content={<CustomToolTipDisplayGame setGameDisplay = {this.setGameDisplayState}/>}/>
                         <CartesianGrid strokeDasharray="3 3"/>
                         <ReferenceLine y={0} stroke='#000'/>
                         {this.renderBarScore(this.state.showScore)}

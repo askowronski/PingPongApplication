@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import javafx.util.Pair;
 import javax.persistence.NoResultException;
@@ -116,7 +117,7 @@ public class GamePersistenceManager {
                 return game;
             }
         }
-        return new PingPongGame();
+        throw new NoSuchElementException("No Game found with ID " + id + ".");
     }
 
     public PersistenceGame getGameByID(final int id) {
@@ -159,10 +160,38 @@ public class GamePersistenceManager {
 
             List<PersistenceGame> games = this.getGamesNew();
             List<PingPongGame> viewGames = new ArrayList<>();
-            for(PersistenceGame game:games){
-                Player player1 = pPM.getViewPlayerByID(game.getPlayer1ID(),game.getiD());
-                Player player2 = pPM.getViewPlayerByID(game.getPlayer2ID(),game.getiD());
-                viewGames.add(new PingPongGame(game.getiD(),player1,player2,game.getPlayer1Score(),game.getPlayer2Score(),game.getTime()));
+            for(PersistenceGame game:games) {
+                if (!game.isDeleted()) {
+                    Player player1 = pPM.getViewPlayerByID(game.getPlayer1ID(), game.getiD());
+                    Player player2 = pPM.getViewPlayerByID(game.getPlayer2ID(), game.getiD());
+                    viewGames.add(new PingPongGame(game.getiD(), player1, player2,
+                            game.getPlayer1Score(), game.getPlayer2Score(), game.getTime()));
+                }
+            }
+            return viewGames;
+        } catch(HibernateException | NoResultException e){
+            List<PingPongGame> games = new ArrayList<>();
+            e.printStackTrace();
+            return games;
+        }
+    }
+
+    public List<PingPongGame> getGamesViewWithoutEloRatings() {
+        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
+
+        try {
+
+            List<PersistenceGame> games = this.getGamesNew();
+            List<PingPongGame> viewGames = new ArrayList<>();
+            for(PersistenceGame game:games) {
+                if (!game.isDeleted()) {
+                    PersistencePlayer player1P = pPM.getPlayerById(game.getPlayer1ID());
+                    PersistencePlayer player2P = pPM.getPlayerById(game.getPlayer2ID());
+                    Player player1 = new Player(new EloRating(),game.getPlayer1ID(),player1P.getUsername());
+                    Player player2 = new Player(new EloRating(),game.getPlayer2ID(),player2P.getUsername());
+                    viewGames.add(new PingPongGame(game.getiD(), player1, player2,
+                            game.getPlayer1Score(), game.getPlayer2Score(), game.getTime()));
+                }
             }
             return viewGames;
         } catch(HibernateException | NoResultException e){

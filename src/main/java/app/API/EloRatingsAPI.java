@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class EloRatingsAPI {
 
     @CrossOrigin
-    @RequestMapping(path = "/GetEloRatings", method=GET)
+    @RequestMapping(path = "/GetEloRatingsTest", method=GET)
     public APIResult getGames(@RequestParam(value = "playerId", required =  true) int playerId) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
 

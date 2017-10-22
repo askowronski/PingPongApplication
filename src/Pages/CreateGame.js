@@ -99,8 +99,22 @@ class CreateGameForm extends React.Component {
                     result: data.success,
                     resultText: data.message
                 });
+                this.clearInputs();
                 event.preventDefault();
             }.bind(this)
+        });
+
+    };
+
+    clearInputs = () => {
+        jQuery('.typeahead-text-inputplayer1IDInput').val('')
+        jQuery('#score1Input').val('')
+        jQuery('#score2Input').val('')
+        this.setState({
+            player1ID: '',
+            player2ID: '',
+            score1: '',
+            score2: '',
         });
 
     };

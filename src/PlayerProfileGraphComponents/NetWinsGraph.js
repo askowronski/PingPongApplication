@@ -113,7 +113,7 @@ export class NetWinsGraph extends React.Component {
             <div className="PlayerChartContainer">
                 <div className="PlayerGraph">
                     <span ><text >Net Wins</text></span>
-                    <ComposedChart width={1000} height={400}
+                    <ComposedChart width={1300} height={400}
                                    data={this.state.dataset}
                                    margin={{
                                        top: 5,
@@ -132,7 +132,7 @@ export class NetWinsGraph extends React.Component {
                             <Legend />
                         </div>
                         {this.returnBar(this.state.showBar)}
-                        <Tooltip position={{x: 1000, y: 0}}
+                        <Tooltip position={{x: 1300, y: 0}}
                                  content={<CustomToolTipDisplayNet/>}/>
                     </ComposedChart>
                     <div className="netWinsToggleButtons">

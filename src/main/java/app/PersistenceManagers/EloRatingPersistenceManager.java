@@ -31,6 +31,8 @@ public class EloRatingPersistenceManager {
     private final int playerID;
 
     private static String FIND_ELO_RATINGS_FOR_PLAYER = "from PersistenceEloRating as ratings where ratings.playerID = :playerid";
+    private static String FIND_ELO_RATING_BY_GAME_ID = "from PersistenceEloRating as ratings where ratings.playerID = :playerid and "
+            + "ratings.gameID=:gameId";
 
     private SessionFactory factory;
 
@@ -135,8 +137,23 @@ public class EloRatingPersistenceManager {
         }
     }
 
+
+
     public PersistenceEloRating getRatingByGameID(int gameID) {
-        PersistencePlayerEloRatingList list = this.getEloRatingList();
+        try {
+            Session session = factory.openSession();
+            Query query = session.createQuery(FIND_ELO_RATING_BY_GAME_ID);
+            query.setParameter("playerid", this.getPlayerID());
+            query.setParameter("gameId",gameID);
+            PersistenceEloRating rating = (PersistenceEloRating)query.getSingleResult();
+            return rating;
+        } catch (HibernateException e) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
+    }
+
+    public PersistenceEloRating getRatingByGameID(int gameID, PersistencePlayerEloRatingList list) {
         return list.getRating(list.getIndexOfGame(gameID));
     }
 

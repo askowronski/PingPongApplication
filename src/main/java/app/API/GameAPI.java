@@ -7,6 +7,7 @@ import app.ViewModel.PingPongGame;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.NoSuchElementException;
 import javafx.util.Pair;
 import org.springframework.web.bind.annotation.*;
 
@@ -137,8 +138,12 @@ public class GameAPI {
     @RequestMapping(path = "/GetGame", method=GET)
     public APIResult getGame(@RequestParam("iD") int iD) {
         GamePersistenceManager gPM = new GamePersistenceManager();
-        PingPongGame game = gPM.getViewGameByID(iD);
-        return new APIResult(true, gPM.writeGameToJson(game));
+        try {
+            PingPongGame game = gPM.getViewGameByID(iD);
+            return new APIResult(true, gPM.writeGameToJson(game));
+        } catch (NoSuchElementException e) {
+            return new APIResult(false, e.getMessage());
+        }
 
     }
 
@@ -150,6 +155,17 @@ public class GameAPI {
         return new APIResult(true, gPM.writeViewGamesToJson(games));
 
     }
+
+    @CrossOrigin
+    @RequestMapping(path = "/GetGamesNoRatings", method=GET)
+    public APIResult getGamesNoRatings() {
+        GamePersistenceManager gPM = new GamePersistenceManager();
+        List<PingPongGame> games = gPM.getGamesViewWithoutEloRatings();
+        return new APIResult(true, gPM.writeViewGamesToJson(games));
+
+    }
+
+
 
     @CrossOrigin
     @RequestMapping(path = "/GetGamesForPlayer", method=GET)

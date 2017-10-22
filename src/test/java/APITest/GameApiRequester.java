@@ -36,12 +36,15 @@ public class GameApiRequester {
         return mapper.readValue(messsageData, mapType);
     }
 
-    public PingPongGame getGame(int gameId) throws  IOException {
+    public HttpResponse getGame(int gameId) throws  IOException {
         HttpUriRequest getGames = new HttpGet(
                 HOST + "GetGame?iD="+gameId);
-        HttpResponse response = HttpClientBuilder.create().build()
+        return HttpClientBuilder.create().build()
                 .execute(getGames);
 
+    }
+
+    public PingPongGame getGame(HttpResponse response) throws  IOException {
         String jsonFromResponse = EntityUtils.toString(response.getEntity());
         ObjectMapper mapper = new ObjectMapper();
         JsonNode data = mapper.readTree(jsonFromResponse);

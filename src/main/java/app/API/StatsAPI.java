@@ -7,6 +7,7 @@ import app.API.GraphData.EloRatingGraphData;
 import app.PersistenceManagers.EloRatingPersistenceManager;
 import app.PersistenceManagers.GamePersistenceManager;
 import app.PersistenceManagers.PlayerPersistenceManager;
+import app.PersistenceModel.PersistencePlayerEloRatingList;
 import app.ViewModel.EloRating;
 import app.ViewModel.GameOutcomeEnum;
 import app.ViewModel.PingPongGame;
@@ -362,11 +363,10 @@ public class StatsAPI {
                 player1 = game.getPlayer1();
             }
 
-            EloRatingPersistenceManager eRPM1 = new EloRatingPersistenceManager(player1.getiD());
-            EloRatingPersistenceManager eRPM2 = new EloRatingPersistenceManager(opponenet.getiD());
 
-            data.add(new EloRatingGraphData(game,i,new EloRating(eRPM1.getRatingByGameID(game.getiD()).getEloRating()).getRating(),
-                    new EloRating(eRPM2.getRatingByGameID(game.getiD()).getEloRating()).getRating()));
+
+            data.add(new EloRatingGraphData(game,i,new EloRating(game.getPlayer1().getRating().getRating()).getRating(),
+                    new EloRating(game.getPlayer2().getRating().getRating()).getRating()));
             i++;
         }
          String json;

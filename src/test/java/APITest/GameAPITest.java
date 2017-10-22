@@ -3,15 +3,14 @@ package APITest;
 import app.ViewModel.PingPongGame;
 import app.ViewModel.Player;
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import org.apache.http.HttpResponse;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GameAPITest {
 
@@ -104,6 +103,15 @@ public class GameAPITest {
         assertTrue(games.size() > 0);
     }
 
+    // Exceptions
+
+    @Test
+    public void getGameThatDoesntExist() throws  IOException {
+        String message = ApiUtil.retrieveMessage(gameApi.getGame(-1));
+
+        assertEquals(message, "No Game found with ID -1.");
+    }
+
 
     // Update
 
@@ -158,7 +166,7 @@ public class GameAPITest {
 
         gameApi.editGame(gameId, "2011MAR1");
 
-        PingPongGame game = gameApi.getGame(gameId);
+        PingPongGame game = gameApi.getGame(gameApi.getGame(gameId));
 
         assertEquals(game.getTime().toString(), "Tue Mar 01 00:00:00 CST 2011");
     }
@@ -171,7 +179,9 @@ public class GameAPITest {
 
         gameApi.deleteGame(gamesForPlayer.get(0).getiD());
 
+        String retrieveMessage = ApiUtil.retrieveMessage(gameApi.getGame(gamesForPlayer.get(0).getiD()));
 
+        assertEquals(retrieveMessage, "No Game found with ID " + gamesForPlayer.get(0).getiD() +".");
     }
 
 

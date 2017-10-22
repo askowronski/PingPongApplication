@@ -4,6 +4,7 @@ import app.Exceptions.InvalidParameterException;
 import app.PersistenceManagers.EloRatingPersistenceManager;
 import app.PersistenceManagers.GamePersistenceManager;
 import app.PersistenceModel.PersistenceEloRating;
+import app.PersistenceModel.PersistenceGame;
 import app.PersistenceModel.PersistencePlayer;
 import app.ViewModel.EloRating;
 import app.PersistenceManagers.PlayerPersistenceManager;
@@ -59,7 +60,13 @@ public class PlayerAPI {
     public APIResult getPlayerByUsername(@RequestParam(value="username", required=true) String username) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         GamePersistenceManager gPM = new GamePersistenceManager();
-        int gameId = gPM.getGamesNew().get(gPM.getGamesNew().size()-1).getiD();
+        int gameId;
+        List<PersistenceGame> games = gPM.getGamesNew();
+        if (games.size() > 0) {
+            gameId = games.get(gPM.getGamesNew().size() - 1).getiD();
+        } else {
+            gameId = 0;
+        }
         Player player = pPM.getViewPlayerByUsername(username,gameId);
         if(player.getiD()==0){
             return new APIResult(false,"Player with ID "+username+" not found");
