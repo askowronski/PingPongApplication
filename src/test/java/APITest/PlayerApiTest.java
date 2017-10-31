@@ -14,7 +14,9 @@ import java.util.List;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
@@ -23,15 +25,15 @@ public class PlayerApiTest {
     public static List<String> usersToDelete = new ArrayList<>();
     public static PlayerApiRequester api = new PlayerApiRequester();
 
-    @BeforeAll
-    public static void beforeAll() throws IOException {
+    @BeforeEach
+    public  void beforeEach() throws IOException {
         HttpResponse response = api.createPlayer("swag");
 
         usersToDelete.add("swag");
     }
 
-    @AfterAll
-    public static void afterAll() throws IOException {
+    @AfterEach
+    public  void afterEach() throws IOException {
         HttpResponse response = api.getPlayers();
 
         List<Player> players = retrievePlayerListResourceFromResponse(response);

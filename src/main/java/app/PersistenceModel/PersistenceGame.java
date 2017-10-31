@@ -16,7 +16,7 @@ import javax.persistence.Table;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
-@Table( name = "ping_pong_game")
+@Table(name = "ping_pong_game")
 public class PersistenceGame {
 
     @JsonProperty("iD")
@@ -94,7 +94,7 @@ public class PersistenceGame {
         return time;
     }
 
-    public boolean didWin(int  playerId) {
+    public boolean didWin(int playerId) {
         if (this.getPlayer1ID() == playerId) {
             return this.getPlayer1Score() > this.getPlayer2Score();
         }
@@ -160,6 +160,18 @@ public class PersistenceGame {
         this.deleted = deleted;
     }
 
+    private boolean checkIfPlayersAndScoresAreSame(int otherPlayer1, int otherScore1,
+            int otherPlayer2, int otherScore2) {
+        if (this.getPlayer1ID() == otherPlayer1 && this.getPlayer2ID() == otherPlayer2) {
+            return this.getPlayer1Score() == otherScore1 &&
+                    this.getPlayer2Score() == otherScore2;
+        } else if (this.getPlayer2ID() == otherPlayer1 && this.getPlayer1ID() == otherPlayer2) {
+            return this.getPlayer2Score() == otherScore1 &&
+                    this.getPlayer1Score() == otherScore2;
+        }
+        return false;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof PersistenceGame)) {
@@ -167,10 +179,9 @@ public class PersistenceGame {
         }
         PersistenceGame game2 = (PersistenceGame) o;
         return this.getiD() == game2.getiD()
-                && this.getPlayer1ID() == game2.getPlayer1ID()
-                && this.getPlayer2ID() == game2.getPlayer2ID()
-                && this.getPlayer1Score() == game2.getPlayer1Score()
-                && this.getPlayer2Score() == game2.getPlayer2Score()
+                && this
+                .checkIfPlayersAndScoresAreSame(game2.getPlayer1ID(), game2.getPlayer1Score(),
+                        game2.getPlayer2ID(), game2.getPlayer2Score())
                 && this.getTime().equals(game2.getTime());
     }
 }

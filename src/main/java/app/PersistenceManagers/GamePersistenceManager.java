@@ -278,8 +278,6 @@ public class GamePersistenceManager {
 
         GamePersistenceManager gPM = new GamePersistenceManager();
 
-
-        eRPM1.updateEloRatingsOnDeleteGame(game,gPM.getGamesNew().indexOf(game));
         try {
             Session session = factory.openSession();
             Transaction transaction = session.beginTransaction();
@@ -290,6 +288,8 @@ public class GamePersistenceManager {
             System.out.println(e.getMessage());
             throw e;
         }
+
+        eRPM1.updateEloRatingsOnDeleteGame(game,gPM.getGamesNew().indexOf(game));
     }
 
     public void deleteGame(PersistenceGame game) {

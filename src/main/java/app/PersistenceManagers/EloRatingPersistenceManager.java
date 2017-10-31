@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -153,6 +154,19 @@ public class EloRatingPersistenceManager {
         }
     }
 
+    public PersistenceEloRating getRatingPriorToGame(int gameId) {
+        GamePersistenceManager gPM = new GamePersistenceManager();
+        List<PersistenceGame> list = gPM.getGamesForPlayer(this.getPlayerID());
+        List<PersistenceEloRating> elos = this.getEloRatingList().getList();
+
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getiD() == gameId) {
+                return elos.get(i);
+            }
+        }
+        throw new EntityNotFoundException("No rating found prior to gameId " + gameId + ".");
+    }
+
     public PersistenceEloRating getRatingByGameID(int gameID, PersistencePlayerEloRatingList list) {
         return list.getRating(list.getIndexOfGame(gameID));
     }
@@ -191,8 +205,8 @@ public class EloRatingPersistenceManager {
 
         int indexOfGame = games.indexOf(game);
 
-        PersistenceEloRating ratingPriorToGame1 = eRPM1.getRatingByGameID(indexOfGame - 1);
-        PersistenceEloRating ratingPriorToGame2 = eRPM2.getRatingByGameID(indexOfGame - 1);
+        PersistenceEloRating ratingPriorToGame1 = eRPM1.getRatingPriorToGame(game.getiD());
+        PersistenceEloRating ratingPriorToGame2 = eRPM2.getRatingPriorToGame(game.getiD());
 
         PersistenceEloRating newRating1 = ratingPriorToGame1
                 .newRating(outcome1, ratingPriorToGame2, game.getiD());
@@ -225,7 +239,7 @@ public class EloRatingPersistenceManager {
     public void updateEloRatingsOnDeleteGame(PersistenceGame game, int indexOfGame) {
         GamePersistenceManager gPM = new GamePersistenceManager();
 
-        List<PersistenceGame> games = gPM.getGamesNew();
+//        List<PersistenceGame> games = gPM.getGamesNew();
 
         EloRatingPersistenceManager eRPM1 = new EloRatingPersistenceManager(game.getPlayer1ID());
         EloRatingPersistenceManager eRPM2 = new EloRatingPersistenceManager(game.getPlayer2ID());
@@ -320,16 +334,33 @@ public class EloRatingPersistenceManager {
             PersistenceEloRating newRating1;
             PersistenceEloRating newRating2;
 
-            int gameIdPriorToGame;
+            int gameIdPriorToGame1;
+            int gameIdPriorToGame2;
+
 
             if (i - 1 < 0) {
-                gameIdPriorToGame = 0;
+                gameIdPriorToGame1 = 0;
+                gameIdPriorToGame2 = 0;
+
             } else {
-                gameIdPriorToGame = games.get(i - 1).getiD();
+                List<PersistenceGame> games1 = gPM.getGamesForPlayer(game.getPlayer1ID());
+                List<PersistenceGame> games2 = gPM.getGamesForPlayer(game.getPlayer2ID());
+                if (games1.indexOf(game) == 0) {
+                    gameIdPriorToGame1 = 0;
+                } else {
+                    gameIdPriorToGame1= games.get(games1.indexOf(game)-1).getiD();
+                }
+
+                if (games2.indexOf(game) == 0) {
+                    gameIdPriorToGame2 = 0;
+                } else {
+                    gameIdPriorToGame2= games.get(games1.indexOf(game)-1).getiD();
+                }
+
             }
 
-            PersistenceEloRating ratingPriorToGame1 = eRPM1.getRatingByGameID(gameIdPriorToGame);
-            PersistenceEloRating ratingPriorToGame2 = eRPM2.getRatingByGameID(gameIdPriorToGame);
+            PersistenceEloRating ratingPriorToGame1 = eRPM1.getRatingByGameID(gameIdPriorToGame1);
+            PersistenceEloRating ratingPriorToGame2 = eRPM2.getRatingByGameID(gameIdPriorToGame2);
 
             if (game.didWin(game.getPlayer1ID())) {
                 newRating1 = ratingPriorToGame1

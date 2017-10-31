@@ -69,7 +69,7 @@ class InfoDisplayGame extends React.Component  {
 
         jQuery.ajax({
 
-            url: "http://localhost:8080/GetGame?iD=6",
+            url: "http://localhost:8080/GetGame?iD=1",
             type:"GET",
             dataType:"json",
             async:false,

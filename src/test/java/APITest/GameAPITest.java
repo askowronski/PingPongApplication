@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.util.List;
 import org.apache.http.HttpResponse;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,8 +25,8 @@ public class GameAPITest {
     public static PlayerApiRequester playerApi = new PlayerApiRequester();
     public static GameApiRequester gameApi = new GameApiRequester();
 
-    @BeforeAll
-    public static void beforeAll() throws IOException {
+    @BeforeEach
+    public  void beforeEach() throws IOException {
 
         playerApi.createPlayer(USERNAME1);
         playerApi.createPlayer(USERNAME2);
@@ -35,8 +37,8 @@ public class GameAPITest {
         gameApi.createGame(player1.getiD(), player2.getiD(), 15, 14);
     }
 
-    @AfterAll
-    public static void afterAll() throws  IOException {
+    @AfterEach
+    public  void afterEach() throws  IOException {
         List<PingPongGame> games = gameApi.getGamesForPlayer(player1.getiD());
 
         for(PingPongGame game:games) {

@@ -46,7 +46,13 @@ public class PlayerAPI {
     public APIResult getPlayer(@RequestParam(value="id", required=true) int id) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         GamePersistenceManager gPM = new GamePersistenceManager();
-        int gameId = gPM.getGamesNew().get(gPM.getGamesNew().size()-1).getiD();
+        List<PersistenceGame> gamesForPlayer = gPM.getGamesForPlayer(id);
+        int gameId;
+        if (gamesForPlayer.size() == 0) {
+            gameId = 0;
+        } else {
+            gameId = gamesForPlayer.get(gamesForPlayer.size()-1).getiD();
+        }
         Player player = pPM.getViewPlayerByID(id,gameId);
         if(player.getiD()==0){
             return new APIResult(false,"Player with ID "+id+" not found");
@@ -61,7 +67,9 @@ public class PlayerAPI {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         GamePersistenceManager gPM = new GamePersistenceManager();
         int gameId;
-        List<PersistenceGame> games = gPM.getGamesNew();
+        PersistencePlayer playerForId = pPM.getPlayerByUsername(username);
+
+        List<PersistenceGame> games = gPM.getGamesForPlayer(playerForId.getId());
         if (games.size() > 0) {
             gameId = games.get(gPM.getGamesNew().size() - 1).getiD();
         } else {
