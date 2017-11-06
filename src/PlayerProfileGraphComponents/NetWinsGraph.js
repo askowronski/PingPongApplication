@@ -1,6 +1,3 @@
-/**
- * Created by askowronski on 9/3/17.
- */
 
 import {
     LineChart,
@@ -17,6 +14,7 @@ import {
     ReferenceLine,
     ComposedChart
 } from 'recharts';
+import ToggleDisplay from 'react-toggle-display';
 import {CustomToolTipDisplayNet} from "../Pages/PlayerProfilePage";
 import moment from "moment";
 import {ParseApiMessage} from "./EloRatingGraph";
@@ -36,7 +34,9 @@ export class NetWinsGraph extends React.Component {
         buttonValue: "Show Line Chart",
         playerID: 0,
         startDate: '',
-        endDate: ''
+        endDate: '',
+        errorMessage:'',
+        displayError:false
     };
 
     returnData = () => {
@@ -66,14 +66,27 @@ export class NetWinsGraph extends React.Component {
                 dataType: "json",
                 async: false,
                 success: function(data) {
-                    this.setState({
-                        dataset: ParseApiMessage(data),
-                        result: data.success,
-                    });
-
+                    if (data.success === false) {
+                        this.handleFailure(data.message)
+                    } else {
+                        this.setState({
+                            dataset: ParseApiMessage(data),
+                            result: data.success,
+                            displayError:false,
+                            errorMessage:''
+                        });
+                    }
                 }.bind(this)
             });
         }
+    };
+
+    handleFailure = (message) => {
+        this.setState({
+            errorMessage: message,
+            displayError: true,
+            dataset: [],
+        });
     };
 
     returnYLabel = (x, y) => {
@@ -112,7 +125,7 @@ export class NetWinsGraph extends React.Component {
         return (
             <div className="PlayerChartContainer">
                 <div className="PlayerGraph">
-                    <span ><text >Net Wins</text></span>
+                    <span ><ToggleDisplay show={this.state.displayError}><text className = "errorMessageGraph">{this.state.errorMessage}</text></ToggleDisplay><text >Net Wins</text></span>
                     <ComposedChart width={1300} height={400}
                                    data={this.state.dataset}
                                    margin={{

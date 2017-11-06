@@ -200,7 +200,6 @@ Tr {
 }
 
 .CreatePlayerForm {
-    margin-top: 10%;
     margin-left:10%;
     margin-right:auto;
     z-index: 0;
@@ -502,9 +501,13 @@ border-color: #020104;
     width:30%;
 }
 
-.typeahead-text-input,.react-datepicker-ignore-onclickoutside,.editDateInput,.editScoreInput, .scoreInput {
+.typeahead-text-input,.react-datepicker-ignore-onclickoutside,.editDateInput,.editScoreInput, .scoreInput, .typeahead-text-inputplayer1IDInput ,.typeahead-text-inputplayer2IDInput{
     font-size: 14px;
     height: 20px;
+}
+
+.typeahead-text-inputplayer1IDInput, .typeahead-text-inputplayer2IDInput {
+    width:187px;
 }
 
 .createPlayerButton {
@@ -536,6 +539,25 @@ background-color: white;
 
 .bottomRow {
     border-bottom:2px groove;
+}
+
+.typeahead-activeplayer1IDInput*{
+    background-color: #636363;
+}
+
+li[class^="typeahead-active"]{
+    background-color: rgba(27, 220, 255, 0.53);
+}
+
+input[class^="editDateInput"] {
+    font-size: 14px;
+    height: 20px;
+    width:187px;
+}
+
+.errorMessageGraph {
+    font-size: 24pt;
+    color: darkred;
 }
 
 

@@ -179,6 +179,10 @@ public class StatsAPI {
         } catch (ParseException pe) {
             return new APIResult(false, pe.getMessage());
         }
+
+        if (gamesForPlayer.size() == 0) {
+            return new APIResult(false, "No Games For Player.");
+        }
         SinglePlayerStatisticsCalculator calc = new SinglePlayerStatisticsCalculator(gamesForPlayer,player);
 
         List<GameOutcomeEnum> outcomes = calc.getOutcomes();
@@ -282,6 +286,10 @@ public class StatsAPI {
         } else {
             gamesForPlayer = gPM.getGamesForPlayer(gPM.getPlayer(playerID));
         }
+
+        if (gamesForPlayer.size() == 0) {
+            return new APIResult(false, "No Games For Player.");
+        }
         Player player = pPM.getViewPlayerByID(playerID,gamesForPlayer.get(gamesForPlayer.size()-1).getiD());
 
         Date theFirstDate = gamesForPlayer.get(0).getTime();
@@ -346,6 +354,10 @@ public class StatsAPI {
                     .getGamesForPlayerOptionalDates(playerID, beginningTime, endingTime, gPM);
         } catch (ParseException pe) {
             return new APIResult(false, pe.getMessage());
+        }
+
+        if (gamesForPlayer.size() == 0) {
+            return new APIResult(false, "No Games For Player.");
         }
         Player player = gPM.getPlayer(playerID);
 

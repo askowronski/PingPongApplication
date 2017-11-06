@@ -1,4 +1,3 @@
-import ToggleDisplay from 'react-toggle-display';
 import {
     LineChart,
     Line,
@@ -209,6 +208,8 @@ export class AverageScoreGraph extends React.Component {
     state = {
         dataset: [],
         result: '',
+        errorMessage:'',
+        displayError:false
     };
 
     returnData = () => {
@@ -223,10 +224,15 @@ export class AverageScoreGraph extends React.Component {
             dataType: "json",
             async: false,
             success: function(data) {
-                this.setState({
-                    dataset: JSON.parse(data.message),
-                    result: data.success,
-                });
+                if (JSON.parse(data.success) === false) {
+                    this.handleFailure(JSON.parse(data.message))
+                } else {
+
+                    this.setState({
+                        dataset: JSON.parse(data.message),
+                        result: data.success,
+                    });
+                }
 
             }.bind(this)
         });
@@ -251,6 +257,13 @@ export class AverageScoreGraph extends React.Component {
         return (
             <text x={x} y={y} textAnchor="middle">Score</text>
         )
+    };
+
+    handleFailure = (message) => {
+        this.setState({
+            errorMessage:message,
+            displayError:true
+        });
     };
 
     returnXLabel = (x, y) => {
@@ -310,7 +323,10 @@ export const PlayerTypeAhead = (props) => {
             onOptionSelected={props.onOptionSelected}
             inputDisplayOption={handleHint}
             customClasses={{
-                input: "typeAheadInput"
+                input: "typeAheadInput",
+                results: "typeahead-list__container" + props.id,
+                listItem: "typeahead-list__item" + props.id,
+                hover: "typeahead-active" + props.id,
             }}
 
         />

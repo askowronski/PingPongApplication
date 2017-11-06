@@ -30,6 +30,32 @@ class CreateGameForm extends React.Component {
     }
 
     componentDidMount = () => {
+        document.addEventListener('keyup', function(event) {
+            // if (event.keyCode === 9 && event.target.id === "player1IDInput") {
+            //     if (event.shiftKey) {
+            //         jQuery('.editDateInput react-datepicker-ignore-onclickoutside').focus();
+            //     } else {
+            //         jQuery("#player2IDInput").focus();
+            //     }
+            // } else
+            // if (event.keyCode === 9 && event.target.id === "player2IDInput") {
+            //     if (event.shiftKey) {
+            //         jQuery('.typeahead-text-inputplayer1IDInput').focus();
+            //     } else {
+            //         jQuery("#score1Input").focus();
+            //     }
+            // }
+            if (event.keyCode === 9 && event.target.className == "typeahead-text-inputplayer1IDInput") {
+                if (!event.shiftKey) {
+                    jQuery(".typeahead-text-inputplayer2IDInput").focus();
+                }
+            } else
+            if (event.keyCode === 9 &&  event.target.className == "typeahead-text-inputplayer2IDInput") {
+                if (!event.shiftKey) {
+                    jQuery("#score1Input").focus();
+                }
+            }
+        });
         jQuery.ajax({
 
             url: "http://localhost:8080/GetPlayers",
@@ -111,8 +137,6 @@ class CreateGameForm extends React.Component {
         jQuery('#score1Input').val('')
         jQuery('#score2Input').val('')
         this.setState({
-            player1ID: '',
-            player2ID: '',
             score1: '',
             score2: '',
         });
@@ -128,6 +152,8 @@ class CreateGameForm extends React.Component {
 
     render() {
         return (
+
+
             <div>
                 <table className="createGameTable">
                     <td>
@@ -175,7 +201,7 @@ class CreateGameForm extends React.Component {
                                         </label>
                                     </tr>
                                     <tr className="inputRow">
-                                        <label>
+                                        <label className="inputGameLabel">
                                             <td className="inputCell">
                                                 <text
                                                     className="inputGameLabel">
@@ -186,7 +212,7 @@ class CreateGameForm extends React.Component {
                                                 <div
                                                     className="choosePlayerTypeAhead">
                                                     <EditUsernameTypeAhead
-                                                        id="player1IDInput"
+                                                        id="player2IDInput"
                                                         players={this.state.players}
                                                         onOptionSelected={(event) => this.setPlayer2(
                                                             event)}/>

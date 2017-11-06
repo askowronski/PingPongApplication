@@ -13,6 +13,7 @@ import {
     ReferenceLine,
     ComposedChart
 } from 'recharts';
+import ToggleDisplay from 'react-toggle-display';
 import moment from "moment";
 const React = require('react');
 const jQuery = require('jquery');
@@ -39,6 +40,8 @@ export class EloRatingPerGame extends React.Component {
         positiveSet: [],
         startDate: '',
         endDate: '',
+        errorMessage: '',
+        displayError: false,
 
         gameDisplayStats: {
             number: 0,
@@ -75,25 +78,43 @@ export class EloRatingPerGame extends React.Component {
                 dataType: "json",
                 async: false,
                 success: function(data) {
-                    let oppDataSet = [];
-                    let dataSet = ParseApiMessage(data);
-                    for (let i = 0; i < dataSet.length; i++) {
-                        let newData = dataSet[i];
-                        newData.opponentEloRating = newData.opponentEloRating
-                            * -1;
-                        oppDataSet.push(newData);
+                    if (data.success === false) {
+                        this.handleFailure(data.message)
+                    } else {
+
+                        let oppDataSet = [];
+                        let dataSet = ParseApiMessage(data);
+                        for (let i = 0; i < dataSet.length; i++) {
+                            let newData = dataSet[i];
+                            newData.opponentEloRating = newData.opponentEloRating
+                                * -1;
+                            oppDataSet.push(newData);
+                        }
+                        this.setState({
+                            dataset: ParseApiMessage(data),
+                            result: data.success,
+                            oppDataSet: oppDataSet,
+                            negativeSet: oppDataSet,
+                            positiveSet: JSON.parse(data.message),
+                            displayError:false,
+                            errorMessage:''
+                        });
                     }
-                    this.setState({
-                        dataset: ParseApiMessage(data),
-                        result: data.success,
-                        oppDataSet: oppDataSet,
-                        negativeSet: oppDataSet,
-                        positiveSet: JSON.parse(data.message)
-                    });
 
                 }.bind(this)
             });
         }
+    };
+
+    handleFailure = (message) => {
+        this.setState({
+            errorMessage: message,
+            displayError: true,
+            dataset:[],
+            oppDataSet: [],
+            negativeSet: [],
+            positiveSet: [],
+        });
     };
 
     returnYLabel = (x, y) => {
@@ -171,7 +192,7 @@ export class EloRatingPerGame extends React.Component {
         return (
             <div className="PlayerChartContainer">
                 <div className="PlayerGraph">
-                    <span ><text >Elo Rating Per Game</text></span>
+                    <span ><ToggleDisplay show={this.state.displayError}><text className = "errorMessageGraph">{this.state.errorMessage}</text></ToggleDisplay><text >Elo Rating Per Game</text></span>
                     <LineChart width={1300} height={400}
                                data={this.state.dataset}
                                margins={{top: 5, right: 30, bottom: 5}}>
@@ -205,11 +226,11 @@ export class EloRatingPerGame extends React.Component {
 }
 
 export const ParseApiMessage = (props) => {
-  if (props.success === true) {
-      return JSON.parse(props.message);
-  }  else {
-      return props.message;
-  }
+    if (props.success === true) {
+        return JSON.parse(props.message);
+    } else {
+        return props.message;
+    }
 };
 
 export const CustomToolTipDisplayGameElo = React.createClass({
