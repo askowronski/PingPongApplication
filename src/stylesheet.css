@@ -514,9 +514,8 @@ border-color: #020104;
     border-style: groove;
     background-color: white;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 22px;
     font-style: italic;
-    margin-left:15px;
 }
 
 .createPlayerInput, .scoreInput {

@@ -39,8 +39,8 @@ public class PingPongGame {
 
     public PingPongGame() {
         this.iD=0;
-        this.player1= new Player(new EloRating(0),0,"Home Not found");
-        this.player2= new Player(new EloRating(0),0,"Home Not found");
+        this.player1= new Player(new EloRating(0),0,"Home Not found","No","Player");
+        this.player2= new Player(new EloRating(0),0,"Home Not found", "No", "Player");
         this.player1Score=0;
         this.player2Score=0;
         this.time= new Date();

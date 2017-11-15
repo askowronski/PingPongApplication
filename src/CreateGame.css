@@ -3,6 +3,14 @@
   row-span: 3;
 }
 
+.inputPlayerTable {
+  width:40%;
+  border:2px groove;
+  align-self: center;
+  row-span: 2;
+  margin-left: 0;
+}
+
 .inputRow {
   border:none;
 }

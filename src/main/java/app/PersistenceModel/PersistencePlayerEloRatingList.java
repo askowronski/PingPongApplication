@@ -88,7 +88,7 @@ public class PersistencePlayerEloRatingList {
         GamePersistenceManager gPM = new GamePersistenceManager();
         List<PersistenceGame> gamesForPlayer = gPM.getGamesForPlayer(this.eloRatingList.get(0).getPlayerID());
 
-        gamesForPlayer.sort(Comparator.comparing(g -> g.getTime()));
+        gamesForPlayer.sort(Comparator.comparing(PersistenceGame::getTime));
 
         LinkedList<PersistenceEloRating> sortedRatings = new LinkedList<>();
 

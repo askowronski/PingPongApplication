@@ -1,6 +1,7 @@
 import APITest.GameApiRequester;
 
 import java.io.IOException;
+import java.util.Random;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,8 +13,10 @@ public class HammerTest {
 
     @Test
     public void create1000Games() throws IOException{
-        for (int i = 0; i < 1001 ; i++){
-            gameApi.createGame(1,2,14,15,"2017OCT10");
+        Random random = new Random();
+        for (int i = 0; i < 40 ; i++){
+            gameApi.createGame(1,2,random.nextInt(15 - 10 + 1) + 10
+                    ,random.nextInt(15 - 10 + 1) + 10,"2017OCT09");
         }
     }
 

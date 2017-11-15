@@ -9,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name = "Player")
 public class PersistencePlayer {
@@ -24,12 +24,22 @@ public class PersistencePlayer {
     @JsonProperty("deleted")
     @Column(name = "deleted")
     private int deleted;
+    @JsonProperty("firstName")
+    @Column(name = "first_name")
+    private String firstName;
+    @JsonProperty("lastName")
+    @Column(name = "last_name")
+    private String lastName;
 
     @JsonCreator
-    public PersistencePlayer(@JsonProperty("id") int id,@JsonProperty("username") String username) {
+    public PersistencePlayer(@JsonProperty("id") int id, @JsonProperty("username") String username,
+            @JsonProperty("first_name") String firstName,
+            @JsonProperty("last_name") String lastName) {
         this.id = id;
         this.username = username;
         this.deleted = 0;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public PersistencePlayer() {
@@ -64,12 +74,32 @@ public class PersistencePlayer {
         this.deleted = deleted;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     @Override
-    public boolean equals(Object o){
-        if(!(o instanceof PersistencePlayer)) {
+    public boolean equals(Object o) {
+        if (!(o instanceof PersistencePlayer)) {
             return false;
         }
         PersistencePlayer player2 = (PersistencePlayer) o;
-        return this.getId() == player2.getId();
+        return this.getId() == player2.getId() &&
+                this.deleted == player2.deleted &&
+                this.getFirstName().equals(player2.getFirstName()) &&
+                this.getLastName().equals(player2.getLastName()) &&
+                this.getUsername().equals(player2.getUsername());
     }
 }

@@ -105,6 +105,13 @@ public class GameApiRequester {
                 .execute(getGames);
     }
 
+    public HttpResponse editGamePlayer2(int id, int player1Id) throws IOException {
+        HttpUriRequest getGames = new HttpPost(
+                HOST + "EditGame?iD=" + id + "&player2ID=" + player1Id);
+        return HttpClientBuilder.create().build()
+                .execute(getGames);
+    }
+
     public HttpResponse editGame(int id, int player1Id, int player2Id) throws IOException {
         HttpUriRequest getGames = new HttpPost(
                 HOST + "EditGame?iD=" + id + "&player1ID=" + player1Id + "&player2ID=" + player2Id);

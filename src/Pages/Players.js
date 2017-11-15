@@ -12,9 +12,13 @@ export default class PlayersList extends React.Component {
     state = {
         players: [],
         result: '',
-        showUsername: [],
         showEditPlayer: [],
-        deletePlayerResponse: ''
+        deletePlayerResponse: '',
+        editUsername: '',
+        editFirstName: '',
+        editLastName: '',
+        editId: 0,
+        originalUsername:''
     };
 
     componentDidMount = () => {
@@ -32,13 +36,10 @@ export default class PlayersList extends React.Component {
                     result: data.success,
                 });
                 let showEditArray = [];
-                let showUsernameArray = [];
                 for (let i = 0; i < JSON.parse(data.message).length; i++) {
-                    showUsernameArray.push(true);
                     showEditArray.push(false);
                 }
                 this.setState({
-                    showUsername: showUsernameArray,
                     showEditPlayer: showEditArray,
                 });
             }.bind(this)
@@ -46,28 +47,56 @@ export default class PlayersList extends React.Component {
 
     };
 
-    showEditPlayer = (index) => {
+    showEditPlayer = (index, player) => {
 
-        let showUsernameArray = this.state.showUsername.concat();
         let showEditArray = this.state.showEditPlayer.concat();
-        showUsernameArray[index] = false;
+        let indexOfTrue = showEditArray.indexOf(true);
+        if (indexOfTrue >= 0) {
+            showEditArray[indexOfTrue] = false;
+        }
         showEditArray[index] = true;
 
         this.setState({
-            showUsername: showUsernameArray,
-            showEditPlayer: showEditArray
+            showEditPlayer: showEditArray,
+            editId: player.id,
+            originalUsername:player.username,
+            editUsername: player.username,
+            editFirstName:player.firstName,
+            editLastName:player.lastName
         });
     };
 
     cancelEditPlayer = (index) => {
-        let showUsernameArray = this.state.showUsername.concat();
         let showEditArray = this.state.showEditPlayer.concat();
-        showUsernameArray[index] = true;
         showEditArray[index] = false;
 
         this.setState({
-            showUsername: showUsernameArray,
-            showEditPlayer: showEditArray
+            showEditPlayer: showEditArray,
+            editUsername: null,
+            editFirstName: null,
+            editLastName: null,
+            originalUsername:'',
+            editId:0
+        });
+    };
+
+    processEditPlayer = () => {
+
+        let urlString = "http://localhost:8080/EditPlayer?id="+this.state.editId+ "&newFirstName="
+            + this.state.editFirstName + "&newLastName=" + this.state.editLastName;
+        if (this.state.editUsername !== this.state.originalUsername) {
+            urlString = urlString + "&newUsername="+this.state.editUsername
+        }
+        jQuery.ajax({
+
+            url: urlString,
+            type: "POST",
+            dataType: "json",
+            async: false,
+            success: function(data) {
+                alert(data.message);
+                this.componentDidMount();
+            }.bind(this)
         });
     };
 
@@ -84,6 +113,24 @@ export default class PlayersList extends React.Component {
                 this.componentDidMount();
             }.bind(this)
         });
+    };
+
+    onChangeUsername = (event) => {
+        this.setState({
+            editUsername: event.target.value
+        })
+    };
+
+    onChangeFirstName = (event) => {
+        this.setState({
+            editFirstName: event.target.value
+        })
+    };
+
+    onChangeLastName = (event) => {
+        this.setState({
+            editLastName: event.target.value
+        })
     };
 
     playerProfile = (player) => {
@@ -108,21 +155,60 @@ export default class PlayersList extends React.Component {
 
                     {this.state.players.map((player, i) =>
                         <Tr className="PlayersRow">
-                            <Td column="ID" value={player.id}>
-                                {player.id}
-                            </Td>
+
                             <Td column="Username" className="playersTableColumn"
                                 value={player.username}>
                                 <div>
                                     <ToggleDisplay id="usernameToggleDisplay"
-                                                   show={this.state.showUsername[i]}>
+                                                   show={!this.state.showEditPlayer[i]}>
                                         {player.username}
                                     </ToggleDisplay>
                                     <ToggleDisplay
                                         id="editUsernameToggleDisplay"
                                         show={this.state.showEditPlayer[i]}>
-                                        <EditPlayer username={player.username}
-                                                    id={player.id}/>
+                                        <input className="editUsernameInput"
+                                               type="text"
+                                               value={this.state.editUsername}
+                                               onChange={(event) => this.onChangeUsername(event)}
+                                        />
+                                    </ToggleDisplay>
+                                </div>
+                            </Td>
+                            <Td column="First Name"
+                                className="playersTableColumn"
+                                value={player.firstName}>
+                                <div>
+                                    <ToggleDisplay id="usernameToggleDisplay"
+                                                   show={!this.state.showEditPlayer[i]}>
+                                        {player.firstName}
+                                    </ToggleDisplay>
+                                    <ToggleDisplay
+                                        id="editUsernameToggleDisplay"
+                                        show={this.state.showEditPlayer[i]}>
+                                        <input className="editUsernameInput"
+                                               type="text"
+                                               value={this.state.editFirstName}
+                                               onChange={(event) => this.onChangeFirstName(event)}
+                                        />
+                                    </ToggleDisplay>
+                                </div>
+                            </Td>
+                            <Td column="Last Name"
+                                className="playersTableColumn"
+                                value={player.lastName}>
+                                <div>
+                                    <ToggleDisplay id="usernameToggleDisplay"
+                                                   show={!this.state.showEditPlayer[i]}>
+                                        {player.lastName}
+                                    </ToggleDisplay>
+                                    <ToggleDisplay
+                                        id="editUsernameToggleDisplay"
+                                        show={this.state.showEditPlayer[i]}>
+                                        <input className="editUsernameInput"
+                                               type="text"
+                                               value={this.state.editLastName}
+                                               onChange={(event) => this.onChangeLastName(event)}
+                                        />
                                     </ToggleDisplay>
                                 </div>
                             </Td>
@@ -134,11 +220,21 @@ export default class PlayersList extends React.Component {
                             </Td>
                             <Td column="Actions" id={player.id}>
                                 <div>
+                                    <ToggleDisplay
+                                        show={this.state.showEditPlayer[i]}>
+                                        <div>
+                                            <input type="button" value="Submit"
+                                                   className="editButton"
+                                                   onClick={this.processEditPlayer}
+                                            />
+                                            &nbsp;
+                                        </div>
+                                    </ToggleDisplay>
                                     <div className="editContainer">
                                         <a className="editPlayer"
                                            style={{cursor: 'pointer'}}
                                            onClick={() => this.showEditPlayer(
-                                               i)}>Edit</a>
+                                               i, player)}>Edit</a>
                                     </div>
                                     &nbsp;
                                     <ToggleDisplay

@@ -63,19 +63,18 @@ public class PlayerPersistenceManager {
 
     // Create
 
-    public void createPlayer(String username) {
+    public void createPlayer(String username, String firstName, String lastName) {
         if (this.checkUsernameValidity(username)) {
             try {
                 int id = this.getNextID();
-
-                PersistencePlayer player = new PersistencePlayer(id,username);
+                PersistencePlayer player = new PersistencePlayer(id, username, firstName, lastName);
                 EloRatingPersistenceManager eRPM = new EloRatingPersistenceManager(id);
                 Session session = this.factory.openSession();
                 Transaction transaction = session.beginTransaction();
                 session.save(player);
                 transaction.commit();
                 session.close();
-                eRPM.createEloRating(new PersistenceEloRating(EloRating.DEFAULT_RATING,id,0));
+                eRPM.createEloRating(new PersistenceEloRating(EloRating.DEFAULT_RATING, id, 0));
             } catch (HibernateException he) {
                 System.out.println(he.getMessage());
                 throw he;
@@ -121,10 +120,10 @@ public class PlayerPersistenceManager {
 
         for (PersistencePlayer player : players) {
             EloRatingPersistenceManager eRPM = new EloRatingPersistenceManager(player.getId());
-            PersistencePlayerEloRatingList list = eRPM.getEloRatingList();
             viewPlayers.add(new Player(
-                    new EloRating(list.getRating(list.getListSize() - 1).getEloRating())
-                    , player.getId(), player.getUsername()));
+                    new EloRating(eRPM.getPlayersLastRating().getEloRating())
+                    , player.getId(), player.getUsername(), player.getFirstName(),
+                    player.getLastName()));
         }
         return viewPlayers;
     }
@@ -174,21 +173,39 @@ public class PlayerPersistenceManager {
         }
     }
 
-    public boolean updatePlayer(int id, String newUsername) {
-        PersistencePlayer player = this.getPlayerById(id);
-
-        if (player.getId() == 0 || !this.checkUsernameValidity(newUsername)) {
-            throw new IllegalArgumentException("Username or ID in update call are not valid.");
-        }
-        player.setUsername(newUsername);
-
+    public boolean updatePlayer(int id, String newUsername, String newFirstName, String newLastName) {
         try {
-            this.updatePlayer(player);
-            return true;
-        } catch (HibernateException e) {
-            System.out.println(e.getMessage());
-            throw e;
+            PersistencePlayer player = this.getPlayerById(id);
+
+            if (player.getId() == 0) {
+                throw new IllegalArgumentException("Id is not valid.");
+            }
+
+            if (newUsername != null) {
+                player.setUsername(newUsername);
+                if (!this.checkUsernameValidity(newUsername)) {
+                    throw new IllegalArgumentException("Username is taken.");
+                }
+            }
+            if (newFirstName != null) {
+                player.setFirstName(newFirstName);
+            }
+            if (newLastName != null) {
+                player.setLastName(newLastName);
+            }
+
+
+            try {
+                this.updatePlayer(player);
+                return true;
+            } catch (HibernateException e) {
+                System.out.println(e.getMessage());
+                throw e;
+            }
+        } catch (NoResultException e) {
+            throw new IllegalArgumentException("No player found with ID " + id + ".");
         }
+
     }
 
     public void updatePlayers(List<PersistencePlayer> players) {
@@ -243,7 +260,7 @@ public class PlayerPersistenceManager {
         for (PersistencePlayer player : players) {
             usernames.add(player.getUsername());
         }
-        return !usernames.contains(username) ;
+        return !usernames.contains(username);
     }
 
     public String writePlayerArrayToJson(List<Player> players) {
@@ -286,21 +303,23 @@ public class PlayerPersistenceManager {
                 return player;
             }
         }
-        return new Player(new EloRating(0), 0, "Player Does Not Exist");
+        return new Player(new EloRating(0), 0, "Player Does Not Exist", "No", "Player");
     }
 
     public Player getViewPlayerByID(int id, int gameID) {
         EloRatingPersistenceManager eRPM = new EloRatingPersistenceManager(id);
         PersistencePlayer player = this.getPlayerById(id);
         PersistenceEloRating rating = eRPM.getRatingByGameID(gameID);
-        return new Player(new EloRating(rating.getEloRating()), id, player.getUsername());
+        return new Player(new EloRating(rating.getEloRating()), id, player.getUsername(),
+                player.getFirstName(), player.getLastName());
     }
 
     public Player getViewPlayerByUsername(String username, int gameID) {
         PersistencePlayer player = this.getPlayerByUsername(username);
         EloRatingPersistenceManager eRPM = new EloRatingPersistenceManager(player.getId());
         PersistenceEloRating rating = eRPM.getRatingByGameID(gameID);
-        return new Player(new EloRating(rating.getEloRating()), player.getId(), player.getUsername());
+        return new Player(new EloRating(rating.getEloRating()), player.getId(),
+                player.getUsername(), player.getFirstName(), player.getLastName());
     }
 
     public boolean deletePlayerById(int id) {

@@ -200,13 +200,13 @@ export class AverageScorePerGame extends React.Component {
 
     renderBarScore = (state) => {
         if (state === true) {
-            return (<Bar dataKey="score" barSize={25} fill='#4286f4'/>)
+            return (<Line dataKey="score" barSize={25} fill='#4286f4'/>)
         }
     };
 
     renderBarOppScore = (state) => {
         if (state === true) {
-            return (<Bar dataKey="opponentScore" barSize={25} fill='#ad0505'/>
+            return (<Line dataKey="opponentScore" barSize={25} fill='#ad0505'/>
             )
         }
     };

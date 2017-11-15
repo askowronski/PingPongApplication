@@ -32,8 +32,13 @@ public class EloRatingPersistenceManager {
     private final int playerID;
 
     private static String FIND_ELO_RATINGS_FOR_PLAYER = "from PersistenceEloRating as ratings where ratings.playerID = :playerid";
-    private static String FIND_ELO_RATING_BY_GAME_ID = "from PersistenceEloRating as ratings where ratings.playerID = :playerid and "
-            + "ratings.gameID=:gameId";
+    private static String FIND_ELO_RATING_BY_GAME_ID =
+            "from PersistenceEloRating as ratings where ratings.playerID = :playerid and "
+                    + "ratings.gameID=:gameId";
+    private String getStringForLastPlayerQuery() {
+        return "select * from elo_rating where sort_order = (select Max(sort_order) from elo_rating where playerId = "
+                + this.getPlayerID() + " ) and playerId = " + this.getPlayerID() + ";";
+    }
 
     private SessionFactory factory;
 
@@ -108,6 +113,20 @@ public class EloRatingPersistenceManager {
         }
     }
 
+    public void saveOrUpdateEloRating(PersistenceEloRating eloRating) {
+        try {
+            Session session = factory.openSession();
+            Transaction transaction = session.beginTransaction();
+            session.saveOrUpdate(eloRating);
+            transaction.commit();
+            session.close();
+        } catch (HibernateException e) {
+            System.out.println(e.getMessage());
+            factory.getCurrentSession().close();
+            throw e;
+        }
+    }
+
     public void saveEloRating(int gameId) {
         try {
             Session session = factory.openSession();
@@ -139,16 +158,15 @@ public class EloRatingPersistenceManager {
     }
 
 
-
     public PersistenceEloRating getRatingByGameID(int gameID) {
         try {
             Session session = factory.openSession();
             Query query = session.createQuery(FIND_ELO_RATING_BY_GAME_ID);
             query.setParameter("playerid", this.getPlayerID());
-            query.setParameter("gameId",gameID);
-            PersistenceEloRating rating = (PersistenceEloRating)query.getSingleResult();
+            query.setParameter("gameId", gameID);
+            PersistenceEloRating rating = (PersistenceEloRating) query.getSingleResult();
             return rating;
-        } catch (HibernateException e) {
+        } catch (HibernateException | NoResultException e) {
             System.out.println(e.getMessage());
             throw e;
         }
@@ -258,28 +276,35 @@ public class EloRatingPersistenceManager {
 
         List<PersistenceGame> games = gPM.getGamesNew();
 
-        EloRatingPersistenceManager eRPM1 = new EloRatingPersistenceManager(newGame.getPlayer1ID());
-        EloRatingPersistenceManager eRPM2 = new EloRatingPersistenceManager(newGame.getPlayer2ID());
+        int indexOfGame;
 
-        int indexOfGame = games.indexOf(newGame);
+        if (oldGame.getTime().compareTo(newGame.getTime()) >= 0) {
+            indexOfGame = games.indexOf(newGame);
+        } else {
+            indexOfGame = 0;
+            for (int i = 0; i < games.size(); i++) {
+                if (games.get(i).getTime().compareTo(oldGame.getTime()) > 0) {
+                    indexOfGame = i;
+                    break;
+                }
+            }
+        }
 
-        if (!this.arePlayersAndOutcomesTheSame(oldGame, newGame)) {
-            if (this.areOutcomesSame(oldGame, newGame)) {
-                this.updateAllEloRatingsFromGameIndexOn(indexOfGame, gPM);
-            } else {
+        if (!this.arePlayersSame(oldGame, newGame)) {
                 if (!newGame.isPlayerInGame(oldGame.getPlayer1ID())) {
                     EloRatingPersistenceManager eRPM = new EloRatingPersistenceManager(
                             oldGame.getPlayer1ID());
                     eRPM.deleteEloRating(oldGame.getiD());
+
                 }
 
                 if (!newGame.isPlayerInGame(oldGame.getPlayer2ID())) {
                     EloRatingPersistenceManager eRPM = new EloRatingPersistenceManager(
-                            oldGame.getPlayer1ID());
+                            oldGame.getPlayer2ID());
                     eRPM.deleteEloRating(oldGame.getiD());
                 }
-            }
         }
+
 
         this.updateAllEloRatingsFromGameIndexOn(indexOfGame, gPM);
     }
@@ -297,6 +322,17 @@ public class EloRatingPersistenceManager {
             }
         }
         return false;
+    }
+
+    public PersistenceEloRating getPlayersLastRating() {
+        try {
+            Session session = factory.openSession();
+            Query query = session.createNativeQuery(this.getStringForLastPlayerQuery(), PersistenceEloRating.class);
+            return (PersistenceEloRating) query.getSingleResult();
+        } catch (HibernateException e) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
     }
 
     public boolean areOutcomesSame(PersistenceGame game1, PersistenceGame game2) {
@@ -337,30 +373,44 @@ public class EloRatingPersistenceManager {
             int gameIdPriorToGame1;
             int gameIdPriorToGame2;
 
-
             if (i - 1 < 0) {
                 gameIdPriorToGame1 = 0;
                 gameIdPriorToGame2 = 0;
 
             } else {
-                List<PersistenceGame> games1 = gPM.getGamesForPlayer(game.getPlayer1ID());
-                List<PersistenceGame> games2 = gPM.getGamesForPlayer(game.getPlayer2ID());
+                List<PersistenceGame> games1 = gPM.getGamesForPlayer(game.getPlayer1ID(), games);
+                List<PersistenceGame> games2 = gPM.getGamesForPlayer(game.getPlayer2ID(), games);
                 if (games1.indexOf(game) == 0) {
                     gameIdPriorToGame1 = 0;
                 } else {
-                    gameIdPriorToGame1= games.get(games1.indexOf(game)-1).getiD();
+                    gameIdPriorToGame1 = games1.get(games1.indexOf(game) - 1).getiD();
                 }
 
                 if (games2.indexOf(game) == 0) {
                     gameIdPriorToGame2 = 0;
                 } else {
-                    gameIdPriorToGame2= games.get(games1.indexOf(game)-1).getiD();
+                    gameIdPriorToGame2 = games2.get(games2.indexOf(game) - 1).getiD();
                 }
 
             }
 
             PersistenceEloRating ratingPriorToGame1 = eRPM1.getRatingByGameID(gameIdPriorToGame1);
             PersistenceEloRating ratingPriorToGame2 = eRPM2.getRatingByGameID(gameIdPriorToGame2);
+
+            PersistenceEloRating gameRating1;
+            PersistenceEloRating gameRating2;
+
+            try {
+                gameRating1 = eRPM1.getRatingByGameID(game.getiD());
+            } catch (NoResultException e) {
+                gameRating1 = new PersistenceEloRating(1500,game.getPlayer1ID(), game.getiD());
+            }
+
+            try {
+                gameRating2 = eRPM2.getRatingByGameID(game.getiD());
+            } catch (NoResultException e) {
+                gameRating2 = new PersistenceEloRating(1500,game.getPlayer2ID(), game.getiD());
+            }
 
             if (game.didWin(game.getPlayer1ID())) {
                 newRating1 = ratingPriorToGame1
@@ -379,14 +429,11 @@ public class EloRatingPersistenceManager {
                         .newRating(GameOutcomeEnum.DRAW, ratingPriorToGame1, game.getiD());
             }
 
-            PersistencePlayerEloRatingList list1 = eRPM1.getEloRatingList();
-            PersistencePlayerEloRatingList list2 = eRPM2.getEloRatingList();
+            gameRating1.setEloRating(newRating1.getEloRating());
+            gameRating2.setEloRating(newRating2.getEloRating());
 
-            list1.replaceEloRatingWithGameId(game.getiD(), newRating1);
-            list2.replaceEloRatingWithGameId(game.getiD(), newRating2);
-
-            eRPM1.saveOrUpdateEloList(list1);
-            eRPM2.saveOrUpdateEloList(list2);
+            eRPM1.saveOrUpdateEloRating(gameRating1);
+            eRPM2.saveOrUpdateEloRating(gameRating2);
         }
     }
 
@@ -412,7 +459,7 @@ public class EloRatingPersistenceManager {
         try {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(ratings);
-        } catch(JsonProcessingException e){
+        } catch (JsonProcessingException e) {
             return e.getMessage();
         }
     }

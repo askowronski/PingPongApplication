@@ -24,7 +24,7 @@ public class PlayerPersistenceManagerTest {
         String filePath = "pingPongPlayerTest.txt";
 
         PlayerPersistenceManager pPM = new PlayerPersistenceManager(filePath);
-        Player player = new Player(new EloRating(),1,username);
+        Player player = new Player(new EloRating(),1,username,"jah","boi");
         List<Player> players = new ArrayList<>();
         players.add(player);
 

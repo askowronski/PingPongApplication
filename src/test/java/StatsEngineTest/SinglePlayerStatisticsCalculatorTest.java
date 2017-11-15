@@ -16,8 +16,8 @@ public class SinglePlayerStatisticsCalculatorTest {
 
     @Test
     public void testGetHighestScore() {
-        Player player1 = new Player(new EloRating(), 1,"ka");
-        Player player2 = new Player(new EloRating(), 2,"jah");
+        Player player1 = new Player(new EloRating(), 1,"ka","jah","boi");
+        Player player2 = new Player(new EloRating(), 2,"jah","jah","boi");
 
         PingPongGame game1 = new PingPongGame(1,player1,player2,15,9);
         PingPongGame game2 = new PingPongGame(1,player1,player2,10,1);
@@ -41,8 +41,8 @@ public class SinglePlayerStatisticsCalculatorTest {
     @Test
     public void testStandardDeviation() {
 
-        Player player1 = new Player(new EloRating(), 1,"ka");
-        Player player2 = new Player(new EloRating(), 2,"sweet");
+        Player player1 = new Player(new EloRating(), 1,"ka","jah","boi");
+        Player player2 = new Player(new EloRating(), 2,"sweet","jah","boi");
 
         PingPongGame game1 = new PingPongGame(1,player1,player2,15,9);
         PingPongGame game2 = new PingPongGame(1,player1,player2,10,1);
@@ -64,8 +64,8 @@ public class SinglePlayerStatisticsCalculatorTest {
     @Test
     public void testGetWins() {
 
-        Player player1 = new Player(new EloRating(), 1,"ka");
-        Player player2 = new Player(new EloRating(), 2,"sweet");
+        Player player1 = new Player(new EloRating(), 1,"ka","jah","boi");
+        Player player2 = new Player(new EloRating(), 2,"sweet","jah","boi");
 
         PingPongGame game1 = new PingPongGame(1,player1,player2,15,9);
         PingPongGame game2 = new PingPongGame(1,player1,player2,10,1);
@@ -87,8 +87,8 @@ public class SinglePlayerStatisticsCalculatorTest {
     @Test
     public void testGetLosses() {
 
-        Player player1 = new Player(new EloRating(), 1,"ka");
-        Player player2 = new Player(new EloRating(), 2,"sweet");
+        Player player1 = new Player(new EloRating(), 1,"ka","jah","boi");
+        Player player2 = new Player(new EloRating(), 2,"sweet","jah","boi");
 
         PingPongGame game1 = new PingPongGame(1,player1,player2,15,9);
         PingPongGame game2 = new PingPongGame(1,player1,player2,10,1);
