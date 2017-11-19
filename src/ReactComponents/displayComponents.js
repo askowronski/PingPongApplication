@@ -14,23 +14,23 @@ class InfoDisplayPlayer extends React.Component {
         data: "",
         username: "",
         id: "",
-        eloRating: ""
+        streak: ""
     };
 
     componentDidMount = () => {
 
         jQuery.ajax({
 
-            url: "http://localhost:8080/GetPlayer?id=1",
+            url: "http://localhost:8080/GetLongestStreak",
             type: "GET",
             dataType: "json",
             async: false,
             success: function (data) {
                 this.setState({
                     data: data.message,
-                    username: JSON.parse(data.message).username,
-                    id: JSON.parse(data.message).id,
-                    eloRating: JSON.parse(data.message).eloRating.rating
+                    username: JSON.parse(data.message).player.username,
+                    id: JSON.parse(data.message).player.id,
+                    streak:JSON.parse(data.message).streak
                 });
             }.bind(this)
         });
@@ -45,8 +45,10 @@ class InfoDisplayPlayer extends React.Component {
                 <span className="infoDisplayHeader">Longest Streak </span>
                 <br/>
                 <span className="longestStreakUsername">Username: {this.state.username}</span>
+
+                <span className="longestStreakUsername"> ID: {this.state.id}</span>
                 <br/>
-                <span>ID: {this.state.id}</span>
+                <span className="longestStreakUsername">Streak: {this.state.streak}</span>
             </div>
 
         );
@@ -69,7 +71,7 @@ class InfoDisplayGame extends React.Component  {
 
         jQuery.ajax({
 
-            url: "http://localhost:8080/GetGame?iD=1",
+            url: "http://localhost:8080/GetLastGame?",
             type:"GET",
             dataType:"json",
             async:false,
@@ -94,17 +96,17 @@ class InfoDisplayGame extends React.Component  {
         return (
 
             <div className="infoDisplay" >
-                <span className="infoDisplayHeader"> Game </span>
+                <span className="infoDisplayHeader"> Last Game Played</span>
                 <br/>
                 <span className="longestStreakUsername">Date : {this.state.time} </span>
+                <br/>
+                <span className="longestStreakUsername">{this.state.player1Username}</span>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span className="longestStreakUsername">{this.state.player2Username}</span>
                 <br/>
                 <span>score: {this.state.score1}</span>
                 &nbsp;&nbsp;&nbsp;
                 <span>score: {this.state.score2}</span>
-                <br/>
-                <span>Player 1: {this.state.player1Username}</span>
-                &nbsp;&nbsp;&nbsp;
-                <span>Player 2: {this.state.player2Username}</span>
 
             </div>
 

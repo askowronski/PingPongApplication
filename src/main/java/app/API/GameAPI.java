@@ -39,10 +39,10 @@ public class GameAPI {
             int player2Score = Integer.parseInt(score2);
             Date newTime = new SimpleDateFormat("yyyyMMMdd").parse(time);
 
-            if (gPM.doesPlayerHaveFourGamesOnDate(newTime, IDplayer1) ||
-                    gPM.doesPlayerHaveFourGamesOnDate(newTime, IDplayer2)) {
-                return new APIResult(false, "Should you be doing that?");
-            }
+//            if (gPM.doesPlayerHaveFourGamesOnDate(newTime, IDplayer1) ||
+//                    gPM.doesPlayerHaveFourGamesOnDate(newTime, IDplayer2)) {
+//                return new APIResult(false, "Should you be doing that?");
+//            }
 
             PersistenceGame game = new PersistenceGame(gPM.getNextID(),IDplayer1,IDplayer2,player1Score,player2Score,newTime);
             gPM.createGame(game);
@@ -145,6 +145,19 @@ public class GameAPI {
         GamePersistenceManager gPM = new GamePersistenceManager();
         try {
             PingPongGame game = gPM.getViewGameByID(iD);
+            return new APIResult(true, gPM.writeGameToJson(game));
+        } catch (NoSuchElementException e) {
+            return new APIResult(false, e.getMessage());
+        }
+
+    }
+
+    @CrossOrigin()
+    @RequestMapping(path = "/GetLastGame", method=GET)
+    public APIResult getLastGame() {
+        GamePersistenceManager gPM = new GamePersistenceManager();
+        try {
+            PingPongGame game = gPM.getLastGame();
             return new APIResult(true, gPM.writeGameToJson(game));
         } catch (NoSuchElementException e) {
             return new APIResult(false, e.getMessage());

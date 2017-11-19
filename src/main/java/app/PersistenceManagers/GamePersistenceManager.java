@@ -155,6 +155,34 @@ public class GamePersistenceManager {
         }
     }
 
+    public PingPongGame getLastGame() {
+        try {
+            PlayerPersistenceManager pPM = new PlayerPersistenceManager();
+            Session session = factory.openSession();
+            Query query = session.createNativeQuery(this.getStringForLastGameQuery(),
+                    PersistenceGame.class);
+            List<PersistenceGame> games = query.getResultList();
+
+            if (games.size() == 0) {
+                throw new NoResultException("No games found.");
+            }
+
+            PersistenceGame game = games.get(games.size() - 1);
+            Player player1 = pPM.getViewPlayerByID(game.getPlayer1ID(), game.getiD());
+            Player player2 = pPM.getViewPlayerByID(game.getPlayer2ID(), game.getiD());
+            return new PingPongGame(game.getiD(), player1, player2,
+                    game.getPlayer1Score(), game.getPlayer2Score(), game.getTime());
+
+        } catch (HibernateException e) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
+    }
+
+    private String getStringForLastGameQuery() {
+        return "select * from ping_pong_game where date = (select Max(date) from ping_pong_game);";
+    }
+
 
     public String writeGameToJson(PingPongGame game) {
         ObjectMapper mapper = new ObjectMapper();
@@ -315,7 +343,7 @@ public class GamePersistenceManager {
             List<PersistenceGame> games = query.getResultList();
 
             if (games.size() > 0) {
-                return games.get(games.size()-1).getiD();
+                return games.get(games.size() - 1).getiD();
             } else {
                 return 0;
             }
@@ -327,7 +355,8 @@ public class GamePersistenceManager {
 
     private String getStringForLastPlayerQuery(int playerId) {
         return "select * from ping_pong_game where date = (select Max(date) from ping_pong_game where player1Id = "
-                + playerId + " OR player2Id = " + playerId + " );";
+                + playerId + " OR player2Id = " + playerId + " ) AND (player1Id = " + playerId
+                + " OR player2Id = " + playerId + ");";
     }
 
 
@@ -379,6 +408,22 @@ public class GamePersistenceManager {
 
     public List<PingPongGame> getGamesForPlayer(Player player) {
         List<PingPongGame> games = this.getGamesView();
+        List<PingPongGame> gamesForPlayer = new ArrayList<>();
+
+        for (PingPongGame game : games) {
+            if (game.getPlayer1().getiD() == player.getiD()) {
+                gamesForPlayer.add(game);
+            } else if (game.getPlayer2().getiD() == player.getiD()) {
+                PingPongGame newGame = new PingPongGame(game.getiD(), game.getPlayer2(),
+                        game.getPlayer1(), game.getPlayer2Score(), game.getPlayer1Score(),
+                        game.getTime());
+                gamesForPlayer.add(newGame);
+            }
+        }
+        return gamesForPlayer;
+    }
+
+    public List<PingPongGame> getGamesForPlayer(Player player, List<PingPongGame> games) {
         List<PingPongGame> gamesForPlayer = new ArrayList<>();
 
         for (PingPongGame game : games) {

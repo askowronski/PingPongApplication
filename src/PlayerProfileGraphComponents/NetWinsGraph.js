@@ -137,7 +137,7 @@ export class NetWinsGraph extends React.Component {
                                    label={"Net Wins/Losses"}>
                         <XAxis allowDecimals={false} dataKey="label"
                                label={this.returnXLabel(500, 400)}/>
-                        <YAxis allowDecimals={false} domain={['auto', 'auto']}
+                        <YAxis allowDecimals={false} domain={[0, 'auto']}
                                label={this.returnYLabel(20, 150)}/>
                         <CartesianGrid strokeDasharray="3 3"/>
                         <ReferenceLine y={0} stroke='#000'/>

@@ -8,6 +8,7 @@ import app.PersistenceManagers.EloRatingPersistenceManager;
 import app.PersistenceManagers.GamePersistenceManager;
 import app.PersistenceManagers.PlayerPersistenceManager;
 import app.PersistenceModel.PersistencePlayerEloRatingList;
+import app.StatsEngine.LongestStreakData;
 import app.ViewModel.EloRating;
 import app.ViewModel.GameOutcomeEnum;
 import app.ViewModel.PingPongGame;
@@ -114,6 +115,15 @@ public class StatsAPI {
 
         SinglePlayerStatisticsCalculator calc = new SinglePlayerStatisticsCalculator(games,player);
         return new APIResult(true,Integer.toString(calc.getLosses()));
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000")
+    @RequestMapping("/GetLongestStreak")
+    public APIResult getLongestStreak() {
+        TotalGamesStatsCalculator tGSC = new TotalGamesStatsCalculator();
+        LongestStreakData lSD = tGSC.getLongestStreak();
+
+        return new APIResult(true, lSD.writeDataToJson());
     }
 
     @CrossOrigin(origins = "http://localhost:3000")

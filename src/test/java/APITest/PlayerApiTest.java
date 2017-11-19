@@ -72,6 +72,7 @@ public class PlayerApiTest {
     @Test
     public void testEditPlayer() throws IOException {
         String newUsername = "swaggggggggggggg";
+        usersToDelete.add(newUsername);
         Player player = api.getPlayer(usersToDelete.get(0));
         HttpResponse response = api.editPlayer(player.getiD(), newUsername);
         Player playerAfter = api.getPlayer(player.getiD());

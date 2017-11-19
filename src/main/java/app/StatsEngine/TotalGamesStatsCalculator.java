@@ -3,6 +3,9 @@ package app.StatsEngine;
 
 import app.PersistenceManagers.GamePersistenceManager;
 import app.PersistenceManagers.PlayerPersistenceManager;
+import app.PersistenceModel.PersistenceGame;
+import app.PersistenceModel.PersistencePlayer;
+import app.ViewModel.EloRating;
 import app.ViewModel.PingPongGame;
 import app.ViewModel.Player;
 
@@ -12,9 +15,11 @@ import java.util.List;
 public class TotalGamesStatsCalculator {
 
     private final GamePersistenceManager gPM;
+    private final PlayerPersistenceManager pPM;
 
     public TotalGamesStatsCalculator() {
         this.gPM = new GamePersistenceManager();
+        this.pPM = new PlayerPersistenceManager();
     }
 
     public int getTotalGames() {
@@ -92,6 +97,40 @@ public class TotalGamesStatsCalculator {
 
     public GamePersistenceManager getgPM(){
         return this.gPM;
+    }
+
+    public PlayerPersistenceManager getPPM() {
+        return pPM;
+    }
+
+    public LongestStreakData getLongestStreak() {
+        List<PingPongGame> games = this.getgPM().getGamesView();
+        List<Player> players = this.getPPM().getViewPlayers();
+        int currentHighCount = 0;
+        Player currentHighPlayer = new Player(new EloRating(), 0, "Empty Player", "Empty", "Player");
+
+        for (Player player:players) {
+            int counter = 0;
+            List<PingPongGame> gamesForPlayer = gPM.getGamesForPlayer(player, games);
+            int currentHighForPlayer = 0;
+            for (PingPongGame game: gamesForPlayer) {
+                if (game.didWin(player)) {
+                    counter++;
+                } else {
+                    if (counter > currentHighForPlayer) {
+                        currentHighForPlayer = counter;
+                    }
+                    counter=0;
+                }
+            }
+            if (currentHighForPlayer > currentHighCount) {
+                currentHighCount = currentHighForPlayer;
+                currentHighPlayer = player;
+            }
+        }
+
+        return new LongestStreakData(currentHighPlayer, currentHighCount);
+
     }
 
 

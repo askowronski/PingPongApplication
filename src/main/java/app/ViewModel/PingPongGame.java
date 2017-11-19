@@ -1,6 +1,7 @@
 package app.ViewModel;
 
 
+import app.PersistenceModel.PersistencePlayer;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -112,6 +113,16 @@ public class PingPongGame {
             return this.getPlayer1Score() > this.getPlayer2Score();
         }
         if(this.getPlayer2().getiD() == player.getiD()){
+            return this.getPlayer2Score() > this.getPlayer1Score();
+        }
+        return false;
+    }
+
+    public boolean didWin(PersistencePlayer player){
+        if(this.getPlayer1().getiD() == player.getId()){
+            return this.getPlayer1Score() > this.getPlayer2Score();
+        }
+        if(this.getPlayer2().getiD() == player.getId()){
             return this.getPlayer2Score() > this.getPlayer1Score();
         }
         return false;
