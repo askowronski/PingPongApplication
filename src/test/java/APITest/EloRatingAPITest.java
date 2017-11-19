@@ -22,6 +22,8 @@ public class EloRatingAPITest {
 
     public static String USERNAME1 = "gameTestUser1";
     public static String USERNAME2 = "gameTestUser2";
+    public static String FIRST_NAME = "first";
+    public static String LAST_NAME = "last";
 
     public static Player player1;
     public static Player player2;
@@ -35,8 +37,8 @@ public class EloRatingAPITest {
     @BeforeEach
     public void beforeEach() throws IOException {
 
-        playerApi.createPlayer(USERNAME1);
-        playerApi.createPlayer(USERNAME2);
+        playerApi.createPlayer(USERNAME1, FIRST_NAME, LAST_NAME);
+        playerApi.createPlayer(USERNAME2, FIRST_NAME, LAST_NAME);
 
         player1 = playerApi.getPlayer(USERNAME1);
         player2 = playerApi.getPlayer(USERNAME2);
@@ -67,7 +69,7 @@ public class EloRatingAPITest {
 
     @Test
     public void testEloRatingCreationUponPlayerCreation() throws IOException {
-        playerApi.createPlayer("swagTesterEloRatingMan");
+        playerApi.createPlayer("swagTesterEloRatingMan", FIRST_NAME, LAST_NAME);
         Player player = playerApi.getPlayer("swagTesterEloRatingMan");
 
         List<PersistenceEloRating> ratings = eloApi.getRatings(player.getiD());
@@ -371,7 +373,7 @@ public class EloRatingAPITest {
 
         String USERNAME3 = "gameTestUser3";
 
-        playerApi.createPlayer(USERNAME3);
+        playerApi.createPlayer(USERNAME3, FIRST_NAME, LAST_NAME);
 
         Player player3 = playerApi.getPlayer(USERNAME3);
         playersToDelete.add(player3.getiD());
@@ -393,7 +395,7 @@ public class EloRatingAPITest {
 
         String USERNAME3 = "gameTestUser3";
 
-        playerApi.createPlayer(USERNAME3);
+        playerApi.createPlayer(USERNAME3, FIRST_NAME, LAST_NAME);
 
         Player player3 = playerApi.getPlayer(USERNAME3);
         playersToDelete.add(player3.getiD());

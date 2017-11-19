@@ -27,7 +27,7 @@ public class PlayerApiTest {
 
     @BeforeEach
     public  void beforeEach() throws IOException {
-        HttpResponse response = api.createPlayer("swag");
+        HttpResponse response = api.createPlayer("swag", "first", "last");
 
         usersToDelete.add("swag");
     }
@@ -52,7 +52,7 @@ public class PlayerApiTest {
         String username = "swag2";
         usersToDelete.add(username);
 
-        HttpResponse response = api.createPlayer(username);
+        HttpResponse response = api.createPlayer(username, "first", "last");
 
         Player player = api.getPlayer(username);
         assertEquals(username, player.getUsername());
@@ -62,7 +62,7 @@ public class PlayerApiTest {
     public void testCreatePlayerWithTakenUsername() throws IOException {
         String username = usersToDelete.get(0);
 
-        HttpResponse response = api.createPlayer(username);
+        HttpResponse response = api.createPlayer(username, "first", "last");
         ObjectMapper mapper = new ObjectMapper();
         JsonNode data = mapper.readTree(EntityUtils.toString(response.getEntity()));
         String message = data.path("message").asText();

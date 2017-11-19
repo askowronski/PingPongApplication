@@ -84,7 +84,7 @@ public class PersistencePlayerEloRatingList {
         }
     }
 
-    private void sortEloRatings() {
+    public void sortEloRatings() {
         GamePersistenceManager gPM = new GamePersistenceManager();
         List<PersistenceGame> gamesForPlayer = gPM.getGamesForPlayer(this.eloRatingList.get(0).getPlayerID());
 

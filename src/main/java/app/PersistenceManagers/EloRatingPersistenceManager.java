@@ -100,6 +100,7 @@ public class EloRatingPersistenceManager {
         try {
             Session session = factory.openSession();
             Transaction transaction = session.beginTransaction();
+
             ratings.setSortOrder();
             for (PersistenceEloRating rating : ratings.getList()) {
                 session.saveOrUpdate(rating);

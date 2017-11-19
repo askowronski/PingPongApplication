@@ -22,7 +22,8 @@ class CreateGameForm extends React.Component {
             players: [],
             resultPlayers: '',
             date: '',
-            resultText: ''
+            resultText: '',
+            showKim:false
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -31,26 +32,13 @@ class CreateGameForm extends React.Component {
 
     componentDidMount = () => {
         document.addEventListener('keyup', function(event) {
-            // if (event.keyCode === 9 && event.target.id === "player1IDInput") {
-            //     if (event.shiftKey) {
-            //         jQuery('.editDateInput react-datepicker-ignore-onclickoutside').focus();
-            //     } else {
-            //         jQuery("#player2IDInput").focus();
-            //     }
-            // } else
-            // if (event.keyCode === 9 && event.target.id === "player2IDInput") {
-            //     if (event.shiftKey) {
-            //         jQuery('.typeahead-text-inputplayer1IDInput').focus();
-            //     } else {
-            //         jQuery("#score1Input").focus();
-            //     }
-            // }
-            if (event.keyCode === 9 && event.target.className == "typeahead-text-inputplayer1IDInput") {
+            if (event.keyCode === 9 && event.target.className
+                == "typeahead-text-inputplayer1IDInput") {
                 if (!event.shiftKey) {
                     jQuery(".typeahead-text-inputplayer2IDInput").focus();
                 }
-            } else
-            if (event.keyCode === 9 &&  event.target.className == "typeahead-text-inputplayer2IDInput") {
+            } else if (event.keyCode === 9 && event.target.className
+                == "typeahead-text-inputplayer2IDInput") {
                 if (!event.shiftKey) {
                     jQuery("#score1Input").focus();
                 }
@@ -121,12 +109,21 @@ class CreateGameForm extends React.Component {
             dataType: "json",
             async: false,
             success: function(data) {
-                this.setState({
-                    result: data.success,
-                    resultText: data.message
-                });
-                this.clearInputs();
-                event.preventDefault();
+                if (data.success) {
+                    this.setState({
+                        result: data.success,
+                        resultText: data.message
+                    });
+                    this.clearInputs();
+                    event.preventDefault();
+                } else {
+                    this.setState({
+                        showKim: true,
+                        resultText: data.message
+                    });
+                    this.clearInputs();
+                    event.preventDefault();
+                }
             }.bind(this)
         });
 
@@ -264,7 +261,15 @@ class CreateGameForm extends React.Component {
 
                     </td>
                     <td>
-                        <ResultText text={this.state.resultText}/>
+                        <div>
+                            <ResultText text={this.state.resultText}/>
+
+                            {
+                                this.state.showKim ?<img src={require('../images/kimGif.gif')}
+                                                         width='80%' height='80%'/> :<img></img>
+                            }
+                        </div>
+
                     </td>
                 </table>
             </div>

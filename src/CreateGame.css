@@ -36,7 +36,7 @@
   color:deepskyblue;
   font-weight:bold;
   align-self: center;
-  float: left;
+  /*float: left;*/
 }
 
 .createGameTable > td{

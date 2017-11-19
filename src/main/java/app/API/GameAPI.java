@@ -39,6 +39,11 @@ public class GameAPI {
             int player2Score = Integer.parseInt(score2);
             Date newTime = new SimpleDateFormat("yyyyMMMdd").parse(time);
 
+            if (gPM.doesPlayerHaveFourGamesOnDate(newTime, IDplayer1) ||
+                    gPM.doesPlayerHaveFourGamesOnDate(newTime, IDplayer2)) {
+                return new APIResult(false, "Should you be doing that?");
+            }
+
             PersistenceGame game = new PersistenceGame(gPM.getNextID(),IDplayer1,IDplayer2,player1Score,player2Score,newTime);
             gPM.createGame(game);
             return  new APIResult(true,"Game Created");

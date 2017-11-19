@@ -14,6 +14,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -36,6 +37,9 @@ public class GamePersistenceManager {
 
     public static String GET_GAMES = "from PersistenceGame as games where games.deleted = false";
     public static String GET_GAME_BY_ID = "from PersistenceGame as game where game.iD = :id";
+    public static String GET_GAMES_FOR_PLAYER_ON_DATE = "from PersistenceGame as game where (game.player1ID = :playerId OR"
+            + " game.player2ID = :playerId ) AND datediff(game.time, :date) = 0";
+
 
     private final File file;
 
@@ -94,6 +98,23 @@ public class GamePersistenceManager {
     public Player getPlayer(int id) {
         PlayerPersistenceManager ppm = new PlayerPersistenceManager();
         return ppm.getPlayerByIDOld(id);
+    }
+
+    public Boolean doesPlayerHaveFourGamesOnDate(Date date, int playerId) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+            String dateString = sdf.format(date);
+            Session session = factory.openSession();
+            Query query = session.createQuery(GET_GAMES_FOR_PLAYER_ON_DATE);
+            query.setParameter("playerId", playerId);
+            query.setParameter("date", dateString);
+            List<PersistenceGame> games = query.getResultList();
+            return games.size() > 3;
+        } catch (NoResultException | HibernateException e) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
     }
 
     public int getNextID() {

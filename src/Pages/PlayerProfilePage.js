@@ -13,7 +13,6 @@ import {
     ReferenceLine,
     ComposedChart
 } from 'recharts';
-import pureRender from 'react-pure-render';
 import {AverageScorePerGame} from "../PlayerProfileGraphComponents/ScorePerGameGraph";
 import {
     EloRatingPerGame,
