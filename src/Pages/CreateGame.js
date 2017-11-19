@@ -23,7 +23,7 @@ class CreateGameForm extends React.Component {
             resultPlayers: '',
             date: '',
             resultText: '',
-            showKim:false
+            showKim: false
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -109,16 +109,16 @@ class CreateGameForm extends React.Component {
             dataType: "json",
             async: false,
             success: function(data) {
-                if (data.success) {
+                if (data.message === "Should you be doing that?") {
                     this.setState({
-                        result: data.success,
+                        showKim: true,
                         resultText: data.message
                     });
                     this.clearInputs();
                     event.preventDefault();
                 } else {
                     this.setState({
-                        showKim: true,
+                        result: data.success,
                         resultText: data.message
                     });
                     this.clearInputs();
@@ -265,8 +265,10 @@ class CreateGameForm extends React.Component {
                             <ResultText text={this.state.resultText}/>
 
                             {
-                                this.state.showKim ?<img src={require('../images/kimGif.gif')}
-                                                         width='80%' height='80%'/> :<img></img>
+                                this.state.showKim ?
+                                    <img src={require('../images/kimGif.gif')}
+                                         width='80%' height='80%'/> :
+                                    <img></img>
                             }
                         </div>
 

@@ -108,27 +108,27 @@ public class PingPongGame {
     }
 
     public boolean didWin(Player player){
-        if(this.getPlayer1().equals(player)){
+        if(this.getPlayer1().getiD() == player.getiD()){
             return this.getPlayer1Score() > this.getPlayer2Score();
         }
-        if(this.getPlayer2().equals(player)){
+        if(this.getPlayer2().getiD() == player.getiD()){
             return this.getPlayer2Score() > this.getPlayer1Score();
         }
         return false;
     }
 
     public boolean didLose(Player player){
-        if(this.getPlayer1().equals(player)){
+        if(this.getPlayer1().getiD() == player.getiD()){
             return this.getPlayer1Score() < this.getPlayer2Score();
         }
-        if(this.getPlayer2().equals(player)){
+        if(this.getPlayer2().getiD() == player.getiD()){
             return this.getPlayer2Score() < this.getPlayer1Score();
         }
         return false;
     }
 
     public Player getOpponent(Player player) {
-        if(this.getPlayer1().equals(player)){
+        if(this.getPlayer1().getiD() == player.getiD()){
             return this.getPlayer2();
         } else {
             return this.getPlayer1();

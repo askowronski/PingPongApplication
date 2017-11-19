@@ -536,10 +536,8 @@ public class PlayerPersistenceManager {
                     listPlayer2.replaceEloRating(indexOfGame2, newRating2);
                 }
 
-                listPlayer1.setSortOrder();
-                listPlayer2.setSortOrder();
-                eRPM1.saveOrUpdateEloList(listPlayer1);
-                eRPM2.saveOrUpdateEloList(listPlayer2);
+                eRPM1.saveOrUpdateEloRating(newRating1);
+                eRPM2.saveOrUpdateEloRating(newRating2);
             }
         }
     }

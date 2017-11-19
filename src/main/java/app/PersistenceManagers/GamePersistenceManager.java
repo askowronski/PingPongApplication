@@ -2,6 +2,7 @@ package app.PersistenceManagers;
 
 
 import app.Exceptions.InvalidParameterException;
+import app.PersistenceModel.PersistenceEloRating;
 import app.PersistenceModel.PersistenceGame;
 import app.PersistenceModel.PersistencePlayer;
 import app.PersistenceModel.PersistencePlayerEloRatingList;
@@ -37,8 +38,9 @@ public class GamePersistenceManager {
 
     public static String GET_GAMES = "from PersistenceGame as games where games.deleted = false";
     public static String GET_GAME_BY_ID = "from PersistenceGame as game where game.iD = :id";
-    public static String GET_GAMES_FOR_PLAYER_ON_DATE = "from PersistenceGame as game where (game.player1ID = :playerId OR"
-            + " game.player2ID = :playerId ) AND datediff(game.time, :date) = 0";
+    public static String GET_GAMES_FOR_PLAYER_ON_DATE =
+            "from PersistenceGame as game where (game.player1ID = :playerId OR"
+                    + " game.player2ID = :playerId ) AND datediff(game.time, :date) = 0";
 
 
     private final File file;
@@ -301,16 +303,31 @@ public class GamePersistenceManager {
         oldGame.setPlayer1ID(player1Id);
 
         EloRatingPersistenceManager eRPM = new EloRatingPersistenceManager(oldGame.getPlayer1ID());
-        EloRatingPersistenceManager eRPM2 = new EloRatingPersistenceManager(oldGame.getPlayer2ID());
-
-        PersistencePlayerEloRatingList list1 = eRPM.getEloRatingList();
-        list1.setSortOrder();
-        eRPM.saveOrUpdateEloList(list1);
-        PersistencePlayerEloRatingList list2 = eRPM2.getEloRatingList();
-        list2.setSortOrder();
-        eRPM2.saveOrUpdateEloList(list2);
 
         eRPM.updateEloRatingsEditGame(oldGame, newGame);
+    }
+
+    public int getPlayersLastGameId(int playerId) {
+        try {
+            Session session = factory.openSession();
+            Query query = session.createNativeQuery(this.getStringForLastPlayerQuery(playerId),
+                    PersistenceGame.class);
+            List<PersistenceGame> games = query.getResultList();
+
+            if (games.size() > 0) {
+                return games.get(games.size()-1).getiD();
+            } else {
+                return 0;
+            }
+        } catch (HibernateException e) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
+    }
+
+    private String getStringForLastPlayerQuery(int playerId) {
+        return "select * from ping_pong_game where date = (select Max(date) from ping_pong_game where player1Id = "
+                + playerId + " OR player2Id = " + playerId + " );";
     }
 
 

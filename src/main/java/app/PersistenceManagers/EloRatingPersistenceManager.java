@@ -101,7 +101,7 @@ public class EloRatingPersistenceManager {
             Session session = factory.openSession();
             Transaction transaction = session.beginTransaction();
 
-            ratings.setSortOrder();
+            ratings.sortEloRatings();
             for (PersistenceEloRating rating : ratings.getList()) {
                 session.saveOrUpdate(rating);
             }
@@ -149,9 +149,9 @@ public class EloRatingPersistenceManager {
             Query query = session.createQuery(FIND_ELO_RATINGS_FOR_PLAYER);
             query.setParameter("playerid", this.getPlayerID());
             List<PersistenceEloRating> ratings = query.list();
-            Collections.sort(ratings,
-                    Comparator.comparing((PersistenceEloRating rating) -> rating.getSortOrder()));
-            return new PersistencePlayerEloRatingList(new LinkedList<>(ratings));
+            PersistencePlayerEloRatingList list = new PersistencePlayerEloRatingList(new LinkedList<>(ratings));
+            list.sortEloRatings();
+            return list;
         } catch (HibernateException e) {
             System.out.println(e.getMessage());
             throw e;
@@ -327,9 +327,9 @@ public class EloRatingPersistenceManager {
 
     public PersistenceEloRating getPlayersLastRating() {
         try {
-            Session session = factory.openSession();
-            Query query = session.createNativeQuery(this.getStringForLastPlayerQuery(), PersistenceEloRating.class);
-            return (PersistenceEloRating) query.getSingleResult();
+            GamePersistenceManager gPM = new GamePersistenceManager();
+            int gameId = gPM.getPlayersLastGameId(this.getPlayerID());
+            return this.getRatingByGameID(gameId);
         } catch (HibernateException e) {
             System.out.println(e.getMessage());
             throw e;

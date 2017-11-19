@@ -36,9 +36,6 @@ public class PersistenceEloRating {
     @Column(name = "gameId")
     private  int gameID;
 
-    @Column(name = "sort_order")
-    private  int sortOrder;
-
     @JsonCreator
     public PersistenceEloRating(@JsonProperty("rating") double eloRating, @JsonProperty("playerID") int playerID,
             @JsonProperty("gameID") int gameID) {
@@ -97,14 +94,6 @@ public class PersistenceEloRating {
 
     public void setGameID(int gameID) {
         this.gameID = gameID;
-    }
-
-    public int getSortOrder() {
-        return sortOrder;
-    }
-
-    public void setSortOrder(int sortOrder) {
-        this.sortOrder = sortOrder;
     }
 
     @Override

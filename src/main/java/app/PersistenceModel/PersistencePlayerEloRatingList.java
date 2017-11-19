@@ -26,18 +26,15 @@ public class PersistencePlayerEloRatingList {
 
     public void addEloRating(PersistenceEloRating rating) {
         this.eloRatingList.add(rating);
-        this.setSortOrder();
     }
 
     public void addEloRating(int index, PersistenceEloRating rating) {
         this.eloRatingList.add(index, rating);
-        this.setSortOrder();
     }
 
     public void replaceEloRating(int index, PersistenceEloRating rating) {
         PersistenceEloRating ratingToUpdate = this.eloRatingList.get(index);
         ratingToUpdate.setEloRating(rating.getEloRating());
-        this.setSortOrder();
     }
 
     public void replaceEloRatingWithGameId(int gameId, PersistenceEloRating rating) {
@@ -67,7 +64,6 @@ public class PersistencePlayerEloRatingList {
 
     public boolean deleteRating(PersistenceEloRating rating) {
         boolean check = this.eloRatingList.remove(rating);
-        this.setSortOrder();
         return check;
     }
 
@@ -75,14 +71,6 @@ public class PersistencePlayerEloRatingList {
         return this.eloRatingList;
     }
 
-    public void setSortOrder() {
-        this.sortEloRatings();
-        int i = 0;
-        for (PersistenceEloRating rating: this.eloRatingList) {
-            rating.setSortOrder(i);
-            i +=1;
-        }
-    }
 
     public void sortEloRatings() {
         GamePersistenceManager gPM = new GamePersistenceManager();

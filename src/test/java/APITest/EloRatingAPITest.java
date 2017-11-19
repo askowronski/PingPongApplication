@@ -304,32 +304,6 @@ public class EloRatingAPITest {
     }
 
     @Test
-    public void testEloRatingsSortOrderPlayer2OnCreationOfGamePriorToExistingOnes()
-            throws IOException {
-        gameApi.createGame(player1.getiD(), player2.getiD(), 15, 14, "2017NOV01");
-        gameApi.createGame(player1.getiD(), player2.getiD(), 15, 14, "2017SEP01");
-
-        List<PersistenceEloRating> ratings = eloApi.getRatings(player2.getiD());
-
-        assertTrue(ratings.get(0).getSortOrder() == 0);
-        assertTrue(ratings.get(1).getSortOrder() == 1);
-        assertTrue(ratings.get(2).getSortOrder() == 2);
-    }
-
-    @Test
-    public void testEloRatingsSortOrderPlayer1OnCreationOfGamePriorToExistingOnes()
-            throws IOException {
-        gameApi.createGame(player1.getiD(), player2.getiD(), 15, 14, "2017NOV01");
-        gameApi.createGame(player1.getiD(), player2.getiD(), 15, 14, "2017SEP01");
-
-        List<PersistenceEloRating> ratings2 = eloApi.getRatings(player1.getiD());
-
-        assertTrue(ratings2.get(0).getSortOrder() == 0);
-        assertTrue(ratings2.get(1).getSortOrder() == 1);
-        assertTrue(ratings2.get(2).getSortOrder() == 2);
-    }
-
-    @Test
     public void testEloRatingsPlayer1OnEditOfGamePriorToExistingOnes() throws IOException {
         gameApi.createGame(player1.getiD(), player2.getiD(), 15, 14, "2017NOV01");
         gameApi.createGame(player1.getiD(), player2.getiD(), 15, 14, "2017NOV02");
