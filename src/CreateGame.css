@@ -35,7 +35,10 @@
   font-size:24pt;
   color:deepskyblue;
   font-weight:bold;
-  align-self: center;
+  grid-column-start: 1;
+  grid-column-end: 4;
+  grid-row-start: 1;
+  grid-row-end: 2;
   /*float: left;*/
 }
 
@@ -50,13 +53,11 @@
 
 .ResultHeaderText {
   display: inline-block;
-  align-self: center;
   font-size:26pt;
   font-weight: bold;
   color: #00205f;
 }
 
 .creatGameForm {
-  position:absolute;
   flex:auto;
 }

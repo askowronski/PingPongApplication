@@ -259,7 +259,7 @@ const InputButtons = (props) => {
 
 export class HeaderButtons extends React.Component {
     state = {
-        buttonDisplayNames:["Input","Scores","Players"],
+        buttonDisplayNames:["Input","Games","Players"],
         showInputButtons:false
     };
 

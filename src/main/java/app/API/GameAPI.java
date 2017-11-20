@@ -28,7 +28,8 @@ public class GameAPI {
             @RequestParam(value="player2ID",required = true) String player2ID,
             @RequestParam(value="score1",required = true) String score1,
             @RequestParam(value="score2",required = true) String score2,
-            @RequestParam(value="time", required=true) String time) {
+            @RequestParam(value="date", required=true) String date,
+            @RequestParam(value="time", required=false) String time) {
         GamePersistenceManager gPM = new GamePersistenceManager();
 
         try {
@@ -37,7 +38,12 @@ public class GameAPI {
 
             int player1Score = Integer.parseInt(score1);
             int player2Score = Integer.parseInt(score2);
-            Date newTime = new SimpleDateFormat("yyyyMMMdd").parse(time);
+            Date newTime;
+            if (time == null) {
+                newTime = new SimpleDateFormat("yyyyMMMdd").parse(date);
+            } else {
+                newTime = new SimpleDateFormat("yyyyMMMdd H:mm:ss").parse(date+" "+time);
+            }
 
 //            if (gPM.doesPlayerHaveFourGamesOnDate(newTime, IDplayer1) ||
 //                    gPM.doesPlayerHaveFourGamesOnDate(newTime, IDplayer2)) {
@@ -46,7 +52,8 @@ public class GameAPI {
 
             PersistenceGame game = new PersistenceGame(gPM.getNextID(),IDplayer1,IDplayer2,player1Score,player2Score,newTime);
             gPM.createGame(game);
-            return  new APIResult(true,"Game Created");
+            PingPongGame viewGame = gPM.getViewGameByID(game.getiD());
+            return  new ApiResultWithGame(true,"Game Created", viewGame.toJson());
 
         } catch (NumberFormatException | ParseException e ){
             e.printStackTrace();

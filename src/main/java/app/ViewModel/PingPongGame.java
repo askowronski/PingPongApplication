@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -80,6 +82,15 @@ public class PingPongGame {
         return "{iD:"+this.getiD()+",player1:"+this.getPlayer1().getiD()
                 +",player2:"+this.getPlayer2().getiD()+",score1:"+this.getPlayer1Score()
                 +",score2:"+this.getPlayer2Score()+"}";
+    }
+
+    public String toJson() {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            return e.getMessage();
+        }
     }
 
     public Player getPlayer1() {

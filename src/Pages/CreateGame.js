@@ -1,14 +1,16 @@
 import {Header} from '../ReactComponents/displayComponents.js';
-import {PlayerTypeAhead} from "./PlayerProfilePage";
-import ToggleDisplay from 'react-toggle-display';
 import {DateInput, EditUsernameTypeAhead} from "./Games";
 import moment from 'moment';
 import {Typeahead} from 'react-bootstrap-typeahead';
+import DatePicker from 'react-datepicker';
+import TimePicker from 'rc-time-picker';
+import '../timeinput.css';
 const React = require('react');
 const jQuery = require('jquery');
 const css = require("css-loader");
 require("../stylesheet.css");
 require("../CreateGame.css");
+require("../ReactDatePicker.css");
 
 class CreateGameForm extends React.Component {
     constructor(props) {
@@ -23,7 +25,21 @@ class CreateGameForm extends React.Component {
             resultPlayers: '',
             date: '',
             resultText: '',
-            showKim: false
+            time:moment(),
+            open:false,
+            showKim: false,
+            resultGame:{
+                player1: {
+                    username:''
+                },
+                player2:{
+                    username:''
+                },
+                score1:'',
+                score2:'',
+                timeString:moment()
+            },
+            showGameVs:false
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -100,26 +116,60 @@ class CreateGameForm extends React.Component {
     handleSubmit(event) {
         console.log(this.state.value);
 
+        let timeString = moment(this.state.time).format('HH:mm:ss');
+
         jQuery.ajax({
             url: "http://localhost:8080/CreateGame?player1ID="
             + this.state.player1ID + "&player2ID=" + this.state.player2ID +
             "&score1=" + this.state.score1 + "&score2=" + this.state.score2
-            + "&time=" + this.state.date.format('YYYYMMMDD'),
+            + "&date=" + this.state.date.format('YYYYMMMDD')+"&time="+timeString,
             type: "POST",
             dataType: "json",
             async: false,
             success: function(data) {
                 if (data.message === "Should you be doing that?") {
                     this.setState({
+                        result: data.success,
                         showKim: true,
-                        resultText: data.message
+                        resultText: data.message,
+                        showGameVs:false,
+                        resultGame:{
+                            player1: {
+                                username:''
+                            },
+                            player2:{
+                                username:''
+                            },
+                            score1:'',
+                            score2:''
+                        }
+                    });
+                    this.clearInputs();
+                    event.preventDefault();
+                } else if (data.success){
+                    this.setState({
+                        result: data.success,
+                        resultText: data.message,
+                        resultGame:JSON.parse(data.game),
+                        showGameVs:true
                     });
                     this.clearInputs();
                     event.preventDefault();
                 } else {
                     this.setState({
                         result: data.success,
-                        resultText: data.message
+                        resultText: data.message,
+                        showGameVs:false,
+                        resultGame:{
+                            player1: {
+                                username:''
+                            },
+                            player2:{
+                                username:''
+                            },
+                            score1:'',
+                            score2:''
+                        }
                     });
                     this.clearInputs();
                     event.preventDefault();
@@ -142,9 +192,25 @@ class CreateGameForm extends React.Component {
 
     handleDateChange = (date) => {
         this.setState({
-            date: moment(date)
+            date: date
         })
 
+    };
+
+    handleTimeChange = (time) => {
+        this.setState({
+            time: time
+        })
+
+    };
+
+    setOpen = ({ open }) => {
+        this.setState({ open });
+    };
+    toggleOpen = () => {
+        this.setState({
+            open: !this.state.open,
+        });
     };
 
     render() {
@@ -173,6 +239,28 @@ class CreateGameForm extends React.Component {
                                                     <DateInput
                                                         startDate={this.state.date}
                                                         onChange={this.handleDateChange}/>
+                                                </div>
+                                            </td>
+                                        </label>
+                                    </tr>
+                                    <tr className="inputRow">
+                                        <label className="inputGameLabel">
+                                            <td className="inputCell">
+                                                <text
+                                                    className="inputGameLabel">
+                                                    Time :
+                                                </text>
+                                            </td>
+                                            <td className="inputCell">
+                                                <div
+                                                    className="choosePlayerTypeAhead">
+                                                    <TimePicker
+                                                        onChange={this.handleTimeChange}
+                                                        defaultValue={moment()}
+                                                        use12Hours
+                                                        open={this.state.open}
+                                                        onOpen={this.setOpen}
+                                                        onClose={this.setOpen}/>
                                                 </div>
                                             </td>
                                         </label>
@@ -250,9 +338,12 @@ class CreateGameForm extends React.Component {
                                                        onChange={this.handleChange}/>
                                             </td>
                                         </label>
-                                        <input type="submit"
-                                               className="createButton"
-                                               value="Submit"/>
+
+                                    </tr>
+                                    <tr rowSpan={2}>
+                                    <input type="submit"
+                                           className="createButton"
+                                           value="Submit"/>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -262,7 +353,7 @@ class CreateGameForm extends React.Component {
                     </td>
                     <td>
                         <div>
-                            <ResultText text={this.state.resultText}/>
+
 
                             {
                                 this.state.showKim ?
@@ -270,7 +361,15 @@ class CreateGameForm extends React.Component {
                                          width='80%' height='80%'/> :
                                     <img></img>
                             }
+
                         </div>
+                        <GameView resultText={this.state.resultText}
+                        player1Username={this.state.resultGame.player1.username}
+                                  player2Username={this.state.resultGame.player2.username}
+                                  score1={this.state.resultGame.score1}
+                                  score2={this.state.resultGame.score2}
+                        showGame={this.state.showGameVs}
+                        time={moment(this.state.resultGame.timeString).format("YYYY-MM-DD hh:mm")}/>
 
                     </td>
                 </table>
@@ -335,23 +434,41 @@ export class ResultText extends React.Component {
     };
 }
 
-class CreateGamePlayerTypeAhead extends React.Component {
+class GameView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            players: props.players,
-            currentPlayer: props.currentPlayer
+            game: props.game,
+            showGame:false,
+            time:''
         };
-        this.handleChange = props.handleChange;
     }
+
+    componentWillReceiveProps = (nextProps) => {
+        this.setState({
+            game: nextProps.game,
+            showGame:nextProps.showGame,
+            time:nextProps.time
+
+        });
+
+    };
 
     render() {
         return (
-            <Typeahead
-
-                onChange={this.handleChange}
-                options={this.state.players}
-            />
+            <div className="gameFlexContainer">
+                <ResultText text={this.props.resultText}/>
+                <div className="gameCell1">{this.props.player1Username}</div>
+                <div className="gameCell2">{
+                    this.props.showGame ? <text>vs.</text> : ''
+                }</div>
+                <div className="gameCell3">{this.props.player2Username}</div>
+                <div className="gameCell5">{this.props.score1}</div>
+                <div className="gameCell6">{this.props.score2}</div>
+                <div className="gameCell7">{
+                    this.props.showGame ? <text>{this.props.time}</text> : ''
+                }</div>
+            </div>
         );
     }
 }

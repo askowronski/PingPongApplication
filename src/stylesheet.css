@@ -226,6 +226,7 @@ span text {
     text-decoration: underline;
 }
 
+
 .PlayerGraph {
     margin:auto;
     display: inline-block;
@@ -508,6 +509,9 @@ border-color: #020104;
 
 .typeahead-text-inputplayer1IDInput, .typeahead-text-inputplayer2IDInput {
     width:187px;
+    text-align:center;
+    font-weight:bold;
+    color:blue;
 }
 
 .createPlayerButton {
@@ -521,6 +525,9 @@ border-color: #020104;
 .createPlayerInput, .scoreInput {
     height:20px;
     font-size:16px;
+    text-align: center;
+    color:darkblue;
+    font-weight: bold;
 }
 
 .react-datepicker-popper {
@@ -534,6 +541,7 @@ background-color: white;
 
 .react-datepicker__input-container {
     display: table;
+    text-align: center;
 }
 
 .bottomRow {
@@ -549,14 +557,119 @@ li[class^="typeahead-active"]{
 }
 
 input[class^="editDateInput"] {
-    font-size: 14px;
+    font-size: 16px;
     height: 20px;
     width:187px;
+    text-align: center;
 }
 
 .errorMessageGraph {
     font-size: 24pt;
     color: darkred;
+}
+
+.react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.rc-time-picker-input {
+    font-size:16px;
+}
+
+.editDateInput react-datepicker-ignore-onclickoutside{
+    text-align: center;
+}
+
+.gameFlexContainer {
+    display: grid;
+    width:80%;
+}
+
+.gameCellHeader {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 2;
+}
+
+
+.resultText {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 2;
+}
+
+.gameCell1 {
+    font-size:30pt;
+    font-style: italic;
+    color:darkblue;
+
+     grid-column-start: 1;
+     grid-column-end: 2;
+     grid-row-start: 10;
+     grid-row-end: 11;
+ }
+
+.gameCell2 {
+    font-size:30pt;
+    font-style: italic;
+    color:darkblue;
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 11;
+    grid-row-end: 12;
+}
+
+.gameCell3 {
+    font-size:30pt;
+    font-style: italic;
+    color:darkblue;
+    grid-column-start: 3;
+    grid-column-end: 4;
+    grid-row-start: 10;
+    grid-row-end: 11;
+}
+
+.gameCell4 {
+    font-size:30pt;
+    font-style: italic;
+    color:darkblue;
+    grid-column-start: 3;
+    grid-column-end: 4;
+    grid-row-start: 11;
+    grid-row-end: 12;
+}
+
+.gameCell5 {
+    font-size:30pt;
+    font-style: italic;
+    color:darkblue;
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 12;
+    grid-row-end: 13;
+}
+
+.gameCell6 {
+    font-size:30pt;
+    font-style: italic;
+    color:darkblue;
+    grid-column-start: 3;
+    grid-column-end: 4;
+    grid-row-start: 12;
+    grid-row-end: 13;
+}
+
+.gameCell7 {
+    font-size:30pt;
+    font-style: italic;
+    color:darkblue;
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 15;
+    grid-row-end: 17;
 }
 
 
