@@ -152,7 +152,8 @@ class CreateGameForm extends React.Component {
                         result: data.success,
                         resultText: data.message,
                         resultGame:JSON.parse(data.game),
-                        showGameVs:true
+                        showGameVs:true,
+                        showKim:false
                     });
                     this.clearInputs();
                     event.preventDefault();
@@ -161,6 +162,7 @@ class CreateGameForm extends React.Component {
                         result: data.success,
                         resultText: data.message,
                         showGameVs:false,
+                        showKim:false,
                         resultGame:{
                             player1: {
                                 username:''
@@ -383,7 +385,7 @@ class CreateGameForm extends React.Component {
                         </Box>
 
 
-                        <Box px={2} py={2} width={1 / 2}>
+                        <Box px={2} pb={3} pt={2} width={1 / 2}>
                                 <DateInput
                                     startDate={this.state.date}
                                     onChange={this.handleDateChange}/>
@@ -483,7 +485,7 @@ class CreateGameForm extends React.Component {
                                    value={this.state.score2}
                                    onChange={this.handleChange}/>
                         </Box>
-                    <Box width={1} className="createGameFormText">
+                    <Box width={1} py={2} className="createGameFormText">
                         <Button onClick={this.handleSubmit}>
                             Submit
                         </Button>
@@ -505,14 +507,15 @@ class CreateGameForm extends React.Component {
               score2={this.state.resultGame.score2}
               showGame={this.state.showGameVs}
               time={moment(this.state.resultGame.timeString).format("YYYY-MM-DD hh:mm a")}/>
+                {
+                    this.state.showKim ?
+                        <img src={require('../images/kimGif.gif')}
+                             width='45%' height='45%'/> :
+                        <img></img>
+                }
                 </div>
     <div>
-        {
-            this.state.showKim ?
-                <img src={require('../images/kimGif.gif')}
-                     width='80%' height='80%'/> :
-                <img></img>
-        }
+
     </div>
                 </div>
         );

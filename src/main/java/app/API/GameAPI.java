@@ -45,10 +45,10 @@ public class GameAPI {
                 newTime = new SimpleDateFormat("yyyyMMMdd H:mm:ss").parse(date+" "+time);
             }
 
-//            if (gPM.doesPlayerHaveFourGamesOnDate(newTime, IDplayer1) ||
-//                    gPM.doesPlayerHaveFourGamesOnDate(newTime, IDplayer2)) {
-//                return new APIResult(false, "Should you be doing that?");
-//            }
+            if (gPM.doesPlayerHaveFourGamesOnDate(newTime, IDplayer1) ||
+                    gPM.doesPlayerHaveFourGamesOnDate(newTime, IDplayer2)) {
+                return new APIResult(false, "Should you be doing that?");
+            }
 
             PersistenceGame game = new PersistenceGame(gPM.getNextID(),IDplayer1,IDplayer2,player1Score,player2Score,newTime);
             gPM.createGame(game);
