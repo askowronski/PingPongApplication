@@ -23,6 +23,8 @@ import history from '../history.js';
 import {NetWinsGraph} from "../PlayerProfileGraphComponents/NetWinsGraph";
 import {DateInput} from "./Games";
 import moment from "moment";
+import {Box, Flex, Provider, Text} from "rebass";
+import {ResultText} from "./CreateGame";
 
 const React = require('react');
 const jQuery = require('jquery');
@@ -128,73 +130,149 @@ export const CustomToolTipDisplayGame = React.createClass({
         if (active) {
             const {payload, label} = this.props;
             if (label > 0) {
+                let number = label;
                 let game = payload[0].payload.game;
 
                 return (
                     <div className="custom-tooltip-average">
-                        <table className="GameDisplayTable">
-                            <thead>
-                            <th className="GameDisplayHeader" colSpan={5}>
-                                <span className="HeaderText">Average</span>
-                            </th>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>
-                                </td>
-                                <td className="AverageUserHeader" colSpan={2}>
-                                    <span className="You">You</span>
-                                </td>
+                        {/*<table className="GameDisplayTable">*/}
+                            {/*<thead>*/}
+                            {/*<th className="GameDisplayHeader" colSpan={5}>*/}
+                                {/*<span className="HeaderText">Average</span>*/}
+                            {/*</th>*/}
+                            {/*</thead>*/}
+                            {/*<tbody>*/}
+                            {/*<tr>*/}
+                                {/*<td>*/}
+                                {/*</td>*/}
+                                {/*<td className="AverageUserHeader" colSpan={2}>*/}
+                                    {/*<span className="You">You</span>*/}
+                                {/*</td>*/}
 
-                                <td className="AverageUserHeader" colSpan={2}>
-                                    <span className="You">Opponent</span>
-                                </td>
-                            </tr>
-                            <tr className="GameDisplayAverageRow">
-                                <td>
-                                    Score
-                                </td>
-                                <td colSpan={2}>
-                                    {payload[0].payload.averageScore}
-                                </td>
-                                <td colSpan={2}>
-                                    {payload[0].payload.opponentAverageScore}
-                                </td>
+                                {/*<td className="AverageUserHeader" colSpan={2}>*/}
+                                    {/*<span className="You">Opponent</span>*/}
+                                {/*</td>*/}
+                            {/*</tr>*/}
+                            {/*<tr className="GameDisplayAverageRow">*/}
+                                {/*<td>*/}
+                                    {/*Score*/}
+                                {/*</td>*/}
+                                {/*<td colSpan={2}>*/}
+                                    {/*{payload[0].payload.averageScore}*/}
+                                {/*</td>*/}
+                                {/*<td colSpan={2}>*/}
+                                    {/*{payload[0].payload.opponentAverageScore}*/}
+                                {/*</td>*/}
 
-                            </tr>
-                            <tr>
-                                <td colSpan={5} className="GameDisplayHeader">
-                                    <span
-                                        className="HeaderText">{this.getIntroOfPage(
-                                        label, game.timeString)}</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
+                            {/*</tr>*/}
+                            {/*<tr>*/}
+                                {/*<td colSpan={5} className="GameDisplayHeader">*/}
+                                    {/*<span*/}
+                                        {/*className="HeaderText">{this.getIntroOfPage(*/}
+                                        {/*label, game.timeString)}</span>*/}
+                                {/*</td>*/}
+                            {/*</tr>*/}
+                            {/*<tr>*/}
+                                {/*<td>*/}
 
-                                </td>
-                                <td className="AverageUserHeader" colSpan={2}>
-                                    <span className="You">You</span>
-                                </td>
+                                {/*</td>*/}
+                                {/*<td className="AverageUserHeader" colSpan={2}>*/}
+                                    {/*<span className="You">You</span>*/}
+                                {/*</td>*/}
 
-                                <td className="AverageUserHeader" colSpan={2}>
-                                    <span
-                                        className="You">{game.player2.username}</span>
-                                </td>
-                            </tr>
-                            <tr className="bottomRow">
-                                <td>
-                                    Score
-                                </td>
-                                <td colSpan={2}>
-                                    {payload[0].payload.score}
-                                </td>
-                                <td colSpan={2}>
-                                    {payload[0].payload.opponentScore}
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                                {/*<td className="AverageUserHeader" colSpan={2}>*/}
+                                    {/*<span*/}
+                                        {/*className="You">{game.player2.username}</span>*/}
+                                {/*</td>*/}
+                            {/*</tr>*/}
+                            {/*<tr className="bottomRow">*/}
+                                {/*<td>*/}
+                                    {/*Score*/}
+                                {/*</td>*/}
+                                {/*<td colSpan={2}>*/}
+                                    {/*{payload[0].payload.score}*/}
+                                {/*</td>*/}
+                                {/*<td colSpan={2}>*/}
+                                    {/*{payload[0].payload.opponentScore}*/}
+                                {/*</td>*/}
+                            {/*</tr>*/}
+                            {/*</tbody>*/}
+                        {/*</table>*/}
+
+                        <Provider
+                            theme={{
+                                font: '"Serif"',
+                            }}
+                        >
+                            <Flex wrap mx={-2}>
+                                <Box px={2} py={2} width={1}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={32}><u>Game - {number} </u></Text>
+                                </Box>
+                                <Box px={2} py={2} width={1}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={28}>Average</Text>
+                                </Box>
+
+
+                                <Box px={2} py={2} width={1 / 2}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={26}>
+                                        <em> <u>  You </u>
+                                        </em>
+                                    </Text>
+                                </Box>
+                                <Box px={2} py={2} width={1 / 2}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={26}>
+                                        <em> <u> Opponent </u></em>
+                                    </Text>
+                                </Box>
+                                <Box px={2} py={0} width={1/2}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={26}>
+                                        {payload[0].payload.averageScore}
+                                    </Text>
+                                </Box>
+                                <Box px={2} py={2} width={1 / 2}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={26}>
+                                        {payload[0].payload.opponentAverageScore}
+                                    </Text>
+                                </Box>
+                                <Box px={2} py={2} width={1}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={24}>
+                                        {moment(game.timeString).format("YYYY-MM-DD hh:mm a")}
+                                    </Text>
+                                </Box>
+                                <Box px={2} py={2} width={1/2}>
+                                <Text p={1} color='black' bg='white'
+                                      f={24}>
+                                    <em> <u>  You </u> </em>
+                                </Text>
+                            </Box>
+                                <Box px={2} py={2} width={1/2}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={24}>
+                                        <em> <u>  {game.player2.username} </u> </em>
+                                    </Text>
+                                </Box>
+                                <Box px={2} py={2} width={1/2}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={24}>
+                                        {payload[0].payload.score}
+                                    </Text>
+                                </Box>
+                                <Box px={2} py={2} width={1/2}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={24}>
+                                        {payload[0].payload.opponentScore}
+                                    </Text>
+                                </Box>
+                            </Flex>
+
+                        </Provider>
                     </div>
                 );
             }
@@ -336,11 +414,18 @@ export class PlayerGraphTable extends React.Component {
 
     constructor(props) {
         super(props);
+        let userNameDisplay = '';
+
+        if (props.history.location.state.player.id === 0) {
+            userNameDisplay = "Choose A Player";
+        } else {
+            userNameDisplay = props.history.location.state.player.username;
+        }
         this.state = {
             playerID: props.history.location.state.player.id,
             players: [],
             resultPlayers: '',
-            playerUsername: props.history.location.state.player.username,
+            playerUsername: userNameDisplay,
             history: history.state,
             startDate: '',
             endDate: '',
@@ -370,11 +455,9 @@ export class PlayerGraphTable extends React.Component {
             dataType: "json",
             async: false,
             success: function(data) {
-                let date1 = moment(data.message.split("=")[0]);
-                let date2 = moment(data.message.split("=")[1]);
                 this.setState({
-                    startDate: date1,
-                    endDate: date2
+                    startDate: moment(data.beginningDate),
+                    endDate:  moment(data.endingDate)
                 });
             }.bind(this)
         });

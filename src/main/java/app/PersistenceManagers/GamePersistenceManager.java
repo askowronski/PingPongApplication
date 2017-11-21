@@ -494,10 +494,16 @@ public class GamePersistenceManager {
         return this.getGamesForPlayer(playerId, games);
     }
 
-    public Pair<Date, Date> getDateRangeOfGamesForPlayer(List<PingPongGame> games) {
-        Date beginning = games.get(0).getTime();
-        Date end = games.get(games.size() - 1).getTime();
-        return new Pair<>(beginning, end);
+    public Pair<String, String> getDateRangeOfGamesForPlayer(List<PingPongGame> games) {
+        if (games.size() > 0) {
+            String beginning = games.get(0).getTimeString();
+            String end = games.get(games.size() - 1).getTimeString();
+            return new Pair<>(beginning, end);
+        } else {
+            SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String date = sdfDate.format(new Date());
+            return new Pair<>(date, date);
+        }
     }
 
     public List<PersistenceGame> reorderGames(List<PersistenceGame> games,

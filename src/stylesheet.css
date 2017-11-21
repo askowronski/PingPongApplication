@@ -26,13 +26,13 @@
 }
 
 .header-button-input-holder {
-    margin-top:15%;
-    margin-left:10%;
-    margin-right:5%;
-    width:20px;
+    /*margin-top:15%;*/
+    /*margin-left:10%;*/
+    /*margin-right:5%;*/
+    /*width:20px;*/
     height:20px;
-    border:14px;
-    display:inline;
+    /*border:14px;*/
+    /*display:inline;*/
 }
 
 .header-button {
@@ -45,12 +45,10 @@
 }
 
 .header-button-input {
-    background-color: white;
-    width:100px;
-    height:40px;
-    font-size:14px;
-    margin-top:5%;
+
     visibility: hidden;
+    position:absolute;
+    margin-top: .5%;
 }
 
 .PlayerChartContainer {
@@ -203,6 +201,7 @@ Tr {
     margin-left:10%;
     margin-right:auto;
     z-index: 0;
+
 }
 
 .custom-tooltip {
@@ -214,6 +213,8 @@ Tr {
     opacity: 1;
     background-color: #fff;
     width:300px;
+    margin-left: 10%;
+    align-self: center;
 }
 
 span text {
@@ -387,21 +388,39 @@ border-color: #020104;
     border-radius: 8px;
     box-shadow: 0 5px 10px rgba(0,0,0,.2);
     position: absolute;
+    text-align:center;
+
     list-style: none;
 }
 
 .homePageTable {
+    border: 4px groove;
+}
+
+.homePageTable > tr:hover {
+    background-color: white;
+}
+
+.homePageTable  > td:hover {
+    background-color: #ccebff;
+}
+.homePageTd {
     border: none;
 }
 
-.homePageTd {
-    border: none;
+.homePageTd:hover {
+    background-color: #ccebff;
 }
 
 .infoDisplay {
     background-color: white;
     height: 100%;
     line-height: 45px;
+
+}
+
+.infoDisplay:hover {
+    background-color: white;
 }
 
 .infoDisplayHeader {
@@ -511,7 +530,7 @@ border-color: #020104;
     width:187px;
     text-align:center;
     font-weight:bold;
-    color:blue;
+    color:black;
 }
 
 .createPlayerButton {
@@ -670,6 +689,10 @@ input[class^="editDateInput"] {
     grid-column-end: 4;
     grid-row-start: 15;
     grid-row-end: 17;
+}
+
+.createGameContainer {
+    margin-top: 2%;
 }
 
 

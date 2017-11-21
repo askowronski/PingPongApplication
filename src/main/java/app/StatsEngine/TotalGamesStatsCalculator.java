@@ -16,20 +16,21 @@ public class TotalGamesStatsCalculator {
 
     private final GamePersistenceManager gPM;
     private final PlayerPersistenceManager pPM;
+    private final List<PingPongGame> games;
+    private final List<Player> players;
 
     public TotalGamesStatsCalculator() {
         this.gPM = new GamePersistenceManager();
         this.pPM = new PlayerPersistenceManager();
+        this.games = gPM.getGamesView();
+        this.players = pPM.getViewPlayers();
     }
 
     public int getTotalGames() {
-        List<PingPongGame> games = this.gPM.getGamesView();
         return games.size();
     }
 
     public double averageEloRating() {
-        List<Player> players = new PlayerPersistenceManager().getViewPlayers();
-
         double numerator = 0;
 
         for(Player player:players){
@@ -39,8 +40,6 @@ public class TotalGamesStatsCalculator {
     }
 
     public double stdDeviationOfLosses() {
-        List<PingPongGame> games = this.gPM.getGamesView();
-
         List<Integer> losingScores = new ArrayList<>();
 
         for(PingPongGame game:games){
@@ -69,8 +68,6 @@ public class TotalGamesStatsCalculator {
     }
 
     public double stdDeviationOfGames() {
-        List<PingPongGame> games = this.gPM.getGamesView();
-
         List<Integer> scores = new ArrayList<>();
 
         for(PingPongGame game:games){
@@ -104,8 +101,6 @@ public class TotalGamesStatsCalculator {
     }
 
     public LongestStreakData getLongestStreak() {
-        List<PingPongGame> games = this.getgPM().getGamesView();
-        List<Player> players = this.getPPM().getViewPlayers();
         int currentHighCount = 0;
         Player currentHighPlayer = new Player(new EloRating(), 0, "Empty Player", "Empty", "Player");
 

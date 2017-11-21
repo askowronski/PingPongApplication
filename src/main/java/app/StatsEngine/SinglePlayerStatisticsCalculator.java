@@ -103,10 +103,10 @@ public class SinglePlayerStatisticsCalculator {
         double numerator=0.0;
         List<PingPongGame> games = this.getGames();
         for(PingPongGame game:games) {
-            if(game.getPlayer1().equals(this.getPlayer())){
+            if(game.getPlayer1().getiD() == this.getPlayer().getiD()){
                 numerator+=game.getPlayer1Score();
             }
-            if(game.getPlayer2().equals(this.getPlayer())){
+            if(game.getPlayer2().getiD() == this.getPlayer().getiD()){
                 numerator+=game.getPlayer2Score();
             }
         }
@@ -133,10 +133,10 @@ public class SinglePlayerStatisticsCalculator {
         double numerator=0.0;
         List<PingPongGame> games = this.getGames();
         for(PingPongGame game:games) {
-            if(game.getPlayer1().equals(this.getPlayer())){
+            if(game.getPlayer1().getiD() == this.getPlayer().getiD()){
                 numerator+=game.getPlayer2Score();
             }
-            if(game.getPlayer2().equals(this.getPlayer())){
+            if(game.getPlayer2().getiD() == this.getPlayer().getiD()){
                 numerator+=game.getPlayer1Score();
             }
         }

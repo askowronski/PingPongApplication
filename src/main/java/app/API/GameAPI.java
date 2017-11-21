@@ -221,8 +221,8 @@ public class GameAPI {
     public APIResult getDateRangeForPlayersGame(@RequestParam(value="id") int playerId) {
 
         GamePersistenceManager gPM = new GamePersistenceManager();
-        Pair<Date,Date> dates = gPM.getDateRangeOfGamesForPlayer(gPM.getGamesForPlayer(gPM.getPlayer(playerId)));
-        return new APIResult(true, dates.toString());
+        Pair<String,String> dates = gPM.getDateRangeOfGamesForPlayer(gPM.getGamesForPlayer(gPM.getPlayer(playerId)));
+        return new ApiResultDates(true, dates.getKey(), dates.getValue());
 
     }
 

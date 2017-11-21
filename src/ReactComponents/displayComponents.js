@@ -1,6 +1,17 @@
 import ToggleDisplay from 'react-toggle-display';
 import history from '../history.js';
-
+import {
+    Card,
+    Box,
+    BackgroundImage,
+    Subhead,
+    Small,
+    Row,
+    Column,
+    Provider,
+    Text, Flex, Container, Border, NavLink, Toolbar, Button
+} from 'rebass'
+import moment from "moment";
 const React = require('react');
 const jQuery = require('jquery');
 var _ = require('lodash');
@@ -14,7 +25,9 @@ class InfoDisplayPlayer extends React.Component {
         data: "",
         username: "",
         id: "",
-        streak: ""
+        streak: "",
+        firstName: '',
+        lastName: ''
     };
 
     componentDidMount = () => {
@@ -25,46 +38,103 @@ class InfoDisplayPlayer extends React.Component {
             type: "GET",
             dataType: "json",
             async: false,
-            success: function (data) {
+            success: function(data) {
                 this.setState({
                     data: data.message,
                     username: JSON.parse(data.message).player.username,
+                    firstName: JSON.parse(data.message).player.firstName,
+                    lastName: JSON.parse(data.message).player.lastName,
                     id: JSON.parse(data.message).player.id,
-                    streak:JSON.parse(data.message).streak
+                    streak: JSON.parse(data.message).streak
                 });
             }.bind(this)
         });
 
     };
 
-
     render() {
         return (
 
             <div className="infoDisplay">
-                <span className="infoDisplayHeader">Longest Streak </span>
-                <br/>
-                <span className="longestStreakUsername">Username: {this.state.username}</span>
+                <Provider
+                    theme={{
+                        font: '"Serif"',
+                    }}
+                >
+                    <Flex wrap mx={-2}>
 
-                <span className="longestStreakUsername"> ID: {this.state.id}</span>
-                <br/>
-                <span className="longestStreakUsername">Streak: {this.state.streak}</span>
+                        <Border borderWidth={4} width={1} color="black">
+                            <Box px={2} py={2} width={1}>
+                                <Text p={1} color='white' bg='blue'
+                                      f={35}
+                                      font-family="Serif"
+
+                                >
+                                    <em > Longest Streak </em>
+                                </Text>
+
+                            </Box>
+                        </Border>
+
+
+                        <Box px={2} py={2} width={1 / 2}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}
+                                  underline>
+                                <em ><u> Username: </u> </em>
+                            </Text>
+
+                        </Box>
+                        <Box px={2} py={2} width={1 / 2}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                <em> {this.state.username}</em>
+                            </Text>
+                        </Box>
+                        <Box px={2} py={2} width={1 / 2}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                <em ><u> Name: </u> </em>
+                            </Text>
+                        </Box>
+                        <Box px={2} py={2} width={1 / 2}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                {this.state.firstName + " "
+                                + this.state.lastName}
+                            </Text>
+                        </Box>
+                        <Box px={2} py={2} width={1 / 2}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                <em ><u> Streak: </u></em>
+                            </Text>
+                        </Box>
+                        <Box px={2} py={2} width={1 / 2}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                <em>{this.state.streak}</em>
+                            </Text>
+                        </Box>
+                    </Flex>
+                </Provider>
+
             </div>
 
         );
     }
 }
 
-class InfoDisplayGame extends React.Component  {
+class InfoDisplayGame extends React.Component {
 
     state = {
-        data:"",
-        player1Username:"",
-        id:"" ,
-        player2Username:"",
-        score1:"",
-        score2:"",
-        time:''
+        data: "",
+        player1Username: "",
+        id: "",
+        player2Username: "",
+        score1: "",
+        score2: "",
+        time: ''
     };
 
     componentDidMount = () => {
@@ -72,55 +142,106 @@ class InfoDisplayGame extends React.Component  {
         jQuery.ajax({
 
             url: "http://localhost:8080/GetLastGame?",
-            type:"GET",
-            dataType:"json",
-            async:false,
-            success: function(data){
+            type: "GET",
+            dataType: "json",
+            async: false,
+            success: function(data) {
                 this.setState({
-                    data:data.message,
-                    player1Username:JSON.parse(data.message).player1.username,
-                    player2Username:JSON.parse(data.message).player2.username,
+                    data: data.message,
+                    player1Username: JSON.parse(data.message).player1.username,
+                    player2Username: JSON.parse(data.message).player2.username,
                     id: JSON.parse(data.message).iD,
-                    score1:JSON.parse(data.message).score1,
-                    score2:JSON.parse(data.message).score2,
-                    time:JSON.parse(data.message).timeString
+                    score1: JSON.parse(data.message).score1,
+                    score2: JSON.parse(data.message).score2,
+                    time: moment(JSON.parse(data.message).timeString).format(
+                        'MMMM Do YYYY, h:mm:ss a')
                 });
             }.bind(this)
         });
 
     };
 
-
-
-    render(){
+    render() {
         return (
 
-            <div className="infoDisplay" >
-                <span className="infoDisplayHeader"> Last Game Played</span>
-                <br/>
-                <span className="longestStreakUsername">Date : {this.state.time} </span>
-                <br/>
-                <span className="longestStreakUsername">{this.state.player1Username}</span>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span className="longestStreakUsername">{this.state.player2Username}</span>
-                <br/>
-                <span>score: {this.state.score1}</span>
-                &nbsp;&nbsp;&nbsp;
-                <span>score: {this.state.score2}</span>
+            <div className="infoDisplay">
+
+                <Provider
+                    theme={{
+                        font: '"Serif"',
+                    }}
+                >
+                    <Flex wrap mx={-2}>
+                        <Border borderWidth={4} width={1} color="black">
+
+                            <Box px={2} py={2} width={1}>
+                                <Text p={1} color='white' bg='blue'
+                                      f={35}
+                                      font-family="Serif"
+                                >
+                                    <em > Last Game Played </em>
+                                </Text>
+                            </Box>
+                        </Border>
+
+
+                        <Box px={2} py={2} width={1 / 2}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                <em> <u>  {this.state.player1Username} </u>
+                                </em>
+                            </Text>
+                        </Box>
+                        <Box px={2} py={2} width={1 / 2}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                <em> <u> {this.state.player2Username} </u></em>
+                            </Text>
+                        </Box>
+                        <Box px={2} py={0} width={1}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                <em>vs.</em>
+                            </Text>
+                        </Box>
+                        <Box px={2} py={2} width={1 / 2}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                {this.state.score1}
+                            </Text>
+                        </Box>
+                        <Box px={2} py={2} width={1 / 2}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                {this.state.score2}
+                            </Text>
+                        </Box>
+                        <Box px={2} py={2} width={1}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                <em>{this.state.time}</em>
+                            </Text>
+                        </Box>
+                    </Flex>
+                </Provider>
 
             </div>
+
+
 
         );
     }
 }
 
-class InfoDisplayHighestRating extends React.Component  {
+class InfoDisplayHighestRating extends React.Component {
 
     state = {
-        data:"",
-        id:"",
-        username:"",
-        eloRating:"",
+        data: "",
+        id: "",
+        username: "",
+        eloRating: "",
+        firstName: '',
+        lastName: ''
     };
 
     componentDidMount = () => {
@@ -128,14 +249,16 @@ class InfoDisplayHighestRating extends React.Component  {
         jQuery.ajax({
 
             url: "http://localhost:8080/GetPlayerWithHighestRating",
-            type:"GET",
-            dataType:"json",
-            async:false,
-            success: function(data){
+            type: "GET",
+            dataType: "json",
+            async: false,
+            success: function(data) {
                 this.setState({
-                    data:data.message,
-                    id:JSON.parse(data.message).id,
-                    username:JSON.parse(data.message).username,
+                    data: data.message,
+                    id: JSON.parse(data.message).id,
+                    username: JSON.parse(data.message).username,
+                    firstName: JSON.parse(data.message).firstName,
+                    lastName: JSON.parse(data.message).lastName,
                     eloRating: JSON.parse(data.message).eloRating.rating,
                 });
             }.bind(this)
@@ -143,31 +266,83 @@ class InfoDisplayHighestRating extends React.Component  {
 
     };
 
-
-
-    render(){
+    render() {
         return (
 
-            <div className="infoDisplay" >
-                <span className="infoDisplayHeader">Player With Highest Elo Rating</span>
-                <br/>
-                <span className="longestStreakUsername">Username: {this.state.username} </span>
-                <br/>
-                <span className="eloRatingText">Rating: {parseFloat(this.state.eloRating).toFixed(2)}</span>
+            <div className="infoDisplay">
+                <Provider
+                    theme={{
+                        font: '"Serif"',
+                    }}
+                >
+                    <Flex wrap mx={-2}>
+                        <Border borderWidth={4} width={1} color="black">
+
+                            <Box px={2} py={2} width={1}>
+                                <Text p={1} color='white' bg='blue'
+                                      f={35}
+                                      font-family="Serif"
+                                >
+                                    <em > Player With Highest Elo Rating </em>
+                                </Text>
+                            </Box>
+                        </Border>
+
+
+                        <Box px={2} py={2} width={1 / 2}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                <em ><u> Username: </u> </em>
+                            </Text>
+                        </Box>
+                        <Box px={2} py={2} width={1 / 2}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                <em> {this.state.username}</em>
+                            </Text>
+                        </Box>
+                        <Box px={2} py={2} width={1 / 2}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                <em ><u> Name: </u> </em>
+                            </Text>
+                        </Box>
+                        <Box px={2} py={2} width={1 / 2}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                {this.state.firstName + " "
+                                + this.state.lastName}
+                            </Text>
+                        </Box>
+                        <Box px={2} py={2} width={1 / 2}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                <em ><u> Rating: </u></em>
+                            </Text>
+                        </Box>
+                        <Box px={2} py={2} width={1 / 2}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                {parseFloat(
+                                    this.state.eloRating).toFixed(2)}
+                            </Text>
+                        </Box>
+                    </Flex>
+                </Provider>
             </div>
 
         );
     }
 }
 
-class InfoDisplayTotalGameStats extends React.Component  {
+class InfoDisplayTotalGameStats extends React.Component {
 
     state = {
-        data:"",
-        totalGamesPlayed:"",
-        stdDevForLosses:"",
-        stdDevForGames:"",
-        averageEloRating:""
+        data: "",
+        totalGamesPlayed: "",
+        stdDevForLosses: "",
+        stdDevForGames: "",
+        averageEloRating: ""
     };
 
     componentDidMount = () => {
@@ -175,47 +350,104 @@ class InfoDisplayTotalGameStats extends React.Component  {
         jQuery.ajax({
 
             url: "http://localhost:8080/TotalGameStats",
-            type:"GET",
-            dataType:"json",
-            async:false,
-            success: function(data){
+            type: "GET",
+            dataType: "json",
+            async: false,
+            success: function(data) {
                 this.setState({
-                    data:data.message,
-                    totalGamesPlayed:JSON.parse(data.message).totalGames,
-                    stdDevForGames:JSON.parse(data.message).stdDevForGames,
+                    data: data.message,
+                    totalGamesPlayed: JSON.parse(data.message).totalGames,
+                    stdDevForGames: JSON.parse(data.message).stdDevForGames,
                     stdDevForLosses: JSON.parse(data.message).stdDevForLosses,
-                    averageEloRating:JSON.parse(data.message).averageEloRating
+                    averageEloRating: JSON.parse(data.message).averageEloRating
                 });
             }.bind(this)
         });
 
     };
 
-
-
-    render(){
+    render() {
         return (
 
             <div className="infoDisplay">
-                <span className="infoDisplayHeader">Total Game Stats</span>
-                <br/>
-                <span>Total Games Played: {this.state.totalGamesPlayed} </span>
-                <br/>
-                <span>Std Dev For Games: {this.state.stdDevForGames}</span>
-                <br/>
-                <span>Std Dev For Losses: {this.state.stdDevForLosses}</span>
-                <br/>
-                <span>Average Elo Rating: {this.state.averageEloRating}</span>
+                <Provider
+
+                    theme={{
+                        font: '"Serif"',
+                    }}
+                >
+                    <Flex wrap mx={-2}>
+                        <Border borderWidth={4} width={1} color="black">
+                            <Box px={2} py={2} width={1}
+                            >
+                                <Text p={1} color='white' bg='blue'
+                                      f={35}
+                                      font-family="Serif"
+                                >
+                                    <em > Total Game Stats </em>
+                                </Text>
+                            </Box>
+                        </Border>
+                        <Box pl={2} py={2} width={1 / 2}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                <em> <u> Total Games Played: </u></em>
+                            </Text>
+                        </Box>
+                        <Box px={2} py={2} width={1 / 2}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                {this.state.totalGamesPlayed}
+                            </Text>
+                        </Box>
+                        <Box px={2} py={2} width={1 / 2}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                <em> <u> Std Dev For Games: </u></em>
+                            </Text>
+                        </Box>
+                        <Box px={2} py={2} width={1 / 2}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                {this.state.stdDevForGames}
+                            </Text>
+                        </Box>
+                        <Box px={2} py={2} width={1 / 2}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                <em> <u> Std Dev For Losses: </u></em>
+                            </Text>
+                        </Box>
+                        <Box px={2} py={2} width={1 / 2}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                {this.state.stdDevForLosses}
+                            </Text>
+                        </Box>
+                        <Box px={2} py={2} width={1 / 2}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                <em> <u> Average Elo Rating: </u></em>
+                            </Text>
+                        </Box>
+                        <Box px={2} py={2} width={1 / 2}>
+                            <Text p={1} color='black' bg='white'
+                                  f={30}>
+                                {this.state.averageEloRating}
+                            </Text>
+                        </Box>
+                    </Flex>
+                </Provider>
+
             </div>
 
         );
     }
 }
 
-
 export const InfoDisplayTable = (props) => {
     return (
-        <div id = "homePageTableContainer" className="displayTable">
+        <div id="homePageTableContainer" className="displayTable">
             <table className="homePageTable">
                 <tbody className="homePageBody">
                 <tr id="infoDisplay" className="infoDisplay">
@@ -228,6 +460,7 @@ export const InfoDisplayTable = (props) => {
                 </tr>
                 </tbody>
             </table>
+
         </div>
     );
 };
@@ -243,15 +476,23 @@ const InputButtons = (props) => {
     };
 
     return (
-        <div className="topLevlInputButtons">
-            <ToggleDisplay id="inputDisplayToggle"  >
-                <div id="inputButtonDiv" className="header-row-input">
-                    <div className="header-button-input-holder">
-                        <button className="header-button-input" onClick={inputPlayer} id="playerInputButton" >Player</button>
-                        <button className="header-button-input" onClick={inputGame} id="gameInputButton" >Game</button>
-                    </div>
-                </div>
-            </ToggleDisplay>
+        <div className="header-button-input-holder">
+            <Provider>
+                <Flex>
+                    <Box>
+                        <Button className="header-button-input"
+                                onClick={inputPlayer} id="playerInputButton"
+                                bg="blue">
+                            Player
+                        </Button>
+                    </Box>
+                    <Box>
+                        <Button className="header-button-input"
+                                onClick={inputGame} id="gameInputButton">Game
+                        </Button>
+                    </Box>
+                </Flex>
+            </Provider>
         </div>
 
     );
@@ -259,27 +500,27 @@ const InputButtons = (props) => {
 
 export class HeaderButtons extends React.Component {
     state = {
-        buttonDisplayNames:["Input","Games","Players"],
-        showInputButtons:false
+        buttonDisplayNames: ["Input", "Games", "Players"],
+        showInputButtons: false
     };
 
     goToPlayers = () => {
-    history.push('/Players');
+        history.push('/Players');
 
     };
 
     goToGames = () => {
-    history.push('/Games');
+        history.push('/Games');
     };
 
     onInputClick = () => {
         this.setState({
-            showInputButtons:!this.state.showInputButtons
+            showInputButtons: !this.state.showInputButtons
         });
 
-        if(jQuery('#playerInputButton').css('visibility')==="hidden"){
-            jQuery('#playerInputButton').css('visibility','visible');
-            jQuery('#gameInputButton').css('visibility','visible');
+        if (jQuery('#playerInputButton').css('visibility') === "hidden") {
+            jQuery('#playerInputButton').css('visibility', 'visible');
+            jQuery('#gameInputButton').css('visibility', 'visible');
         } else {
             jQuery('#playerInputButton').css('visibility', 'hidden');
             jQuery('#gameInputButton').css('visibility', 'hidden');
@@ -287,38 +528,167 @@ export class HeaderButtons extends React.Component {
     };
 
     goToHomePage = () => {
-        history.push('/Home');
+        history.push('/TotalStats');
     };
 
-    render(){
+    render() {
         return (
             <div id="headerContainer">
-            <div className="header-row">
-                <div  className="header-button-holder"> <button className="header-button" onClick={() => this.onInputClick()} id={this.state.buttonDisplayNames[0]} >{this.state.buttonDisplayNames[0]}</button> </div>
-                <div  className="header-button-holder"> <button className="header-button" onClick={() =>this. goToGames()} id={this.state.buttonDisplayNames[1]} >{this.state.buttonDisplayNames[1]}</button> </div>
-                <div  className="header-button-holder"> <button className="header-button" onClick={() => this.goToPlayers()} id={this.state.buttonDisplayNames[2]} >{this.state.buttonDisplayNames[2]}</button> </div>
-                <div className="header-button-holder"><img src={require('../images/paddle.png')} onClick={() => this.goToHomePage()}/></div>
-            </div>
+                <div className="header-row">
+                    <div className="header-button-holder">
+                        <button className="header-button"
+                                onClick={() => this.onInputClick()}
+                                id={this.state.buttonDisplayNames[0]}>{this.state.buttonDisplayNames[0]}</button>
+                    </div>
+                    <div className="header-button-holder">
+                        <button className="header-button"
+                                onClick={() => this.goToGames()}
+                                id={this.state.buttonDisplayNames[1]}>{this.state.buttonDisplayNames[1]}</button>
+                    </div>
+                    <div className="header-button-holder">
+                        <button className="header-button"
+                                onClick={() => this.goToPlayers()}
+                                id={this.state.buttonDisplayNames[2]}>{this.state.buttonDisplayNames[2]}</button>
+                    </div>
+                    <div className="header-button-holder"><img
+                        src={require('../images/paddle.png')}
+                        onClick={() => this.goToHomePage()}/></div>
+                </div>
                 <div id="inputButtonContainer">
-                    <InputButtons showInputButtons={this.state.showInputButtons}/>
+                    <InputButtons
+                        showInputButtons={this.state.showInputButtons}/>
                 </div>
             </div>
         );
     }
 }
 
+export class HeaderButtons2 extends React.Component {
+    state = {
+        buttonDisplayNames: ["Input", "Games", "Players", "Total Stats"],
+        showInputButtons: false
+    };
 
+    showInputButtons = () => {
+        this.setState({
+            showInputButtons: !this.state.showInputButtons
+        });
 
+        if (jQuery('#playerInputButton').css('visibility') === "hidden") {
+
+            let position = jQuery('.inputButton').position().left;
+            let width = jQuery('.inputButton').width();
+            let positionPlayer = position + width / 2.0;
+            let positionGame = positionPlayer - jQuery(
+                    '#gameInputButton').width();
+            jQuery('#playerInputButton').css('left', positionPlayer);
+            jQuery('#gameInputButton').css('left', positionGame);
+            jQuery('#playerInputButton').css('visibility', 'visible');
+            jQuery('#gameInputButton').css('visibility', 'visible');
+
+        } else {
+            jQuery('#playerInputButton').css('visibility', 'hidden');
+            jQuery('#gameInputButton').css('visibility', 'hidden');
+        }
+    };
+
+    goToPlayers = () => {
+        history.push('/Players');
+
+    };
+
+    goToGames = () => {
+        history.push('/Games');
+    };
+
+    goToTotalStats = () => {
+        history.push('/TotalStats');
+    };
+
+    inputPlayer = () => {
+        history.push('/CreatPlayer');
+    };
+
+    goToIndividualStats = () => {
+        const location = {
+            pathname: '/PlayerProfile',
+            state: {
+                player: {
+                    id: 0
+                }
+            }
+        };
+        history.push(location);
+
+    };
+
+    inputPlayer = () => {
+        history.push('/CreatePlayer');
+    };
+
+    inputGame = () => {
+        history.push('/CreateGame');
+    };
+
+    render() {
+        return (
+            <div>
+                <Provider
+                    theme={{
+                        font: '"Serif"',
+
+                    }}
+                >
+                    <Toolbar bg="black">
+                        <Button ml={250} mr={50} f={23}
+                                onClick={this.showInputButtons}
+
+                        >
+                            <span className="inputButton"> Input </span>
+                        </Button>
+                        {/*<ToggleDisplay show={this.state.showInputButtons}>*/}
+                        {/*<Button className="header-button-input"*/}
+                        {/*onClick={this.inputPlayer}*/}
+                        {/*id="playerInputButton"*/}
+                        {/*bg="blue">*/}
+                        {/*Player*/}
+                        {/*</Button>*/}
+                        {/*<Button className="header-button-input"*/}
+                        {/*onClick={this.inputGame}*/}
+                        {/*id="gameInputButton">Game*/}
+                        {/*</Button>*/}
+                        {/*</ToggleDisplay>*/}
+                        <Button mx={50} f={24} onClick={this.goToGames}>
+                            Games
+                        </Button >
+                        <Button mx={50} f={24} onClick={this.goToPlayers}>
+                            Players
+                        </Button>
+                        <Button mx={50} f={24} onClick={this.goToTotalStats}>
+                            Total Stats
+                        </Button>
+                        <Button mx={50} f={24}
+                                onClick={this.goToIndividualStats}>
+                            Individual Stats
+                        </Button>
+                    </Toolbar>
+                </Provider>
+                <InputButtons
+                    showInputButtons={this.state.showInputButtons}/>
+            </div>
+        );
+    }
+}
 
 export class Header extends React.Component {
 
     state = {
-        showInputButtons:false,
+        showInputButtons: false,
     };
 
     onInputClick = () => {
         this.setState(prevState => ({
-            showInputButtons:!prevState
+            showInputButtons: !prevState
         }));
     };
 
@@ -327,9 +697,9 @@ export class Header extends React.Component {
 
         return (
 
-        <div>
-            <HeaderButtons />
-        </div>
+            <div>
+                <HeaderButtons2 />
+            </div>
         )
     };
 }

@@ -6,6 +6,7 @@ import PlayersList from './Pages/Players.js';
 import Games from './Pages/Games.js';
 import {Header} from './ReactComponents/displayComponents';
 import {PlayerGraphTable} from './Pages/PlayerProfilePage.js';
+import TotalStats from "./Pages/HomePage";
 
 const React = require('react');
 const ReactDOM = require('react-dom');
@@ -14,11 +15,11 @@ var Router = require('react-router').Router;
 var Route = require('react-router').Route;
 
 
-class HomePage extends React.Component {
+class TotalStatsPage extends React.Component {
     render(){
         return(
             <div>
-                <Home />
+                <TotalStats />
             </div>
         );
 
@@ -104,7 +105,7 @@ class PlayerProfilePage extends React.Component {
 ReactDOM.render(
     <Router history={history}>
         <div>
-            <Route path="/Home" component={HomePage} />
+            <Route path="/TotalStats" component={TotalStats} />
             <Route path="/CreatePlayer" component={InputPlayer} />
             <Route path="/CreateGame" component={InputGame} />
             <Route path="/Players" component={PlayersPage} />

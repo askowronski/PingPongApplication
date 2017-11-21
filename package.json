@@ -32,6 +32,7 @@
     "react-with-addons": "0.0.1",
     "reactable": "^0.14.1",
     "reactutils": "^2.0.0",
+    "rebass": "^1.0.4",
     "recharts": "^1.0.0-alpha.2"
   },
   "scripts": {

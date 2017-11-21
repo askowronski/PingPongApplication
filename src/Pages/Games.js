@@ -344,6 +344,7 @@ export class DateInput extends React.Component {
 
     render() {
         return <DatePicker
+            withPortal
             selected={moment(this.props.startDate)}
             onChange={this.props.onChange}
             className="editDateInput"

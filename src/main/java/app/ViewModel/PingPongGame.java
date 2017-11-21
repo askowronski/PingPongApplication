@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -36,8 +37,8 @@ public class PingPongGame {
         this.player1Score=score1;
         this.player2Score=score2;
         this.time = time;
-        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, Locale.US);
-        this.timeString = df.format(this.time);
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        this.timeString = sdfDate.format(time);
     }
 
     public PingPongGame() {
@@ -47,8 +48,8 @@ public class PingPongGame {
         this.player1Score=0;
         this.player2Score=0;
         this.time= new Date();
-        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, Locale.US);
-        this.timeString = df.format(this.time);
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        this.timeString = sdfDate.format(time);
 
     }
 
@@ -59,8 +60,8 @@ public class PingPongGame {
         this.player1Score=score1;
         this.player2Score=score2;
         this.time= new Date();
-        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, Locale.US);
-        this.timeString = df.format(this.time);
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        this.timeString = sdfDate.format(time);
 
 
     }
@@ -155,6 +156,10 @@ public class PingPongGame {
         } else {
             return this.getPlayer1();
         }
+    }
+
+    public String getTimeString() {
+        return timeString;
     }
 
     @Override
