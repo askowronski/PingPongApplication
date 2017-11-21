@@ -640,7 +640,7 @@ export class HeaderButtons2 extends React.Component {
                     }}
                 >
                     <Toolbar bg="black">
-                        <Button ml={250} mr={50} f={23}
+                        <Button ml={40} mr={20} f={23}
                                 onClick={this.showInputButtons}
 
                         >
@@ -658,16 +658,16 @@ export class HeaderButtons2 extends React.Component {
                         {/*id="gameInputButton">Game*/}
                         {/*</Button>*/}
                         {/*</ToggleDisplay>*/}
-                        <Button mx={50} f={24} onClick={this.goToGames}>
+                        <Button mx={20} f={24} onClick={this.goToGames}>
                             Games
                         </Button >
-                        <Button mx={50} f={24} onClick={this.goToPlayers}>
+                        <Button mx={20} f={24} onClick={this.goToPlayers}>
                             Players
                         </Button>
-                        <Button mx={50} f={24} onClick={this.goToTotalStats}>
+                        <Button mx={20} f={24} onClick={this.goToTotalStats}>
                             Total Stats
                         </Button>
-                        <Button mx={50} f={24}
+                        <Button mx={20} f={24}
                                 onClick={this.goToIndividualStats}>
                             Individual Stats
                         </Button>
