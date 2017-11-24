@@ -45,6 +45,7 @@ export class NetWinsGraph extends React.Component {
 
     componentWillReceiveProps = (nextProps) => {
         const playerID = nextProps.playerID;
+        debugger;
         if (playerID !== this.props) {
             this.setState({
                 playerID: playerID,
@@ -91,13 +92,13 @@ export class NetWinsGraph extends React.Component {
 
     returnYLabel = (x, y) => {
         return (
-            <text x={x} y={y} textAnchor="left">Net</text>
+            <text x={x} y={y} textAnchor="left" className="XAxisLabel">Net</text>
         )
     };
 
     returnXLabel = (x, y) => {
         return (
-            <text x={x} y={y} textAnchor="center">Game</text>
+            <text x={x} y={y} textAnchor="center" className="XAxisLabel">Game</text>
         )
     };
 
@@ -121,12 +122,22 @@ export class NetWinsGraph extends React.Component {
         })
     };
 
+    returnWidth = () => {
+        debugger;
+       return jQuery('#infoDisplay').width() * .72;
+    };
+
+    returnStartTooltip = () => {
+        debugger;
+        return jQuery('#infoDisplay').width() * .76;
+    };
+
     render() {
         return (
             <div className="PlayerChartContainer">
                 <div className="PlayerGraph">
                     <span ><ToggleDisplay show={this.state.displayError}><text className = "errorMessageGraph">{this.state.errorMessage}</text></ToggleDisplay><text >Net Wins</text></span>
-                    <ComposedChart width={1300} height={400}
+                    <ComposedChart width={this.returnWidth()} height={400}
                                    data={this.state.dataset}
                                    margin={{
                                        top: 5,
@@ -136,7 +147,11 @@ export class NetWinsGraph extends React.Component {
                                    }}
                                    label={"Net Wins/Losses"}>
                         <XAxis allowDecimals={false} dataKey="label"
-                               label={this.returnXLabel(500, 400)}/>
+                               label={this.returnXLabel(500, 400)}
+                               domain={[0, 'auto']}
+                               padding={{bottom: 50, right: 10}}
+                               labelStyle={{paddingTop: 20, color: '#32CD32'}}
+                        />
                         <YAxis allowDecimals={false} domain={[0, 'auto']}
                                label={this.returnYLabel(20, 150)}/>
                         <CartesianGrid strokeDasharray="3 3"/>
@@ -145,7 +160,7 @@ export class NetWinsGraph extends React.Component {
                             <Legend />
                         </div>
                         {this.returnBar(this.state.showBar)}
-                        <Tooltip position={{x: 1300, y: 0}}
+                        <Tooltip position={{x:this.returnStartTooltip(), y: 0}}
                                  content={<CustomToolTipDisplayNet/>}/>
                     </ComposedChart>
                     <div className="netWinsToggleButtons">

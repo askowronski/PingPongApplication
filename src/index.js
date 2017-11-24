@@ -4,7 +4,7 @@ import CreatePlayer from './Pages/CreatePlayer.js';
 import CreateGame from './Pages/CreateGame.js';
 import PlayersList from './Pages/Players.js';
 import Games from './Pages/Games.js';
-import {Header} from './ReactComponents/displayComponents';
+import {Header, toggleHeaderButton} from './ReactComponents/displayComponents';
 import {PlayerGraphTable} from './Pages/PlayerProfilePage.js';
 import TotalStats from "./Pages/HomePage";
 
@@ -39,6 +39,8 @@ class InputPlayer extends React.Component {
 
 class InputGame extends React.Component {
     render(){
+        {toggleHeaderButton('inputButton')}
+
         return(
             <div>
                 <CreateGame />
@@ -57,7 +59,7 @@ class PlayersPage extends React.Component {
         return(
             <div>
                 <div>
-                    <Header />
+                    <Header selectedButton="playersButton"/>
                 </div>
                 <div>
                     <PlayersList showEdit = {this.state.showEdit} showTable = {this.state.showTable} />
@@ -71,10 +73,12 @@ class PlayersPage extends React.Component {
 class GamesPage extends React.Component {
 
     render() {
+
+        {toggleHeaderButton('gamesButton')}
         return(
             <div>
                 <div>
-                    <Header/>
+                    <Header selectedButton="gamesButton"/>
                 </div>
                 <div>
                     <Games />
@@ -86,10 +90,13 @@ class GamesPage extends React.Component {
 
 class PlayerProfilePage extends React.Component {
     render() {
+
+        {toggleHeaderButton('individualStatsButton')}
+
         return(
          <div>
              <div>
-                 <Header/>
+                 <Header selectedButton="individualStatsButton"/>
              </div>
              <div>
                  <PlayerGraphTable history={history}/>

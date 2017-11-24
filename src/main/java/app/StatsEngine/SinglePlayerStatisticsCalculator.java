@@ -1,5 +1,6 @@
 package app.StatsEngine;
 
+import app.PersistenceModel.PersistenceGame;
 import app.ViewModel.GameOutcomeEnum;
 import app.ViewModel.PingPongGame;
 import app.ViewModel.Player;
@@ -10,12 +11,33 @@ import java.util.List;
 
 public class SinglePlayerStatisticsCalculator {
 
-    private final List<PingPongGame> games;
-    private final Player player;
+    private  List<PingPongGame> games;
+    private  Player player;
+    private List<PersistenceGame> persistenceGames;
 
     public SinglePlayerStatisticsCalculator(List<PingPongGame> games , Player player) {
         this.games=games;
         this.player=player;
+    }
+
+    public SinglePlayerStatisticsCalculator(Player player) {
+        this.player = player;
+    }
+
+    public void setGames(List<PingPongGame> games) {
+        this.games = games;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public List<PersistenceGame> getPersistenceGames() {
+        return persistenceGames;
+    }
+
+    public void setPersistenceGames(List<PersistenceGame> persistenceGames) {
+        this.persistenceGames = persistenceGames;
     }
 
     public List<PingPongGame> getGames() {
@@ -71,11 +93,11 @@ public class SinglePlayerStatisticsCalculator {
 
     public int getWins() {
         List<Integer> scores = new ArrayList<>();
-        List<PingPongGame> games = this.getGames();
+        List<PersistenceGame> games = this.getPersistenceGames();
         int wins = 0;
 
         for(int i = 0; i < games.size(); i++){
-           if(games.get(i).didWin(this.getPlayer())){
+           if(games.get(i).didWin(this.getPlayer().getiD())){
                wins++;
            }
         }
@@ -115,12 +137,12 @@ public class SinglePlayerStatisticsCalculator {
 
     public List<GameOutcomeEnum> getOutcomes() {
         List<GameOutcomeEnum> outcomes = new ArrayList<>();
-        List<PingPongGame> games = this.getGames();
+        List<PersistenceGame> games = this.getPersistenceGames();
 
-        for(PingPongGame game:games){
-            if(game.didWin(this.getPlayer())){
+        for(PersistenceGame game:games){
+            if(game.didWin(this.getPlayer().getiD())){
                 outcomes.add(GameOutcomeEnum.WIN);
-            } else if(game.didLose(this.getPlayer())){
+            } else if(game.didLose(this.getPlayer().getiD())){
                 outcomes.add(GameOutcomeEnum.LOSS);
             } else {
                 outcomes.add(GameOutcomeEnum.DRAW);

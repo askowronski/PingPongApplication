@@ -342,10 +342,12 @@ class InfoDisplayTotalGameStats extends React.Component {
         totalGamesPlayed: "",
         stdDevForLosses: "",
         stdDevForGames: "",
-        averageEloRating: ""
+        averageEloRating: "",
+
     };
 
     componentDidMount = () => {
+        this.setState({ fetchInProgress: true });
 
         jQuery.ajax({
 
@@ -359,7 +361,8 @@ class InfoDisplayTotalGameStats extends React.Component {
                     totalGamesPlayed: JSON.parse(data.message).totalGames,
                     stdDevForGames: JSON.parse(data.message).stdDevForGames,
                     stdDevForLosses: JSON.parse(data.message).stdDevForLosses,
-                    averageEloRating: JSON.parse(data.message).averageEloRating
+                    averageEloRating: JSON.parse(data.message).averageEloRating,
+                    fetchInProgress: false
                 });
             }.bind(this)
         });
@@ -564,10 +567,22 @@ export class HeaderButtons extends React.Component {
 }
 
 export class HeaderButtons2 extends React.Component {
-    state = {
-        buttonDisplayNames: ["Input", "Games", "Players", "Total Stats"],
-        showInputButtons: false
+    constructor(props) {
+        super(props);
+        this.state = {
+            buttonDisplayNames: ["Input", "Games", "Players", "Total Stats"],
+            showInputButtons: false,
+            selected:props.selected,
+            selectedButton:this.props.selectedButton
+        };
+    }
+
+
+    componentDidMount = () => {
+        toggleHeaderButton(this.state.selectedButton);
+        debugger;
     };
+
 
     showInputButtons = () => {
         this.setState({
@@ -642,33 +657,26 @@ export class HeaderButtons2 extends React.Component {
                     <Toolbar bg="black">
                         <Button ml={40} mr={20} f={23}
                                 onClick={this.showInputButtons}
-
+                                id = "inputButtonTab"
                         >
-                            <span className="inputButton"> Input </span>
+                            <span className="inputButton" > Input </span>
                         </Button>
-                        {/*<ToggleDisplay show={this.state.showInputButtons}>*/}
-                        {/*<Button className="header-button-input"*/}
-                        {/*onClick={this.inputPlayer}*/}
-                        {/*id="playerInputButton"*/}
-                        {/*bg="blue">*/}
-                        {/*Player*/}
-                        {/*</Button>*/}
-                        {/*<Button className="header-button-input"*/}
-                        {/*onClick={this.inputGame}*/}
-                        {/*id="gameInputButton">Game*/}
-                        {/*</Button>*/}
-                        {/*</ToggleDisplay>*/}
-                        <Button mx={20} f={24} onClick={this.goToGames}>
+                        <Button mx={20} f={24}
+                                onClick={this.goToGames}
+                                id = "gamesButtonTab">
                             Games
                         </Button >
-                        <Button mx={20} f={24} onClick={this.goToPlayers}>
+                        <Button mx={20} f={24} onClick={this.goToPlayers}
+                                id = "playersButtonTab">
                             Players
                         </Button>
-                        <Button mx={20} f={24} onClick={this.goToTotalStats}>
+                        <Button mx={20} f={24} onClick={this.goToTotalStats}
+                                id = "totalStatsButtonTab">
                             Total Stats
                         </Button>
                         <Button mx={20} f={24}
-                                onClick={this.goToIndividualStats}>
+                                onClick={this.goToIndividualStats}
+                                id = "individualStatsButtonTab">
                             Individual Stats
                         </Button>
                     </Toolbar>
@@ -676,15 +684,20 @@ export class HeaderButtons2 extends React.Component {
                 <InputButtons
                     showInputButtons={this.state.showInputButtons}/>
             </div>
-        );
+    );
     }
 }
 
 export class Header extends React.Component {
 
-    state = {
-        showInputButtons: false,
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            showInputButtons: false,
+            selectedButton:this.props.selectedButton
+        };
+    }
+
 
     onInputClick = () => {
         this.setState(prevState => ({
@@ -698,11 +711,17 @@ export class Header extends React.Component {
         return (
 
             <div>
-                <HeaderButtons2 />
+                <HeaderButtons2 selectedButton={this.props.selectedButton}/>
             </div>
         )
     };
 }
+
+export const toggleHeaderButton = (buttonName) => {
+    debugger;
+    let id = buttonName+'Tab';
+    jQuery('#'+id).css('background-color','#1007a5')
+};
 
 
 

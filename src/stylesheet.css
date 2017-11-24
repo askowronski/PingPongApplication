@@ -211,10 +211,18 @@ Tr {
 
 .custom-tooltip-average {
     opacity: 1;
-    background-color: #fff;
-    width:300px;
-    margin-left: 10%;
+    width:28%;
+    margin-left: -5%;
     align-self: center;
+    border: 3px groove;
+}
+
+.custom-tooltip-net {
+    opacity: 1;
+    width:35%;
+    margin-left: -5%;
+    align-self: center;
+    border: 3px groove;
 }
 
 span text {
@@ -269,6 +277,7 @@ span text {
     margin-bottom: 20px;
     padding-bottom: 20px;
     line-height: 1.8;
+    font-size:16pt;
 }
 
 #score {
@@ -394,7 +403,8 @@ border-color: #020104;
 }
 
 .homePageTable {
-    border: 4px groove;
+    border: 8px groove;
+    box-shadow: #1d5d90;
 }
 
 .homePageTable > tr:hover {

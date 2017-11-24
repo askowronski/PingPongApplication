@@ -15,6 +15,7 @@ import {
 } from 'recharts';
 import ToggleDisplay from 'react-toggle-display';
 import moment from "moment";
+import {Box, Flex, Provider, Text} from "rebass";
 const React = require('react');
 const jQuery = require('jquery');
 const css = require("css-loader");
@@ -188,12 +189,23 @@ export class EloRatingPerGame extends React.Component {
         })
     };
 
+
+    returnWidth = () => {
+        debugger;
+        return jQuery('#infoDisplay').width() * .72;
+    };
+
+    returnStartTooltip = () => {
+        debugger;
+        return jQuery('#infoDisplay').width() * .77;
+    };
+
     render() {
         return (
             <div className="PlayerChartContainer">
                 <div className="PlayerGraph">
                     <span ><ToggleDisplay show={this.state.displayError}><text className = "errorMessageGraph">{this.state.errorMessage}</text></ToggleDisplay><text >Elo Rating Per Game</text></span>
-                    <LineChart width={1300} height={400}
+                    <LineChart width={this.returnWidth()} height={400}
                                data={this.state.dataset}
                                margins={{top: 5, right: 30, bottom: 5}}>
                         <XAxis allowDecimals={false} type="number"
@@ -203,7 +215,7 @@ export class EloRatingPerGame extends React.Component {
                                labelStyle={{paddingTop: 20, color: '#32CD32'}}/>
                         <YAxis domain={['auto', 'auto']}
                                label={this.returnYLabel(30, 150)}/>
-                        <Tooltip position={{x: 1300, y: 0}}
+                        <Tooltip position={{x: this.returnStartTooltip(), y: 0}}
                                  content={<CustomToolTipDisplayGameElo
                                      setGameDisplay={this.setGameDisplayState}/>}/>
                         <CartesianGrid strokeDasharray="3 3"/>
@@ -254,65 +266,83 @@ export const CustomToolTipDisplayGameElo = React.createClass({
 
                 return (
                     <div className="custom-tooltip-average">
-                        <table className="GameDisplayTable">
-                            <th className="GameDisplayHeader" colSpan={5}>
-                                <span className="HeaderText">Rating</span>
-                            </th>
-                            <tr>
-                                <td>
-                                </td>
-                                <td className="AverageUserHeader" colSpan={2}>
-                                    <span className="You">You</span>
-                                </td>
 
-                                <td className="AverageUserHeader" colSpan={2}>
-                                    <span className="You">Opponent</span>
-                                </td>
-                            </tr>
-                            <tr className="GameDisplayAverageRow">
-                                <td>
-                                    Score
-                                </td>
-                                <td colSpan={2}>
-                                    {payload[0].payload.eloRating}
-                                </td>
-                                <td colSpan={2}>
-                                    {payload[0].payload.opponentEloRating}
-                                </td>
+                        <Provider
+                            theme={{
+                                font: '"Serif"',
+                            }}
+                        >
+                            <Flex wrap mx={-2} align='center' width='auto'>
+                                <Box px={2} py={2} width={1}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={32}><u>Game - {label} </u></Text>
+                                </Box>
+                                <Box px={2} py={2} width={1}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={28}>Rating</Text>
+                                </Box>
 
-                            </tr>
-                            <tr>
-                                <td colSpan={5} className="GameDisplayHeader">
-                                    <span
-                                        className="HeaderText">{this.getIntroOfPage(
-                                        label, game.timeString)}</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
 
-                                </td>
-                                <td className="AverageUserHeader" colSpan={2}>
-                                    <span className="You">You</span>
-                                </td>
+                                <Box px={2} py={2} width={1 / 2}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={26}>
+                                        <em> <u> You </u>
+                                        </em>
+                                    </Text>
+                                </Box>
+                                <Box px={2} py={2} width={1 / 2}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={26}>
+                                        <em> <u> Opponent </u></em>
+                                    </Text>
+                                </Box>
+                                <Box px={2} py={0} width={1 / 2}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={26}>
+                                        {payload[0].payload.eloRating}
+                                    </Text>
+                                </Box>
+                                <Box px={2} py={2} width={1 / 2}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={26}>
+                                        {payload[0].payload.opponentEloRating}
+                                    </Text>
+                                </Box>
+                                <Box px={2} py={2} width={1}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={24}>
+                                        {moment(game.timeString).format(
+                                            "YYYY-MM-DD hh:mm a")}
+                                    </Text>
+                                </Box>
+                                <Box px={2} py={2} width={1 / 2}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={24}>
+                                        <em> <u> You </u> </em>
+                                    </Text>
+                                </Box>
+                                <Box px={2} py={2} width={1 / 2}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={24}>
+                                        <em> <u>  {game.player2.username} </u>
+                                        </em>
+                                    </Text>
+                                </Box>
+                                <Box px={2} py={2} width={1 / 2}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={24}>
+                                        {game.score1}
+                                    </Text>
+                                </Box>
+                                <Box px={2} py={2} width={1 / 2}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={24}>
+                                        {game.score2}
+                                    </Text>
+                                </Box>
+                            </Flex>
 
-                                <td className="AverageUserHeader" colSpan={2}>
-                                    <span
-                                        className="You">{game.player2.username}</span>
-                                </td>
-                            </tr>
-                            <tr className="bottomRow">
-                                <td>
-                                    Score
-                                </td>
-                                <td colSpan={2}>
-                                    {game.score1}
-                                </td>
-                                <td colSpan={2}>
-                                    {game.score2}
-                                </td>
-                            </tr>
-                        </table>
+                        </Provider>
                     </div>
                 );
             }

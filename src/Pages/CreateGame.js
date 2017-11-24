@@ -532,7 +532,7 @@ export default class CreateGame extends React.Component {
         return (
             <div>
                 <div>
-                    <Header id="header" className="header"/>
+                    <Header id="header" className="header" selectedButton="inputButton"/>
                 </div>
                 <br/>
                 <div id="PlayerForm">

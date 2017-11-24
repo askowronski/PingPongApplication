@@ -345,12 +345,11 @@ export class DateInput extends React.Component {
     render() {
         return <DatePicker
             withPortal
+            showTimeSelect
             selected={moment(this.props.startDate)}
             onChange={this.props.onChange}
             className="editDateInput"
             shouldCloseOnSelect={true}
-            showTimeSelect
-            timeFormat="HH:mm"
             timeIntervals={15}
         />;
     }

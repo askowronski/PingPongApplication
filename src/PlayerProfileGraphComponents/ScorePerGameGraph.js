@@ -238,12 +238,24 @@ export class AverageScorePerGame extends React.Component {
         })
     };
 
+
+    returnWidth = () => {
+        debugger;
+        return jQuery('#infoDisplay').width() * .70;
+    };
+
+    returnStartTooltip = () => {
+        debugger;
+        return jQuery('#infoDisplay').width() * .76;
+    };
+
+
     render() {
         return (
             <div className="PlayerChartContainer">
                 <div className="PlayerGraph">
                     <span ><ToggleDisplay show={this.state.displayError}><text className = "errorMessageGraph">{this.state.errorMessage}</text></ToggleDisplay><text >Score Per Game</text></span>
-                    <ComposedChart width={1300} height={400}
+                    <ComposedChart width={this.returnWidth()} height={400}
                                    data={this.state.dataset}
                                    margins={{top: 5, right: 30, bottom: 5}}>
                         <XAxis allowDecimals={false} type="number"
@@ -254,7 +266,7 @@ export class AverageScorePerGame extends React.Component {
                         <YAxis domain={[0, 20]}
                                label={this.returnYLabel(30, 150)}
                                ticks={[0, 10, 20]}/>
-                        <Tooltip position={{x: 1300, y: 0}}
+                        <Tooltip position={{x: this.returnStartTooltip(), y: 0}}
                                  content={<CustomToolTipDisplayGame
                                      setGameDisplay={this.setGameDisplayState}/>}/>
                         <CartesianGrid strokeDasharray="3 3"/>

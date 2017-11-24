@@ -15,6 +15,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -41,6 +42,10 @@ public class GamePersistenceManager {
     public static String GET_GAMES_FOR_PLAYER_ON_DATE =
             "from PersistenceGame as game where (game.player1ID = :playerId OR"
                     + " game.player2ID = :playerId ) AND datediff(game.time, :date) = 0";
+
+    public static String GET_GAMES_FOR_PLAYER =
+            "from PersistenceGame as game where (game.player1ID = :playerId OR"
+                    + " game.player2ID = :playerId )";
 
 
     private final File file;
@@ -133,13 +138,16 @@ public class GamePersistenceManager {
     }
 
     public PingPongGame getViewGameByID(int id) {
-        List<PingPongGame> games = this.getGamesView();
-        for (PingPongGame game : games) {
-            if (game.getiD() == id) {
-                return game;
-            }
+        try {
+            PlayerPersistenceManager pPM = new PlayerPersistenceManager();
+            PersistenceGame game = this.getGameByID(id);
+            Player player1 = pPM.getViewPlayerByID(game.getPlayer1ID(), game.getiD());
+            Player player2 = pPM.getViewPlayerByID(game.getPlayer2ID(), game.getiD());
+            return new PingPongGame(game.getiD(), player1, player2,
+                    game.getPlayer1Score(), game.getPlayer2Score(), game.getTime());
+        } catch (NoResultException | HibernateException e) {
+            throw new NoSuchElementException("No Game found with ID " + id + ".");
         }
-        throw new NoSuchElementException("No Game found with ID " + id + ".");
     }
 
     public PersistenceGame getGameByID(final int id) {
@@ -183,10 +191,27 @@ public class GamePersistenceManager {
         return "select * from ping_pong_game where date = (select Max(date) from ping_pong_game);";
     }
 
+    private String getStringForGamesInDate(int playerId, String startDate, String endDate) {
+        return
+                "select * from ping_pong_game  where (player1Id = " + playerId + " OR"
+                        + " player2Id = " + playerId + " ) AND date >= '" + startDate + "'  AND date <= '" + endDate + "'";
+    }
+
 
     public String writeGameToJson(PingPongGame game) {
         ObjectMapper mapper = new ObjectMapper();
 
+        try {
+            return mapper.writeValueAsString(game);
+        } catch (JsonProcessingException e) {
+            return e.getMessage();
+        }
+    }
+
+    public String writeGameToJson(PersistenceGame game) {
+        ObjectMapper mapper = new ObjectMapper();
+
+        PingPongGame viewGame = new GamePersistenceManager().getViewGameByID(game.getiD());
         try {
             return mapper.writeValueAsString(game);
         } catch (JsonProcessingException e) {
@@ -407,15 +432,20 @@ public class GamePersistenceManager {
     }
 
     public List<PingPongGame> getGamesForPlayer(Player player) {
-        List<PingPongGame> games = this.getGamesView();
+        List<PersistenceGame> persistenceGames = this.getPersistenceGamesForPlayer(player.getiD());
+        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         List<PingPongGame> gamesForPlayer = new ArrayList<>();
 
-        for (PingPongGame game : games) {
-            if (game.getPlayer1().getiD() == player.getiD()) {
-                gamesForPlayer.add(game);
-            } else if (game.getPlayer2().getiD() == player.getiD()) {
-                PingPongGame newGame = new PingPongGame(game.getiD(), game.getPlayer2(),
-                        game.getPlayer1(), game.getPlayer2Score(), game.getPlayer1Score(),
+        for (PersistenceGame game : persistenceGames) {
+
+            if (game.getPlayer1ID() == player.getiD()) {
+                PingPongGame newGame = new PingPongGame(game.getiD(), pPM.getViewPlayerByID(player.getiD(), game.getiD()),
+                        pPM.getViewPlayerByID(game.getPlayer2ID(), game.getiD()), game.getPlayer1Score(), game.getPlayer2Score(),
+                        game.getTime());
+                gamesForPlayer.add(newGame);
+            } else if (game.getPlayer2ID() == player.getiD()) {
+                PingPongGame newGame = new PingPongGame(game.getiD(), pPM.getViewPlayerByID(player.getiD(), game.getiD()),
+                        pPM.getViewPlayerByID(game.getPlayer1ID(), game.getiD()), game.getPlayer2Score(), game.getPlayer1Score(),
                         game.getTime());
                 gamesForPlayer.add(newGame);
             }
@@ -471,6 +501,37 @@ public class GamePersistenceManager {
             }
         }
         return gamesForPlayer;
+    }
+
+    public List<PersistenceGame> getPersistenceGamesForPlayer(Player player, Date beginning,
+            Date end) {
+        try {
+            Session session = factory.openSession();
+
+            DateFormat df = new SimpleDateFormat("YYYY-MM-dd");
+            Query query = session.createNativeQuery(this.getStringForGamesInDate(player.getiD(), df.format(beginning), df.format(end)),
+                    PersistenceGame.class);
+            List<PersistenceGame> games = query.getResultList();
+            games.sort(Comparator.comparing(PersistenceGame::getTime));
+            return games;
+        } catch (NoResultException | HibernateException e) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
+    }
+
+    public List<PersistenceGame> getPersistenceGamesForPlayer(int playerId) {
+        try {
+            Session session = factory.openSession();
+            Query query = session.createQuery(GET_GAMES_FOR_PLAYER);
+            query.setParameter("playerId", playerId);
+            List<PersistenceGame> games = query.getResultList();
+            games.sort(Comparator.comparing(PersistenceGame::getTime));
+            return games;
+        } catch (NoResultException | HibernateException e) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
     }
 
     public List<PersistenceGame> getGamesForPlayer(int playerId, List<PersistenceGame> games) {

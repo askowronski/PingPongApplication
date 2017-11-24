@@ -20,7 +20,7 @@ export default class TotalStats extends React.Component {
 
         return(
             <div>
-                <Header/>
+                <Header selectedButton="totalStatsButton"/>
                 <br/>
                 <div>
                     <InfoDisplayTable/>

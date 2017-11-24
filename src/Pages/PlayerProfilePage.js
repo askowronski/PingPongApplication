@@ -56,54 +56,69 @@ export const CustomToolTipDisplayNet = React.createClass({
                 let game = payload[0].payload.game;
 
                 return (
-                    <div className="custom-tooltip-average">
-                        <table className="GameDisplayTable">
-                            <th className="GameDisplayHeader" colSpan={5}>
-                                <span
-                                    className="HeaderText">Net Wins/Losses</span>
-                            </th>
-                            <tr>
-                                <td>
-                                </td>
-                                <td className="AverageUserHeader" colSpan={3}>
-                                    <span >{payload[0].payload.wins}</span>
-                                </td>
-                                <td>
-                                </td>
+                    <div className="custom-tooltip-net">
+                        <Provider
+                            theme={{
+                                font: '"Serif"',
+                            }}
+                        >
+                            <Flex wrap mx={-2} align='center' width='auto'>
+                                <Box px={2} py={2} width={1}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={32}><u>Game - {label} </u></Text>
+                                </Box>
+                                <Box px={2} py={2} width={1}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={28}>
+                                        <em> <u> Net Wins/Losses </u> </em></Text>
+                                </Box>
 
-                            </tr>
-                            <tr>
-                                <td colSpan={5} className="GameDisplayHeader">
-                                    <span
-                                        className="HeaderText">{this.getIntroOfPage(
-                                        label, game.timeString)}</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
 
-                                </td>
-                                <td className="AverageUserHeader" colSpan={2}>
-                                    <span className="You">You</span>
-                                </td>
+                                <Box px={2} py={2} width={1}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={26}>
+                                         {payload[0].payload.wins}
+                                    </Text>
+                                </Box>
+                                <Box px={2} py={2} width={1}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={24}>
+                                        {moment(payload[0].payload.timeString ).format(
+                                            "YYYY-MM-DD hh:mm a")}
+                                    </Text>
+                                </Box>
+                                <Box px={2} py={2} width={1}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={24}>
 
-                                <td className="AverageUserHeader" colSpan={2}>
-                                    <span
-                                        className="You">{game.player2.username}</span>
-                                </td>
-                            </tr>
-                            <tr className="bottomRow">
-                                <td>
-                                    Score
-                                </td>
-                                <td colSpan={2}>
-                                    {game.score1}
-                                </td>
-                                <td colSpan={2}>
-                                    {game.score2}
-                                </td>
-                            </tr>
-                        </table>
+                                    </Text>
+                                </Box>
+                                <Box px={2} py={0} width={1 / 2}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={24}>
+                                        <em> <u> You </u> </em>
+                                    </Text>
+                                </Box>
+                                <Box px={2} py={2} width={1 / 2}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={24}>
+                                        <em> <u>  {payload[0].payload.player2Username} </u> </em>
+                                    </Text>
+                                </Box>
+                                <Box px={2} py={2} width={1/2}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={24}>
+                                        {game.score1}
+                                    </Text>
+                                </Box>
+                                <Box px={2} py={2} width={1 / 2}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={24}>
+                                        {game.score2}
+                                    </Text>
+                                </Box>
+                            </Flex>
+                        </Provider>
                     </div>
                 );
             }
@@ -135,76 +150,12 @@ export const CustomToolTipDisplayGame = React.createClass({
 
                 return (
                     <div className="custom-tooltip-average">
-                        {/*<table className="GameDisplayTable">*/}
-                            {/*<thead>*/}
-                            {/*<th className="GameDisplayHeader" colSpan={5}>*/}
-                                {/*<span className="HeaderText">Average</span>*/}
-                            {/*</th>*/}
-                            {/*</thead>*/}
-                            {/*<tbody>*/}
-                            {/*<tr>*/}
-                                {/*<td>*/}
-                                {/*</td>*/}
-                                {/*<td className="AverageUserHeader" colSpan={2}>*/}
-                                    {/*<span className="You">You</span>*/}
-                                {/*</td>*/}
-
-                                {/*<td className="AverageUserHeader" colSpan={2}>*/}
-                                    {/*<span className="You">Opponent</span>*/}
-                                {/*</td>*/}
-                            {/*</tr>*/}
-                            {/*<tr className="GameDisplayAverageRow">*/}
-                                {/*<td>*/}
-                                    {/*Score*/}
-                                {/*</td>*/}
-                                {/*<td colSpan={2}>*/}
-                                    {/*{payload[0].payload.averageScore}*/}
-                                {/*</td>*/}
-                                {/*<td colSpan={2}>*/}
-                                    {/*{payload[0].payload.opponentAverageScore}*/}
-                                {/*</td>*/}
-
-                            {/*</tr>*/}
-                            {/*<tr>*/}
-                                {/*<td colSpan={5} className="GameDisplayHeader">*/}
-                                    {/*<span*/}
-                                        {/*className="HeaderText">{this.getIntroOfPage(*/}
-                                        {/*label, game.timeString)}</span>*/}
-                                {/*</td>*/}
-                            {/*</tr>*/}
-                            {/*<tr>*/}
-                                {/*<td>*/}
-
-                                {/*</td>*/}
-                                {/*<td className="AverageUserHeader" colSpan={2}>*/}
-                                    {/*<span className="You">You</span>*/}
-                                {/*</td>*/}
-
-                                {/*<td className="AverageUserHeader" colSpan={2}>*/}
-                                    {/*<span*/}
-                                        {/*className="You">{game.player2.username}</span>*/}
-                                {/*</td>*/}
-                            {/*</tr>*/}
-                            {/*<tr className="bottomRow">*/}
-                                {/*<td>*/}
-                                    {/*Score*/}
-                                {/*</td>*/}
-                                {/*<td colSpan={2}>*/}
-                                    {/*{payload[0].payload.score}*/}
-                                {/*</td>*/}
-                                {/*<td colSpan={2}>*/}
-                                    {/*{payload[0].payload.opponentScore}*/}
-                                {/*</td>*/}
-                            {/*</tr>*/}
-                            {/*</tbody>*/}
-                        {/*</table>*/}
-
                         <Provider
                             theme={{
                                 font: '"Serif"',
                             }}
                         >
-                            <Flex wrap mx={-2}>
+                            <Flex wrap mx={-2} align='center' width='auto'>
                                 <Box px={2} py={2} width={1}>
                                     <Text p={1} color='black' bg='white'
                                           f={32}><u>Game - {number} </u></Text>
@@ -218,7 +169,7 @@ export const CustomToolTipDisplayGame = React.createClass({
                                 <Box px={2} py={2} width={1 / 2}>
                                     <Text p={1} color='black' bg='white'
                                           f={26}>
-                                        <em> <u>  You </u>
+                                        <em> <u> You </u>
                                         </em>
                                     </Text>
                                 </Box>
@@ -228,7 +179,7 @@ export const CustomToolTipDisplayGame = React.createClass({
                                         <em> <u> Opponent </u></em>
                                     </Text>
                                 </Box>
-                                <Box px={2} py={0} width={1/2}>
+                                <Box px={2} py={0} width={1 / 2}>
                                     <Text p={1} color='black' bg='white'
                                           f={26}>
                                         {payload[0].payload.averageScore}
@@ -243,28 +194,30 @@ export const CustomToolTipDisplayGame = React.createClass({
                                 <Box px={2} py={2} width={1}>
                                     <Text p={1} color='black' bg='white'
                                           f={24}>
-                                        {moment(game.timeString).format("YYYY-MM-DD hh:mm a")}
+                                        {moment(game.timeString).format(
+                                            "YYYY-MM-DD hh:mm a")}
                                     </Text>
                                 </Box>
-                                <Box px={2} py={2} width={1/2}>
-                                <Text p={1} color='black' bg='white'
-                                      f={24}>
-                                    <em> <u>  You </u> </em>
-                                </Text>
-                            </Box>
-                                <Box px={2} py={2} width={1/2}>
+                                <Box px={2} py={2} width={1 / 2}>
                                     <Text p={1} color='black' bg='white'
                                           f={24}>
-                                        <em> <u>  {game.player2.username} </u> </em>
+                                        <em> <u> You </u> </em>
                                     </Text>
                                 </Box>
-                                <Box px={2} py={2} width={1/2}>
+                                <Box px={2} py={2} width={1 / 2}>
+                                    <Text p={1} color='black' bg='white'
+                                          f={24}>
+                                        <em> <u>  {game.player2.username} </u>
+                                        </em>
+                                    </Text>
+                                </Box>
+                                <Box px={2} py={2} width={1 / 2}>
                                     <Text p={1} color='black' bg='white'
                                           f={24}>
                                         {payload[0].payload.score}
                                     </Text>
                                 </Box>
-                                <Box px={2} py={2} width={1/2}>
+                                <Box px={2} py={2} width={1 / 2}>
                                     <Text p={1} color='black' bg='white'
                                           f={24}>
                                         {payload[0].payload.opponentScore}
@@ -285,8 +238,8 @@ export class AverageScoreGraph extends React.Component {
     state = {
         dataset: [],
         result: '',
-        errorMessage:'',
-        displayError:false
+        errorMessage: '',
+        displayError: false
     };
 
     returnData = () => {
@@ -338,8 +291,8 @@ export class AverageScoreGraph extends React.Component {
 
     handleFailure = (message) => {
         this.setState({
-            errorMessage:message,
-            displayError:true
+            errorMessage: message,
+            displayError: true
         });
     };
 
@@ -415,21 +368,25 @@ export class PlayerGraphTable extends React.Component {
     constructor(props) {
         super(props);
         let userNameDisplay = '';
+        let userId = 0;
 
         if (props.history.location.state.player.id === 0) {
             userNameDisplay = "Choose A Player";
+
         } else {
             userNameDisplay = props.history.location.state.player.username;
+            userId = props.history.location.state.player.id;
+
         }
         this.state = {
-            playerID: props.history.location.state.player.id,
+            playerID: userId,
             players: [],
             resultPlayers: '',
             playerUsername: userNameDisplay,
             history: history.state,
             startDate: '',
             endDate: '',
-            alert: ''
+            alert: '',
         };
     }
 
@@ -457,7 +414,7 @@ export class PlayerGraphTable extends React.Component {
             success: function(data) {
                 this.setState({
                     startDate: moment(data.beginningDate),
-                    endDate:  moment(data.endingDate)
+                    endDate: moment(data.endingDate)
                 });
             }.bind(this)
         });
@@ -523,9 +480,10 @@ export class PlayerGraphTable extends React.Component {
 
                 <tbody>
                 <tr id="infoDisplay">
-                    <td><AverageScorePerGame startDate={this.state.startDate}
-                                             endDate={this.state.endDate}
-                                             playerID={this.state.playerID}/>
+                    <td><AverageScorePerGame
+                        startDate={this.state.startDate}
+                        endDate={this.state.endDate}
+                        playerID={this.state.playerID}/>
                     </td>
                 </tr>
                 <tr id="infoDisplay">

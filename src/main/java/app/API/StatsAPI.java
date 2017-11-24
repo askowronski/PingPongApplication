@@ -7,6 +7,7 @@ import app.API.GraphData.EloRatingGraphData;
 import app.PersistenceManagers.EloRatingPersistenceManager;
 import app.PersistenceManagers.GamePersistenceManager;
 import app.PersistenceManagers.PlayerPersistenceManager;
+import app.PersistenceModel.PersistenceGame;
 import app.PersistenceModel.PersistencePlayerEloRatingList;
 import app.StatsEngine.LongestStreakData;
 import app.ViewModel.EloRating;
@@ -17,6 +18,7 @@ import app.StatsEngine.SinglePlayerStatisticsCalculator;
 import app.StatsEngine.TotalGamesStatsCalculator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -51,9 +53,10 @@ public class StatsAPI {
 
                 beginningTime = new SimpleDateFormat("yyyyMMMdd").parse(beginning.get());
                 endTime = new SimpleDateFormat("yyyyMMMdd").parse(end.get());
-                List<PingPongGame> games = gPM.getGamesForPlayer(player, beginningTime, endTime);
-                SinglePlayerStatisticsCalculator calc = new SinglePlayerStatisticsCalculator(games,
+                List<PersistenceGame> games = gPM.getPersistenceGamesForPlayer(player, beginningTime, endTime);
+                SinglePlayerStatisticsCalculator calc = new SinglePlayerStatisticsCalculator(
                         player);
+                calc.setPersistenceGames(games);
                 return new APIResult(true, Integer.toString(calc.getWins()));
             } catch (ParseException p) {
                 System.out.println(p.getMessage());
@@ -61,9 +64,10 @@ public class StatsAPI {
 
             }
         } else {
-            List<PingPongGame> games = gPM.getGamesForPlayer(player);
-            SinglePlayerStatisticsCalculator calc = new SinglePlayerStatisticsCalculator(games,
+            List<PersistenceGame> games = gPM.getPersistenceGamesForPlayer(player.getiD());
+            SinglePlayerStatisticsCalculator calc = new SinglePlayerStatisticsCalculator(
                     player);
+            calc.setPersistenceGames(games);
             return new APIResult(true, Integer.toString(calc.getWins()));
         }
     }
@@ -181,11 +185,11 @@ public class StatsAPI {
         Player player = pPM.getPlayerByIDOld(playerID);
         Date begTime;
         Date endTime;
-        List<PingPongGame> gamesForPlayer;
+        List<PersistenceGame> gamesForPlayer;
 
 
         try {
-            gamesForPlayer = getGamesForPlayerOptionalDates(playerID, beginningTime, endingTime, gPM);
+            gamesForPlayer = getPersistenceGamesForPlayerOptionalDates(playerID, beginningTime, endingTime, gPM);
         } catch (ParseException pe) {
             return new APIResult(false, pe.getMessage());
         }
@@ -193,7 +197,8 @@ public class StatsAPI {
         if (gamesForPlayer.size() == 0) {
             return new APIResult(false, "No Games For Player.");
         }
-        SinglePlayerStatisticsCalculator calc = new SinglePlayerStatisticsCalculator(gamesForPlayer,player);
+        SinglePlayerStatisticsCalculator calc = new SinglePlayerStatisticsCalculator(player);
+        calc.setPersistenceGames(gamesForPlayer);
 
         List<GameOutcomeEnum> outcomes = calc.getOutcomes();
 
@@ -215,8 +220,15 @@ public class StatsAPI {
         String json = "[";
         int i = 1;
 
+        DateFormat sDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
         for(Integer count:netWins){
-            json = json+"{\"wins\":"+count+",\"game\":"+gPM.writeGameToJson(gamesForPlayer.get(i-1))+",\"label\":"+i+"},";
+            PersistenceGame theGame = gamesForPlayer.get(i-1);
+            json = json+"{\"wins\":"+count+",\"game\":"+gPM.writeGameToJson(theGame)+","
+                    + "\"player1Username\":\""+pPM.getPlayerById(theGame.getPlayer1ID()).getUsername()+"\","
+                    + "\"player2Username\":\""+pPM.getPlayerById(theGame.getPlayer2ID()).getUsername()+"\","
+                    + "\"timeString\":\""+sDF.format(theGame.getTime())+"\","
+                    + "\"label\":"+i+"},";
             i++;
         }
         json = json.substring(0,json.length()-1);
@@ -245,6 +257,27 @@ public class StatsAPI {
 
         } else {
             return gPM.getGamesForPlayer(gPM.getPlayer(playerID));
+        }
+    }
+
+    private List<PersistenceGame> getPersistenceGamesForPlayerOptionalDates(@RequestParam(value = "id") int playerID,
+            @RequestParam(value = "beginningTime") Optional<String> beginningTime,
+            @RequestParam(value = "endingTime") Optional<String> endingTime,
+            GamePersistenceManager gPM) throws ParseException {
+        Date begTime;
+        Date endTime;
+        if (beginningTime.isPresent() && endingTime.isPresent()) {
+            try {
+                begTime = new SimpleDateFormat("yyyyMMMdd").parse(beginningTime.get());
+                endTime = new SimpleDateFormat("yyyyMMMdd").parse(endingTime.get());
+                return gPM.getPersistenceGamesForPlayer(gPM.getPlayer(playerID),begTime,endTime);
+
+            } catch (ParseException e) {
+                throw e;
+            }
+
+        } else {
+            return gPM.getPersistenceGamesForPlayer(gPM.getPlayer(playerID).getiD());
         }
     }
 
@@ -306,7 +339,7 @@ public class StatsAPI {
         Date theEndDate = gamesForPlayer.get(gamesForPlayer.size()-1).getTime();
 
         if(gamesForPlayer.size()==0){
-            return new APIResult(false,"No Games For Player");
+            return new APIResult(false,"No games for " + player.getUsername() + " in this date range.");
         }
 
         int i = 1;
