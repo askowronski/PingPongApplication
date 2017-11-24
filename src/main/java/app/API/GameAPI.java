@@ -55,10 +55,14 @@ public class GameAPI {
             PingPongGame viewGame = gPM.getViewGameByID(game.getiD());
             return  new ApiResultWithGame(true,"Game Created", viewGame.toJson());
 
-        } catch (NumberFormatException | ParseException e ){
+        } catch (NumberFormatException e){
             e.printStackTrace();
-            return new APIResult(false,"Game Unsuccessfully Created");
-        } catch (InvalidParameterException e) {
+            return new APIResult(false,"Game Unsuccessfully Created. Provide numbers for scores.");
+        }
+        catch (ParseException e){
+            e.printStackTrace();
+            return new APIResult(false,"Game Unsuccessfully Created. Provide a valid datea and time.");
+        }catch (InvalidParameterException e) {
             return new APIResult(false,e.getMessage());
         }
 

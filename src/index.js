@@ -14,10 +14,9 @@ require("./stylesheet.css");
 var Router = require('react-router').Router;
 var Route = require('react-router').Route;
 
-
 class TotalStatsPage extends React.Component {
-    render(){
-        return(
+    render() {
+        return (
             <div>
                 <TotalStats />
             </div>
@@ -27,8 +26,8 @@ class TotalStatsPage extends React.Component {
 }
 
 class InputPlayer extends React.Component {
-    render(){
-        return(
+    render() {
+        return (
             <div>
                 <CreatePlayer />
             </div>
@@ -38,10 +37,12 @@ class InputPlayer extends React.Component {
 }
 
 class InputGame extends React.Component {
-    render(){
-        {toggleHeaderButton('inputButton')}
+    render() {
+        {
+            toggleHeaderButton('inputButton')
+        }
 
-        return(
+        return (
             <div>
                 <CreateGame />
             </div>
@@ -51,18 +52,19 @@ class InputGame extends React.Component {
 
 class PlayersPage extends React.Component {
     state = {
-      showEdit:false,
-        showTable:true
+        showEdit: false,
+        showTable: true
     };
 
     render() {
-        return(
+        return (
             <div>
                 <div>
                     <Header selectedButton="playersButton"/>
                 </div>
                 <div>
-                    <PlayersList showEdit = {this.state.showEdit} showTable = {this.state.showTable} />
+                    <PlayersList showEdit={this.state.showEdit}
+                                 showTable={this.state.showTable}/>
 
                 </div>
             </div>
@@ -72,16 +74,25 @@ class PlayersPage extends React.Component {
 
 class GamesPage extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            loading: true
+        }
+    }
+
     render() {
 
-        {toggleHeaderButton('gamesButton')}
-        return(
+        {
+            toggleHeaderButton('gamesButton')
+        }
+        return (
             <div>
                 <div>
                     <Header selectedButton="gamesButton"/>
                 </div>
                 <div>
-                    <Games />
+                    <Games loading={this.state.loading}/>
                 </div>
             </div>
         )
@@ -91,32 +102,31 @@ class GamesPage extends React.Component {
 class PlayerProfilePage extends React.Component {
     render() {
 
-        {toggleHeaderButton('individualStatsButton')}
+        {
+            toggleHeaderButton('individualStatsButton')
+        }
 
-        return(
-         <div>
-             <div>
-                 <Header selectedButton="individualStatsButton"/>
-             </div>
-             <div>
-                 <PlayerGraphTable history={history}/>
-             </div>
-         </div>
+        return (
+            <div>
+                <div>
+                    <Header selectedButton="individualStatsButton"/>
+                </div>
+                <div>
+                    <PlayerGraphTable history={history}/>
+                </div>
+            </div>
         )
     }
 }
 
-
-
-
 ReactDOM.render(
     <Router history={history}>
         <div>
-            <Route path="/TotalStats" component={TotalStats} />
-            <Route path="/CreatePlayer" component={InputPlayer} />
-            <Route path="/CreateGame" component={InputGame} />
-            <Route path="/Players" component={PlayersPage} />
-            <Route path="/Games" component={GamesPage} />
+            <Route path="/TotalStats" component={TotalStats}/>
+            <Route path="/CreatePlayer" component={InputPlayer}/>
+            <Route path="/CreateGame" component={InputGame}/>
+            <Route path="/Players" component={PlayersPage}/>
+            <Route path="/Games" component={GamesPage}/>
             <Route path="/PlayerProfile" component={PlayerProfilePage}/>
         </div>
 

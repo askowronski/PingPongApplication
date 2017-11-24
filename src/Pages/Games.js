@@ -12,32 +12,37 @@ require("../stylesheet.css");
 const Typeahead = require('react-typeahead').Typeahead;
 
 export default class GamesList extends React.Component {
-    state = {
-        games: [],
-        resultGames: '',
-        players: [],
-        showEdit: [],
-        resultPlayers: '',
-        editPlayer1ID: 0,
-        editPlayer2ID: 0,
-        editScore1: 0,
-        editScore2: 0,
-        editGameID: 0,
-        editGameTime: '',
-        resultEditGame: '',
-        resultDelete: '',
-        editDate: ''
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            games: [],
+            resultGames: '',
+            players: [],
+            showEdit: [],
+            resultPlayers: '',
+            editPlayer1ID: 0,
+            editPlayer2ID: 0,
+            editScore1: 0,
+            editScore2: 0,
+            editGameID: 0,
+            editGameTime: '',
+            resultEditGame: '',
+            resultDelete: '',
+            editDate: '',
+            loading: true,
+            loadTable: false,
+            graphContent: null
+        }
+    }
 
     componentDidMount = () => {
-        jQuery('tbody.reactable-pagination tr td').addClass(
-            'custom-pagination');
+        this.finishTableSetup();
         jQuery.ajax({
 
             url: "http://localhost:8080/GetGamesNoRatings",
             type: "GET",
             dataType: "json",
-            async: false,
+            async: true,
             success: function(data) {
                 this.setState({
                     games: JSON.parse(data.message),
@@ -57,14 +62,21 @@ export default class GamesList extends React.Component {
             url: "http://localhost:8080/GetPlayers",
             type: "GET",
             dataType: "json",
-            async: false,
+            async: true,
             success: function(data) {
                 this.setState({
                     players: JSON.parse(data.message),
                     resultPlayers: data.success,
+                    loading: false
+
                 });
             }.bind(this)
         });
+    };
+
+    finishTableSetup = (props) => {
+        jQuery('tbody.reactable-pagination tr td').addClass(
+            'custom-pagination');
     };
 
     showEditGame = (index, game) => {
@@ -147,7 +159,7 @@ export default class GamesList extends React.Component {
             "&time=" + this.state.editDate.format('YYYYMMMDD'),
             type: "POST",
             dataType: "json",
-            async: false,
+            async: true,
             success: this.componentDidMount
         });
     };
@@ -162,145 +174,187 @@ export default class GamesList extends React.Component {
         let Table = Reactable.Table;
         let Tr = Reactable.Tr;
         let Td = Reactable.Td;
+        let gamesLength = this.state.games.length;
+        const columns = [
+            {
+                Header: "Date",
+                accessor: d => d.timeString
+            },
+            {
+                Header: "Player 1",
+                accessor: d => d.player1.username
+            },
+            {
+                Header: "Player 2",
+                accessor: d => d.player2.username
+            },
+            {
+                Header: "Score 1",
+                accessor: d => d.score1
+            },
+            {
+                Header: "Score 2",
+                accessor: d => d.score2
+            }
+        ];
 
         return (
-            <div className="tableHolder">
-                <Table className="GameTable" border="true" itemsPerPage={8}
-                       sortable={true}>
 
-                    {this.state.games.map((game, i) =>
-                        <Tr className="firstCell">
-                            <Td column="Date" value={moment(game.timeString)}
-                                sortFunction={Date}>
-                                <div>
-                                    <ToggleDisplay
-                                        show={!this.state.showEdit[i]}>
-                                        {game.timeString}
-                                    </ToggleDisplay>
-                                    <ToggleDisplay
-                                        show={this.state.showEdit[i]}>
-                                        <DateInput
-                                            startDate={this.state.editDate}
-                                            onChange={this.handleDateChange}/>
-                                    </ToggleDisplay>
-                                </div>
-                            </Td>
-                            <Td column="Player 1" className="player1Cell"
-                                value={game.player1.username}>
-                                <div>
-                                    <ToggleDisplay
-                                        show={!this.state.showEdit[i]}>
-                                        {game.player1.username}
-                                    </ToggleDisplay>
-                                    <ToggleDisplay
-                                        show={this.state.showEdit[i]}>
-                                        <EditUsernameTypeAhead
-                                            onOptionSelected={(event) => this.onChangePlayer1(
-                                                event)}
-                                            players={this.state.players}
-                                            currentPlayer={game.player1.username}
-                                            id="1"
-                                        />
-                                    </ToggleDisplay>
-                                </div>
-                            </Td>
-                            <Td column="Player 2" className="player1Cell"
-                                value={game.player2.username}>
-                                <div>
-                                    <ToggleDisplay
-                                        show={!this.state.showEdit[i]}>
-                                        {game.player2.username}
-                                    </ToggleDisplay>
-                                    <ToggleDisplay
-                                        show={this.state.showEdit[i]}>
-                                        <EditUsernameTypeAhead
-                                            onOptionSelected={(event) => this.onChangePlayer2(
-                                                event)}
-                                            players={this.state.players}
-                                            currentPlayer={game.player2.username}
-                                            id="2"
-                                        />
-                                    </ToggleDisplay>
-                                </div>
-                            </Td>
-                            <Td column="Score 1" className="player1Cell"
-                                value={game.score1}>
-                                <div>
-                                    <ToggleDisplay
-                                        show={!this.state.showEdit[i]}>
-                                        {game.score1}
-                                    </ToggleDisplay>
-                                    <ToggleDisplay
-                                        show={this.state.showEdit[i]}>
-                                        <div>
-                                            <EditScoreInput
-                                                onChange={(event) => this.onChangeScore1(
-                                                    event)}
-                                                score={game.score1}/>
-                                        </div>
-                                    </ToggleDisplay>
-                                </div>
-                            </Td>
-                            <Td column="Score 2" className="player1Cell"
-                                value={game.score2}>
-                                <div>
-                                    <ToggleDisplay
-                                        show={!this.state.showEdit[i]}>
-                                        {game.score2}
-                                    </ToggleDisplay>
-                                    <ToggleDisplay
-                                        show={this.state.showEdit[i]}>
-                                        <div>
-                                            <EditScoreInput
-                                                onChange={(event) => this.onChangeScore2(
-                                                    event)}
-                                                score={game.score2}/>
-                                        </div>
-                                    </ToggleDisplay>
-                                </div>
-                            </Td>
+            <div>
+                <div>
+                    <p id="loadingSpinner" style={{'text-align': 'center'}}>
+                        <img src={require('../images/Spinner.gif')}
+                             width='45%' height='45%'/></p>
+                </div>
+                <div className="tableHolder">
+                    <Table className="GameTable"
+                           loading={this.state.loading}
+                           border="true" itemsPerPage={10}
+                           sortable={true}
+                    >
+                        {this.state.games.map((game,i) => {
+                           if (i > 0 && i === gamesLength-1) {
+                               jQuery('.tableHolder').css('visibility','visible');
+                               jQuery('#loadingSpinner').remove();
+                           }
 
-                            <Td column="Actions">
-                                <div>
-                                    <ToggleDisplay
-                                        show={this.state.showEdit[i]}>
-                                        <div>
-                                            <input type="button" value="Submit"
-                                                   className="editButton"
-                                                   onClick={this.handleSubmit}/>
-                                            &nbsp;
-                                        </div>
-                                    </ToggleDisplay>
-                                    <div className="editContainer">
-                                        <a style={{cursor: 'pointer'}}
-                                           onClick={() => this.showEditGame(i,
-                                               game)}>Edit</a>
+                           return <Tr className="firstCell">
+                                <Td column="Date"
+                                    value={moment(game.timeString)}
+                                    sortFunction={Date}>
+                                    <div>
+                                        <ToggleDisplay
+                                            show={!this.state.showEdit[i]}>
+                                            {game.timeString}
+                                        </ToggleDisplay>
+                                        <ToggleDisplay
+                                            show={this.state.showEdit[i]}>
+                                            <DateInput
+                                                startDate={this.state.editDate}
+                                                onChange={this.handleDateChange}/>
+                                        </ToggleDisplay>
                                     </div>
-                                    &nbsp;
-                                    <ToggleDisplay
-                                        show={this.state.showEdit[i]}>
+                                </Td>
+                                <Td column="Player 1" className="player1Cell"
+                                    value={game.player1.username}>
+                                    <div>
+                                        <ToggleDisplay
+                                            show={!this.state.showEdit[i]}>
+                                            {game.player1.username}
+                                        </ToggleDisplay>
+                                        <ToggleDisplay
+                                            show={this.state.showEdit[i]}>
+                                            <EditUsernameTypeAhead
+                                                onOptionSelected={(event) => this.onChangePlayer1(
+                                                    event)}
+                                                players={this.state.players}
+                                                currentPlayer={game.player1.username}
+                                                id="1"
+                                            />
+                                        </ToggleDisplay>
+                                    </div>
+                                </Td>
+                                <Td column="Player 2" className="player1Cell"
+                                    value={game.player2.username}>
+                                    <div>
+                                        <ToggleDisplay
+                                            show={!this.state.showEdit[i]}>
+                                            {game.player2.username}
+                                        </ToggleDisplay>
+                                        <ToggleDisplay
+                                            show={this.state.showEdit[i]}>
+                                            <EditUsernameTypeAhead
+                                                onOptionSelected={(event) => this.onChangePlayer2(
+                                                    event)}
+                                                players={this.state.players}
+                                                currentPlayer={game.player2.username}
+                                                id="2"
+                                            />
+                                        </ToggleDisplay>
+                                    </div>
+                                </Td>
+                                <Td column="Score 1" className="player1Cell"
+                                    value={game.score1}>
+                                    <div>
+                                        <ToggleDisplay
+                                            show={!this.state.showEdit[i]}>
+                                            {game.score1}
+                                        </ToggleDisplay>
+                                        <ToggleDisplay
+                                            show={this.state.showEdit[i]}>
+                                            <div>
+                                                <EditScoreInput
+                                                    onChange={(event) => this.onChangeScore1(
+                                                        event)}
+                                                    score={game.score1}/>
+                                            </div>
+                                        </ToggleDisplay>
+                                    </div>
+                                </Td>
+                                <Td column="Score 2" className="player1Cell"
+                                    value={game.score2}>
+                                    <div>
+                                        <ToggleDisplay
+                                            show={!this.state.showEdit[i]}>
+                                            {game.score2}
+                                        </ToggleDisplay>
+                                        <ToggleDisplay
+                                            show={this.state.showEdit[i]}>
+                                            <div>
+                                                <EditScoreInput
+                                                    onChange={(event) => this.onChangeScore2(
+                                                        event)}
+                                                    score={game.score2}/>
+                                            </div>
+                                        </ToggleDisplay>
+                                    </div>
+                                </Td>
 
-                                        <div className="cancelContainer">
+                                <Td column="Actions">
+                                    <div>
+                                        <ToggleDisplay
+                                            show={this.state.showEdit[i]}>
+                                            <div>
+                                                <input type="button"
+                                                       value="Submit"
+                                                       className="editButton"
+                                                       onClick={this.handleSubmit}/>
+                                                &nbsp;
+                                            </div>
+                                        </ToggleDisplay>
+                                        <div className="editContainer">
                                             <a style={{cursor: 'pointer'}}
-                                               onClick={() => this.cancelEditGame(
-                                                   i)}>Cancel</a>
+                                               onClick={() => this.showEditGame(
+                                                   i,
+                                                   game)}>Edit</a>
                                         </div>
-                                    </ToggleDisplay>
-                                    &nbsp;
-                                    &nbsp;
-                                    &nbsp;
-                                    <div className="deleteContainer">
-                                        <a style={{cursor: 'pointer'}}
-                                           onClick={() => this.deleteGame(
-                                               game.iD)}>Delete</a>
-                                    </div>
-                                </div>
-                            </Td>
+                                        &nbsp;
+                                        <ToggleDisplay
+                                            show={this.state.showEdit[i]}>
 
-                        </Tr>
-                    )};
-                </Table>
+                                            <div className="cancelContainer">
+                                                <a style={{cursor: 'pointer'}}
+                                                   onClick={() => this.cancelEditGame(
+                                                       i)}>Cancel</a>
+                                            </div>
+                                        </ToggleDisplay>
+                                        &nbsp;
+                                        &nbsp;
+                                        &nbsp;
+                                        <div className="deleteContainer">
+                                            <a style={{cursor: 'pointer'}}
+                                               onClick={() => this.deleteGame(
+                                                   game.iD)}>Delete</a>
+                                        </div>
+                                    </div>
+                                </Td>
+
+                            </Tr>
+                        })}
+                    </Table>
+                </div>
             </div>
+
         );
     }
 }

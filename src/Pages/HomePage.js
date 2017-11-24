@@ -10,8 +10,21 @@ require("../stylesheet.css");
 
 
 export default class TotalStats extends React.Component {
-    state = {
-        buttonNames:["InputPlayer","Scores","Players"]
+    constructor(props) {
+        super(props);
+        this.state = {
+            buttonNames: ["InputPlayer", "Scores", "Players"],
+            loading: true
+        };
+    }
+
+
+    componentDidMount = () => {
+
+        this.setState({
+            loading:false
+        });
+
     };
 
 
@@ -22,9 +35,10 @@ export default class TotalStats extends React.Component {
             <div>
                 <Header selectedButton="totalStatsButton"/>
                 <br/>
-                <div>
-                    <InfoDisplayTable/>
-                </div>
+
+                {this.state.loading ? <div><span>loading</span> </div> :<div>
+                    <InfoDisplayTable loading={this.state.loading}/>
+                </div> }
             </div>
         );
 

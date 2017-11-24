@@ -148,13 +148,29 @@ export default class PlayersList extends React.Component {
         let Tr = Reactable.Tr;
         let Td = Reactable.Td;
 
+        let playersLength = this.state.players.length;
+
         return (
+            <div>
+                <div>
+                    <p id="loadingSpinner" style={{'text-align': 'center'}}>
+                        <img src={require('../images/Spinner.gif')}
+                             width='45%' height='45%'/></p>
+                </div>
+
             <div className="tableHolder">
+
+
                 <Table className="PlayersTable" sortable={true} itemsPerPage={8}
                        pageButtonLimit={5}>
 
-                    {this.state.players.map((player, i) =>
-                        <Tr className="PlayersRow">
+                    {this.state.players.map((player, i) => {
+                        if (i > 0 && i === playersLength - 1) {
+                            jQuery('.tableHolder').css('visibility', 'visible');
+                            jQuery('#loadingSpinner').remove();
+                        }
+
+                        return <Tr className="PlayersRow">
 
                             <Td column="Username" className="playersTableColumn"
                                 value={player.username}>
@@ -169,7 +185,8 @@ export default class PlayersList extends React.Component {
                                         <input className="editUsernameInput"
                                                type="text"
                                                value={this.state.editUsername}
-                                               onChange={(event) => this.onChangeUsername(event)}
+                                               onChange={(event) => this.onChangeUsername(
+                                                   event)}
                                         />
                                     </ToggleDisplay>
                                 </div>
@@ -188,7 +205,8 @@ export default class PlayersList extends React.Component {
                                         <input className="editUsernameInput"
                                                type="text"
                                                value={this.state.editFirstName}
-                                               onChange={(event) => this.onChangeFirstName(event)}
+                                               onChange={(event) => this.onChangeFirstName(
+                                                   event)}
                                         />
                                     </ToggleDisplay>
                                 </div>
@@ -207,7 +225,8 @@ export default class PlayersList extends React.Component {
                                         <input className="editUsernameInput"
                                                type="text"
                                                value={this.state.editLastName}
-                                               onChange={(event) => this.onChangeLastName(event)}
+                                               onChange={(event) => this.onChangeLastName(
+                                                   event)}
                                         />
                                     </ToggleDisplay>
                                 </div>
@@ -262,9 +281,10 @@ export default class PlayersList extends React.Component {
                                 </div>
                             </Td>
                         </Tr>
-                    )};
+                    })};
                 </Table>
 
+            </div>
             </div>
         );
     }

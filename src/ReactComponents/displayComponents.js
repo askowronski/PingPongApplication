@@ -20,15 +20,18 @@ require("../stylesheet.css");
 var Router = require('react-router').Router;
 
 class InfoDisplayPlayer extends React.Component {
-
-    state = {
-        data: "",
-        username: "",
-        id: "",
-        streak: "",
-        firstName: '',
-        lastName: ''
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: "",
+            username: "",
+            id: "",
+            streak: "",
+            firstName: '',
+            lastName: '',
+            loading:props.loading
+        };
+    }
 
     componentDidMount = () => {
 
@@ -45,7 +48,8 @@ class InfoDisplayPlayer extends React.Component {
                     firstName: JSON.parse(data.message).player.firstName,
                     lastName: JSON.parse(data.message).player.lastName,
                     id: JSON.parse(data.message).player.id,
-                    streak: JSON.parse(data.message).streak
+                    streak: JSON.parse(data.message).streak,
+                    loading:false
                 });
             }.bind(this)
         });
@@ -53,6 +57,9 @@ class InfoDisplayPlayer extends React.Component {
     };
 
     render() {
+        if (this.state.loading) {
+            return <div><span>im loading</span></div>
+        } else
         return (
 
             <div className="infoDisplay">
@@ -126,16 +133,19 @@ class InfoDisplayPlayer extends React.Component {
 }
 
 class InfoDisplayGame extends React.Component {
-
-    state = {
-        data: "",
-        player1Username: "",
-        id: "",
-        player2Username: "",
-        score1: "",
-        score2: "",
-        time: ''
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: "",
+            player1Username: "",
+            id: "",
+            player2Username: "",
+            score1: "",
+            score2: "",
+            time: '',
+            loading:props.loading
+        };
+    }
 
     componentDidMount = () => {
 
@@ -154,7 +164,8 @@ class InfoDisplayGame extends React.Component {
                     score1: JSON.parse(data.message).score1,
                     score2: JSON.parse(data.message).score2,
                     time: moment(JSON.parse(data.message).timeString).format(
-                        'MMMM Do YYYY, h:mm:ss a')
+                        'MMMM Do YYYY, h:mm:ss a'),
+                    loading:false
                 });
             }.bind(this)
         });
@@ -162,6 +173,9 @@ class InfoDisplayGame extends React.Component {
     };
 
     render() {
+        if (this.state.loading) {
+            return <div><span>im loading</span></div>
+        } else
         return (
 
             <div className="infoDisplay">
@@ -234,15 +248,18 @@ class InfoDisplayGame extends React.Component {
 }
 
 class InfoDisplayHighestRating extends React.Component {
-
-    state = {
-        data: "",
-        id: "",
-        username: "",
-        eloRating: "",
-        firstName: '',
-        lastName: ''
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: "",
+            id: "",
+            username: "",
+            eloRating: "",
+            firstName: '',
+            lastName: '',
+            loading:props.loading
+        };
+    }
 
     componentDidMount = () => {
 
@@ -260,6 +277,7 @@ class InfoDisplayHighestRating extends React.Component {
                     firstName: JSON.parse(data.message).firstName,
                     lastName: JSON.parse(data.message).lastName,
                     eloRating: JSON.parse(data.message).eloRating.rating,
+                    loading:false
                 });
             }.bind(this)
         });
@@ -267,6 +285,9 @@ class InfoDisplayHighestRating extends React.Component {
     };
 
     render() {
+        if (this.state.loading) {
+            return <div><span>im loading</span></div>
+        } else
         return (
 
             <div className="infoDisplay">
@@ -336,15 +357,18 @@ class InfoDisplayHighestRating extends React.Component {
 }
 
 class InfoDisplayTotalGameStats extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: "",
+            totalGamesPlayed: "",
+            stdDevForLosses: "",
+            stdDevForGames: "",
+            averageEloRating: "",
+            loading:props.loading
 
-    state = {
-        data: "",
-        totalGamesPlayed: "",
-        stdDevForLosses: "",
-        stdDevForGames: "",
-        averageEloRating: "",
-
-    };
+        };
+    }
 
     componentDidMount = () => {
         this.setState({ fetchInProgress: true });
@@ -362,7 +386,8 @@ class InfoDisplayTotalGameStats extends React.Component {
                     stdDevForGames: JSON.parse(data.message).stdDevForGames,
                     stdDevForLosses: JSON.parse(data.message).stdDevForLosses,
                     averageEloRating: JSON.parse(data.message).averageEloRating,
-                    fetchInProgress: false
+                    fetchInProgress: false,
+                    loading:false
                 });
             }.bind(this)
         });
@@ -370,6 +395,9 @@ class InfoDisplayTotalGameStats extends React.Component {
     };
 
     render() {
+        if (this.state.loading) {
+            return <div><span>im loading</span></div>
+        } else
         return (
 
             <div className="infoDisplay">
@@ -448,24 +476,36 @@ class InfoDisplayTotalGameStats extends React.Component {
     }
 }
 
-export const InfoDisplayTable = (props) => {
-    return (
-        <div id="homePageTableContainer" className="displayTable">
-            <table className="homePageTable">
-                <tbody className="homePageBody">
-                <tr id="infoDisplay" className="infoDisplay">
-                    <td className="homePageTd"><InfoDisplayPlayer/></td>
-                    <td className="homePageTd"><InfoDisplayGame/></td>
-                </tr>
-                <tr id="infoDisplay" className="infoDisplay">
-                    <td className="homePageTd"><InfoDisplayHighestRating/></td>
-                    <td className="homePageTd"><InfoDisplayTotalGameStats/></td>
-                </tr>
-                </tbody>
-            </table>
+export class InfoDisplayTable extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            loading:props.loading
+        };
+    }
 
-        </div>
-    );
+    render() {
+        return (
+            <div id="homePageTableContainer" className="displayTable">
+                <table className="homePageTable">
+                    <tbody className="homePageBody">
+                    <tr id="infoDisplay" className="infoDisplay">
+                        <td className="homePageTd"><InfoDisplayPlayer loading={this.props.loading}/></td>
+                        <td className="homePageTd"><InfoDisplayGame loading={this.props.loading}/></td>
+                    </tr>
+                    <tr id="infoDisplay" className="infoDisplay">
+                        <td className="homePageTd"><InfoDisplayHighestRating loading={this.props.loading}/>
+                        </td>
+                        <td className="homePageTd"><InfoDisplayTotalGameStats loading={this.props.loading}/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        );
+        }
+
 };
 
 const InputButtons = (props) => {

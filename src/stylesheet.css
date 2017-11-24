@@ -175,6 +175,7 @@ Tr {
 .tableHolder {
     padding-top:1px;
     height: 100%;
+    visibility: hidden;
 }
 
 
