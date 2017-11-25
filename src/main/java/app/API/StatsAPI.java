@@ -390,11 +390,12 @@ public class StatsAPI {
             @RequestParam(value="endingTime") Optional<String> endingTime) {
 
         GamePersistenceManager gPM = new GamePersistenceManager();
-        List<PingPongGame> gamesForPlayer;
+        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
+        List<PersistenceGame> gamesForPlayer;
 
         try {
             gamesForPlayer = this
-                    .getGamesForPlayerOptionalDates(playerID, beginningTime, endingTime, gPM);
+                    .getPersistenceGamesForPlayerOptionalDates(playerID, beginningTime, endingTime, gPM);
         } catch (ParseException pe) {
             return new APIResult(false, pe.getMessage());
         }
@@ -409,19 +410,23 @@ public class StatsAPI {
         data.add(new EloRatingGraphData(new PingPongGame(0,player,player,0,0),0,1500,1500));
 
         int i = 1;
-        for(PingPongGame game:gamesForPlayer){
-            Player opponenet = game.getOpponent(player);
+        for(PersistenceGame game:gamesForPlayer){
             Player player1;
-            if(game.getPlayer1().equals(opponenet)){
-                player1 = game.getPlayer2();
+            Player player2;
+            if(game.getPlayer1ID() == player.getiD() ){
+                player1 = pPM.getViewPlayerByID(player.getiD(), game.getiD());
+                player2 = pPM.getViewPlayerByID(game.getPlayer2ID(), game.getiD());
             } else {
-                player1 = game.getPlayer1();
+                player1 = pPM.getViewPlayerByID(player.getiD(), game.getiD());
+                player2 = pPM.getViewPlayerByID(game.getPlayer1ID(), game.getiD());
             }
 
+            PingPongGame newGame = new PingPongGame(game.getiD(), player1, player2, game.getPlayer1Score(), game.getPlayer2Score(), game.getTime());
 
 
-            data.add(new EloRatingGraphData(game,i,new EloRating(game.getPlayer1().getRating().getRating()).getRating(),
-                    new EloRating(game.getPlayer2().getRating().getRating()).getRating()));
+
+            data.add(new EloRatingGraphData(newGame,i,player1.getRating().getRating(),
+                    player2.getRating().getRating()));
             i++;
         }
          String json;

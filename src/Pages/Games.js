@@ -4,6 +4,9 @@ import moment from 'moment';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import 'react-datepicker/dist/react-datepicker.css';
+import TimePicker from 'react-times';
+// use material theme
+import 'react-times/css/material/default.css';
 
 const React = require('react');
 const jQuery = require('jquery');
@@ -20,6 +23,7 @@ export default class GamesList extends React.Component {
             resultGames: '',
             players: [],
             showEdit: [],
+            showEditTime:[],
             resultPlayers: '',
             editPlayer1ID: 0,
             editPlayer2ID: 0,
@@ -40,7 +44,12 @@ export default class GamesList extends React.Component {
             editPlayer2: {
                 id:'',
                 username:''
-            }
+            },
+            openTime:false,
+            editTime:'',
+            editHour:'',
+            editMinute:'',
+            focusTime:false
         }
     }
 
@@ -58,11 +67,15 @@ export default class GamesList extends React.Component {
                     resultGames: data.success,
                 });
                 let showEditArray = [];
+                let showEditTimeArray = [];
+
                 for (let i = 0; i < JSON.parse(data.message).length; i++) {
                     showEditArray.push(false);
+                    showEditTimeArray.push(false);
                 }
                 this.setState({
-                    showEdit: showEditArray
+                    showEdit: showEditArray,
+                    showEditTime:showEditTimeArray
                 })
             }.bind(this)
         });
@@ -105,6 +118,7 @@ export default class GamesList extends React.Component {
             editScore1: game.score1,
             editScore2: game.score2,
             editDate: moment(game.timeString),
+            editTime:moment(game.timeString).format("HH:mm"),
             editPlayer2:game.player2,
             editPlayer1:game.player1
         });
@@ -164,16 +178,22 @@ export default class GamesList extends React.Component {
     };
 
     handleSubmit = () => {
+
+        let timeString = moment(this.state.editDate+this.state.editTime).format('YYYYMMMDD HH:mm:ss');
+
         jQuery.ajax({
             url: "http://localhost:8080/EditGame?iD=" + this.state.editGameID
             + "&player1ID=" + this.state.editPlayer1ID
             + "&player2ID=" + this.state.editPlayer2ID + "&score1="
             + this.state.editScore1 + "&score2=" + this.state.editScore2 +
-            "&time=" + this.state.editDate.format('YYYYMMMDD'),
+            "&time=" + this.state.editDate.format('YYYYMMMDD')+"+"+this.state.editTime,
             type: "POST",
             dataType: "json",
             async: true,
-            success: this.componentDidMount
+            success: function(data) {
+                alert(data.message);
+                this.componentDidMount();
+            }.bind(this)
         });
     };
 
@@ -183,34 +203,49 @@ export default class GamesList extends React.Component {
         });
     };
 
+    setOpen = ({ open }, i) => {
+        let editTimeArray = this.state.showEditTime;
+
+        editTimeArray[i] = open;
+
+        this.setState({ showEditTime: editTimeArray});
+    };
+
+    handleTimeChange = (time) => {
+        this.setState({
+            editTime: time
+        })
+    };
+
+    onHourChange(hour) {
+    }
+
+    onMinuteChange(minute) {
+    }
+
+    onTimeChange(time) {
+        this.setState({
+            editTime: time
+        })
+    }
+
+    onFocusChange(focusStatue,i) {
+        let showEditTimeArray = this.state.showEditTime;
+        showEditTimeArray[i] = focusStatue;
+        this.setState({
+            showEditTime:showEditTimeArray
+        })
+    }
+
+    onMeridiemChange(meridiem) {
+        // do something
+    }
+
     render() {
         let Table = Reactable.Table;
         let Tr = Reactable.Tr;
         let Td = Reactable.Td;
         let gamesLength = this.state.games.length;
-        const columns = [
-            {
-                Header: "Date",
-                accessor: d => d.timeString
-            },
-            {
-                Header: "Player 1",
-                accessor: d => d.player1.username
-            },
-            {
-                Header: "Player 2",
-                accessor: d => d.player2.username
-            },
-            {
-                Header: "Score 1",
-                accessor: d => d.score1
-            },
-            {
-                Header: "Score 2",
-                accessor: d => d.score2
-            }
-        ];
-
         return (
 
             <div>
@@ -221,9 +256,9 @@ export default class GamesList extends React.Component {
                 </div>
                 <div className="tableHolder">
                     <Table className="GameTable"
-                           loading={this.state.loading}
                            border="true" itemsPerPage={10}
                            sortable={true}
+                           filterable = {true}
                     >
                         {this.state.games.map((game,i) => {
                            if (i > 0 && i === gamesLength-1) {
@@ -233,13 +268,13 @@ export default class GamesList extends React.Component {
 
                            return <Tr className="firstCell">
                                 <Td column="Date"
-                                    value={moment(game.timeString)}
+                                    value={moment(game.timeString).format("YYYY-MM-DD")}
                                     sortFunction={Date}>
                                     <div>
                                         <ToggleDisplay
                                             show={!this.state.showEdit[i]}>
-                                            {game.timeString}
-                                        </ToggleDisplay>
+                                            {moment(game.timeString).format("YYYY-MM-DD")}
+                                            </ToggleDisplay>
                                         <ToggleDisplay
                                             show={this.state.showEdit[i]}>
                                             <DateInput
@@ -248,6 +283,24 @@ export default class GamesList extends React.Component {
                                         </ToggleDisplay>
                                     </div>
                                 </Td>
+
+                               <Td column="Time"
+                                   value={moment(game.timeString).format("HH:mm:ss")}
+                                   sortFunction={Date}>
+                                   <div>
+                                   <ToggleDisplay
+                                       show={!this.state.showEdit[i]}>
+                                       {moment(game.timeString).format("HH:mm:ss")}
+                                   </ToggleDisplay>
+                                   <ToggleDisplay
+                                       show={this.state.showEdit[i]}>
+                                       <TimePicker
+                                           onTimeChange={this.onTimeChange.bind(this)}
+                                           time={this.state.editTime}
+                                       />
+                                   </ToggleDisplay>
+                                   </div>
+                               </Td>
                                 <Td column="Player 1" className="player1Cell"
                                     value={game.player1.username}>
                                     <div>
@@ -267,7 +320,9 @@ export default class GamesList extends React.Component {
                                     </div>
                                 </Td>
                                 <Td column="Player 2" className="player1Cell"
-                                    value={game.player2.username}>
+                                    value={game.player2.username}
+                                    filterFunction={String}
+                                >
                                     <div>
                                         <ToggleDisplay
                                             show={!this.state.showEdit[i]}>
@@ -349,8 +404,6 @@ export default class GamesList extends React.Component {
                                                        i)}>Cancel</a>
                                             </div>
                                         </ToggleDisplay>
-                                        &nbsp;
-                                        &nbsp;
                                         &nbsp;
                                         <div className="deleteContainer">
                                             <a style={{cursor: 'pointer'}}

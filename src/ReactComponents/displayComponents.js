@@ -51,7 +51,6 @@ class InfoDisplayPlayer extends React.Component {
                     streak: JSON.parse(data.message).streak,
                     loading:false
                 });
-                debugger;
                 this.props.changeLoading();
             }.bind(this)
         });
@@ -513,7 +512,6 @@ export class InfoDisplayTable extends React.Component {
         this.setState({
             loadingPlayer:false
         });
-        debugger;
 
 
         if (!this.state.loadingPlayer && !this.state.loadingHighestRating
@@ -538,7 +536,6 @@ export class InfoDisplayTable extends React.Component {
         this.setState({
             loadingPlayer:false
         });
-        debugger;
 
             this.props.changeLoadingState();
     };
@@ -672,13 +669,14 @@ export class HeaderButtons2 extends React.Component {
             buttonDisplayNames: ["Input", "Games", "Players", "Total Stats"],
             showInputButtons: false,
             selected:props.selected,
-            selectedButton:this.props.selectedButton
+            selectedButton:this.props.selectedButton,
+            secondarySelected: this.props.secondarySelected
         };
     }
 
 
     componentDidMount = () => {
-        toggleHeaderButton(this.state.selectedButton);
+        toggleHeaderButton(this.state.selectedButton, this.state.secondarySelected);
         debugger;
     };
 
@@ -689,7 +687,6 @@ export class HeaderButtons2 extends React.Component {
         });
 
         if (jQuery('#playerInputButton').css('visibility') === "hidden") {
-
             let position = jQuery('.inputButton').position().left;
             let width = jQuery('.inputButton').width();
             let positionPlayer = position + width / 2.0;
@@ -790,10 +787,15 @@ export class HeaderButtons2 extends React.Component {
 export class Header extends React.Component {
 
     constructor(props) {
+        let secondarySelected = '';
+        if (props.selectedButton === "inputButton") {
+            secondarySelected = props.secondarySelected;
+        }
         super(props);
         this.state = {
             showInputButtons: false,
-            selectedButton:this.props.selectedButton
+            selectedButton:this.props.selectedButton,
+            secondarySelected:secondarySelected
         };
     }
 
@@ -808,16 +810,20 @@ export class Header extends React.Component {
         return (
 
             <div>
-                <HeaderButtons2 selectedButton={this.props.selectedButton}/>
+                <HeaderButtons2 selectedButton={this.props.selectedButton} secondarySelected = {this.state.secondarySelected}/>
             </div>
         )
     };
 }
 
-export const toggleHeaderButton = (buttonName) => {
-    debugger;
+export const toggleHeaderButton = (buttonName,secondarySelected) => {
     let id = buttonName+'Tab';
-    jQuery('#'+id).css('background-color','#1007a5')
+    jQuery('#'+id).css('background-color','#1007a5');
+
+    if(buttonName === "inputButton") {
+        let id2 = secondarySelected+'Button';
+        jQuery('#'+id2).css('background-color','#1007a5')
+    }
 };
 
 

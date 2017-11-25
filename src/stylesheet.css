@@ -539,19 +539,22 @@ border-color: #020104;
     width:30%;
 }
 
-.typeahead-text-input,.react-datepicker-ignore-onclickoutside,.editScoreInput, .scoreInput, .typeahead-text-inputplayer1IDInput ,.typeahead-text-inputplayer2IDInput{
+.typeahead-text-input,.react-datepicker-ignore-onclickoutside, .scoreInput, .typeahead-text-inputplayer1IDInput ,.typeahead-text-inputplayer2IDInput{
     font-size: 14px;
     height: 20px;
 }
 
-.editDateInput {
+.editScoreInput {
     width:100%;
+    text-align: center;
+    font-size: inherit;
+}
+
+.editDateInput {
+    /*width:100%;*/
 }
 
 .scoreInput {
-    -webkit-border-radius: 1px;
-    -moz-border-radius: 1px;
-    border-radius: 1px;
     width:100%;
     text-align: center;
     font-weight: bold;
@@ -608,8 +611,9 @@ li[class^="typeahead-active"]{
 
 input[class^="editDateInput"] {
     font-size: 16px;
-    height: 20px;
-    width:187px;
+    /*height: 20px;*/
+    /*width:187px;*/
+    width:100%;
     text-align: center;
 }
 

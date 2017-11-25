@@ -136,7 +136,7 @@ export default class CreatePlayer extends React.Component {
         return (
             <div>
                 <div>
-                    <Header id="header" className="header" selectedButton="inputButton"/>
+                    <Header id="header" className="header" selectedButton="inputButton" secondarySelected="playerInput"/>
                 </div>
                 <br/>
                 <div id="PlayerForm" className="CreatePlayerForm">

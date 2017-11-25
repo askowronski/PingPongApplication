@@ -4,6 +4,7 @@ import app.Exceptions.InvalidParameterException;
 import app.PersistenceManagers.GamePersistenceManager;
 import app.PersistenceModel.PersistenceGame;
 import app.ViewModel.PingPongGame;
+import com.mysql.jdbc.StringUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -33,6 +34,11 @@ public class GameAPI {
         GamePersistenceManager gPM = new GamePersistenceManager();
 
         try {
+            if (StringUtils.isEmptyOrWhitespaceOnly(player1ID) ||
+                    StringUtils.isEmptyOrWhitespaceOnly(player2ID)) {
+                return new APIResult(false,"Game Unsuccessfully Created. Provide two players.");
+            }
+
             int IDplayer1 = Integer.parseInt(player1ID);
             int IDplayer2 = Integer.parseInt(player2ID);
 
@@ -61,7 +67,7 @@ public class GameAPI {
         }
         catch (ParseException e){
             e.printStackTrace();
-            return new APIResult(false,"Game Unsuccessfully Created. Provide a valid datea and time.");
+            return new APIResult(false,"Game Unsuccessfully Created. Provide a valid datea");
         }catch (InvalidParameterException e) {
             return new APIResult(false,e.getMessage());
         }
@@ -104,9 +110,10 @@ public class GameAPI {
             if (time.isPresent()) {
                 try {
 
-                    newTime = new SimpleDateFormat("yyyyMMMdd").parse(time.get());
+                    newTime = new SimpleDateFormat("yyyyMMMdd H:mm").parse(time.get());
                 } catch(ParseException p ){
                     System.out.println(p.getMessage());
+                    return new APIResult(false, "Provide a valid date.");
                 }
             }
 

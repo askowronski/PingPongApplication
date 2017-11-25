@@ -22,7 +22,6 @@ export default class TotalStats extends React.Component {
     };
 
     changeLoadingState = () => {
-        debugger;
         this.setState(
             {
                 loading: false

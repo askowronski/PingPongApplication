@@ -109,7 +109,6 @@ class CreateGameForm extends React.Component {
     };
 
     setPlayer1 = (event) => {
-        debugger;
         let id = event.id;
         this.setState({
             player1:event,
@@ -336,8 +335,8 @@ class CreateGameForm extends React.Component {
                         <Box px={2} py={2} width={1 / 2}>
                             <div className="Select-control-wrapper">
                             <input className="scoreInput"
-                                   type="text"
                                    id="score1Input"
+                                   type="number"
                                    value={this.state.score1}
                                    onChange={this.handleChange}/>
                             </div>
@@ -356,7 +355,7 @@ class CreateGameForm extends React.Component {
                         <Box px={2} py={2} width={1 / 2}>
                             <div className="Select-control-wrapper">
                             <input className="scoreInput"
-                                   type="text"
+                                   type="number"
                                    id="score2Input"
                                    value={this.state.score2}
                                    onChange={this.handleChange}/>
@@ -409,7 +408,7 @@ export default class CreateGame extends React.Component {
         return (
             <div>
                 <div>
-                    <Header id="header" className="header" selectedButton="inputButton"/>
+                    <Header id="header" className="header" selectedButton="inputButton" secondarySelected="gameInput"/>
                 </div>
                 <br/>
                 <div id="PlayerForm">

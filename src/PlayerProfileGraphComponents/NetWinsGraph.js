@@ -36,7 +36,8 @@ export class NetWinsGraph extends React.Component {
         endDate: '',
         errorMessage: '',
         displayError: false,
-        showGraph:false
+        showGraph:false,
+        showGif:true
     };
 
     returnData = () => {
@@ -45,12 +46,12 @@ export class NetWinsGraph extends React.Component {
 
     componentWillReceiveProps = (nextProps) => {
         const playerID = nextProps.playerID;
-        debugger;
         if (playerID !== this.props) {
             this.setState({
                 playerID: playerID,
                 startDate: nextProps.startDate,
-                endDate: nextProps.endDate
+                endDate: nextProps.endDate,
+                showGif:true
             });
             let timeString = "";
             if (nextProps.startDate instanceof moment && nextProps.endDate
@@ -76,7 +77,7 @@ export class NetWinsGraph extends React.Component {
                             result: data.success,
                             displayError: false,
                             errorMessage: '',
-                            showGraph:true
+                            showGraph:true,
                         });
                     }
                 }.bind(this)
@@ -89,6 +90,7 @@ export class NetWinsGraph extends React.Component {
             errorMessage: message,
             displayError: true,
             dataset: [],
+            showGif:false
         });
     };
 
@@ -127,12 +129,10 @@ export class NetWinsGraph extends React.Component {
     };
 
     returnWidth = () => {
-        debugger;
         return jQuery('#infoDisplay').width() * .72;
     };
 
     returnStartTooltip = () => {
-        debugger;
         return jQuery('#infoDisplay').width() * .76;
     };
 
@@ -145,9 +145,14 @@ export class NetWinsGraph extends React.Component {
                         className="graphHeaderText">Net Wins</text></span>
 
                     <ToggleDisplay show={!this.state.showGraph}>
-                        <p id="loadingSpinner" style={{'text-align': 'center'}}>
-                            <img src={require('../images/Spinner.gif')}
-                                 width='45%' height='45%'/></p>
+                        {
+                            this.state.showGif ? <p id="loadingSpinner" style={{'text-align': 'center'}}>
+                                <img src={require('../images/Spinner.gif')}
+                                     width='45%' height='45%'/></p> :
+                                <p id="loadingSpinner" style={{'text-align': 'center'}}>
+                                    <img src={require('../images/paddle.png')}
+                                         width='45%' height='45%'/></p>
+                        }
                     </ToggleDisplay>
                     <ToggleDisplay show={this.state.showGraph}>
                     <ComposedChart width={this.returnWidth()} height={400}

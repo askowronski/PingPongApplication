@@ -53,7 +53,8 @@ export class AverageScorePerGame extends React.Component {
         endDate: '',
         errorMessage: '',
         displayError: false,
-        showGraph:false
+        showGraph:false,
+        showGif:true
     };
 
     hideBarElement = () => {
@@ -81,7 +82,8 @@ export class AverageScorePerGame extends React.Component {
             this.setState({
                 playerID: playerID,
                 startDate: startDate,
-                endDate: endDate
+                endDate: endDate,
+                showGif:true
             });
             let timeString = "";
             if (nextProps.startDate instanceof moment && nextProps.endDate
@@ -110,7 +112,8 @@ export class AverageScorePerGame extends React.Component {
                             result: data.success,
                             displayError: false,
                             errorMessage: '',
-                            showGraph:true
+                            showGraph:true,
+                            showGif:true
                         });
                     }
                 }.bind(this)
@@ -123,6 +126,7 @@ export class AverageScorePerGame extends React.Component {
             errorMessage: message,
             displayError: true,
             dataset: [],
+            showGif:false
         });
     };
 
@@ -246,11 +250,11 @@ export class AverageScorePerGame extends React.Component {
     };
 
     returnStartTooltip = () => {
-        debugger;
         return jQuery('#infoDisplay').width() * .76;
     };
 
     render() {
+        let location = '../images/Spinner.gif';
         return (
             <div className="PlayerChartContainer">
                 <div className="PlayerGraph">
@@ -258,9 +262,14 @@ export class AverageScorePerGame extends React.Component {
                         className="errorMessageGraph">{this.state.errorMessage}</text></ToggleDisplay><text
                         className="graphHeaderText">Score Per Game</text></span>
                     <ToggleDisplay show={!this.state.showGraph}>
-                        <p id="loadingSpinner" style={{'text-align': 'center'}}>
-                            <img src={require('../images/Spinner.gif')}
-                                 width='45%' height='45%'/></p>
+                        {
+                            this.state.showGif ? <p id="loadingSpinner" style={{'text-align': 'center'}}>
+                                <img src={require('../images/Spinner.gif')}
+                                     width='45%' height='45%'/></p> :
+                                <p id="loadingSpinner" style={{'text-align': 'center'}}>
+                                    <img src={require('../images/paddle.png')}
+                                         width='45%' height='45%'/></p>
+                        }
                     </ToggleDisplay>
                     <ToggleDisplay show={this.state.showGraph}>
 

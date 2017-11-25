@@ -51,7 +51,8 @@ export class EloRatingPerGame extends React.Component {
             score1: 0,
             score2: 0
         },
-        showGraph: false
+        showGraph: false,
+        showGif:true
     };
 
     componentWillReceiveProps = (nextProps) => {
@@ -61,7 +62,8 @@ export class EloRatingPerGame extends React.Component {
             this.setState({
                 playerID: playerID,
                 startDate: nextProps.startDate,
-                endDate: nextProps.endDate
+                endDate: nextProps.endDate,
+                showGif:true
             });
 
             let timeString = "";
@@ -99,7 +101,8 @@ export class EloRatingPerGame extends React.Component {
                             positiveSet: JSON.parse(data.message),
                             displayError: false,
                             errorMessage: '',
-                            showGraph: true
+                            showGraph: true,
+                            showGif:true
                         });
                     }
                 }.bind(this)
@@ -115,6 +118,7 @@ export class EloRatingPerGame extends React.Component {
             oppDataSet: [],
             negativeSet: [],
             positiveSet: [],
+            showGif:false
         });
     };
 
@@ -190,7 +194,6 @@ export class EloRatingPerGame extends React.Component {
     };
 
     returnWidth = () => {
-        debugger;
         return jQuery('#infoDisplay').width() * .72;
     };
 
@@ -207,9 +210,14 @@ export class EloRatingPerGame extends React.Component {
                         className="errorMessageGraph">{this.state.errorMessage}</text></ToggleDisplay><text
                         className="graphHeaderText">Elo Rating Per Game</text></span>
                     <ToggleDisplay show={!this.state.showGraph}>
-                        <p id="loadingSpinner" style={{'text-align': 'center'}}>
-                            <img src={require('../images/Spinner.gif')}
-                                 width='45%' height='45%'/></p>
+                        {
+                            this.state.showGif ? <p id="loadingSpinner" style={{'text-align': 'center'}}>
+                                <img src={require('../images/Spinner.gif')}
+                                     width='45%' height='45%'/></p> :
+                                <p id="loadingSpinner" style={{'text-align': 'center'}}>
+                                    <img src={require('../images/paddle.png')}
+                                         width='45%' height='45%'/></p>
+                        }
                     </ToggleDisplay>
 
                     <ToggleDisplay show={this.state.showGraph}>
