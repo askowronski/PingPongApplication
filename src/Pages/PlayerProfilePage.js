@@ -18,10 +18,11 @@ import {
     EloRatingPerGame,
     ParseApiMessage
 } from "../PlayerProfileGraphComponents/EloRatingGraph";
+import ToggleDisplay from 'react-toggle-display';
 import {Typeahead} from "react-typeahead";
 import history from '../history.js';
 import {NetWinsGraph} from "../PlayerProfileGraphComponents/NetWinsGraph";
-import {DateInput} from "./Games";
+import {DateInput, EditUsernameSelect} from "./Games";
 import moment from "moment";
 import {Box, Flex, Provider, Text} from "rebass";
 import {ResultText} from "./CreateGame";
@@ -369,6 +370,10 @@ export class PlayerGraphTable extends React.Component {
         super(props);
         let userNameDisplay = '';
         let userId = 0;
+        let player = {
+            id:'',
+            username:''
+        };
 
         if (props.history.location.state.player.id === 0) {
             userNameDisplay = "Choose A Player";
@@ -376,6 +381,10 @@ export class PlayerGraphTable extends React.Component {
         } else {
             userNameDisplay = props.history.location.state.player.username;
             userId = props.history.location.state.player.id;
+            player={
+                id:userId,
+                    username:userNameDisplay
+            }
 
         }
         this.state = {
@@ -387,6 +396,8 @@ export class PlayerGraphTable extends React.Component {
             startDate: '',
             endDate: '',
             alert: '',
+            showEloGraph:false,
+            player:player
         };
     }
 
@@ -438,8 +449,15 @@ export class PlayerGraphTable extends React.Component {
         let username = event.username;
         this.setState({
             playerID: id,
-            playerUsername: username
+            playerUsername: username,
+            player:event
         })
+    };
+
+    renderEloRatingGraph = () => {
+      this.setState({
+          showEloGraph:true
+      })
     };
 
     render() {
@@ -454,12 +472,20 @@ export class PlayerGraphTable extends React.Component {
                 </tr>
                 <tr>
                     <div className="choosePlayerContainer">
-                        <text className="choosePlayer">Choose Player</text>
                         <div className="choosePlayerTypeAhead">
-                            <PlayerTypeAhead
+                            <text className="choosePlayer">Choose Player</text>
+                            <div className="Select-control-wrapper">
+                            <EditUsernameSelect
+                                players={this.state.players}
                                 onOptionSelected={(event) => this.setPlayer(
                                     event)}
-                                players={this.state.players}/>
+                                currentPlayer={this.state.player}
+                            className="profile"/>
+                        </div>
+                            {/*<PlayerTypeAhead*/}
+                                {/*onOptionSelected={(event) => this.setPlayer(*/}
+                                    {/*event)}*/}
+                                {/*players={this.state.players}/>*/}
                         </div>
                     </div>
                     <div className="dateInputContainer">
@@ -492,9 +518,19 @@ export class PlayerGraphTable extends React.Component {
                                       playerID={this.state.playerID}/></td>
                 </tr>
                 <tr>
-                    <td><EloRatingPerGame playerID={this.state.playerID}
+                    <td>
+                        <ToggleDisplay show={this.state.showEloGraph}>
+                            <p id="loadingSpinner" style={{'text-align': 'center'}}>
+                                <img src={require('../images/Spinner.gif')}
+                                     width='45%' height='45%'/></p>
+                        </ToggleDisplay>
+                        <ToggleDisplay show={!this.state.showEloGraph}>
+                        <EloRatingPerGame playerID={this.state.playerID}
                                           startDate={this.state.startDate}
-                                          endDate={this.state.endDate}/></td>
+                                          endDate={this.state.endDate}
+                       />
+                        </ToggleDisplay>
+                    </td>
                 </tr>
                 </tbody>
             </table>

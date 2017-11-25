@@ -50,7 +50,8 @@ export class EloRatingPerGame extends React.Component {
             player2Username: '',
             score1: 0,
             score2: 0
-        }
+        },
+        showGraph: false
     };
 
     componentWillReceiveProps = (nextProps) => {
@@ -77,12 +78,11 @@ export class EloRatingPerGame extends React.Component {
                 + timeString,
                 type: "GET",
                 dataType: "json",
-                async: false,
+                async: true,
                 success: function(data) {
                     if (data.success === false) {
-                        this.handleFailure(data.message)
+                        this.handleFailure(data.message);
                     } else {
-
                         let oppDataSet = [];
                         let dataSet = ParseApiMessage(data);
                         for (let i = 0; i < dataSet.length; i++) {
@@ -97,11 +97,11 @@ export class EloRatingPerGame extends React.Component {
                             oppDataSet: oppDataSet,
                             negativeSet: oppDataSet,
                             positiveSet: JSON.parse(data.message),
-                            displayError:false,
-                            errorMessage:''
+                            displayError: false,
+                            errorMessage: '',
+                            showGraph: true
                         });
                     }
-
                 }.bind(this)
             });
         }
@@ -111,7 +111,7 @@ export class EloRatingPerGame extends React.Component {
         this.setState({
             errorMessage: message,
             displayError: true,
-            dataset:[],
+            dataset: [],
             oppDataSet: [],
             negativeSet: [],
             positiveSet: [],
@@ -189,7 +189,6 @@ export class EloRatingPerGame extends React.Component {
         })
     };
 
-
     returnWidth = () => {
         debugger;
         return jQuery('#infoDisplay').width() * .72;
@@ -204,27 +203,42 @@ export class EloRatingPerGame extends React.Component {
         return (
             <div className="PlayerChartContainer">
                 <div className="PlayerGraph">
-                    <span ><ToggleDisplay show={this.state.displayError}><text className = "errorMessageGraph">{this.state.errorMessage}</text></ToggleDisplay><text >Elo Rating Per Game</text></span>
-                    <LineChart width={this.returnWidth()} height={400}
-                               data={this.state.dataset}
-                               margins={{top: 5, right: 30, bottom: 5}}>
-                        <XAxis allowDecimals={false} type="number"
-                               dataKey="label" domain={[0, 'auto']}
-                               label={this.returnXLabel(475, 375)}
-                               padding={{bottom: 50, right: 10}}
-                               labelStyle={{paddingTop: 20, color: '#32CD32'}}/>
-                        <YAxis domain={['auto', 'auto']}
-                               label={this.returnYLabel(30, 150)}/>
-                        <Tooltip position={{x: this.returnStartTooltip(), y: 0}}
-                                 content={<CustomToolTipDisplayGameElo
-                                     setGameDisplay={this.setGameDisplayState}/>}/>
-                        <CartesianGrid strokeDasharray="3 3"/>
-                        <ReferenceLine y={0} className="referenceLine"
-                                       stroke='#000'/>
-                        {this.renderEloRating(this.state.showEloRating)}
-                        {this.renderOppEloRating(this.state.showOppEloRating)}
-                        <Legend margins={{top: 15, right: 15, bottom: 5}}/>
-                    </LineChart>
+                    <span ><ToggleDisplay show={this.state.displayError}><text
+                        className="errorMessageGraph">{this.state.errorMessage}</text></ToggleDisplay><text
+                        className="graphHeaderText">Elo Rating Per Game</text></span>
+                    <ToggleDisplay show={!this.state.showGraph}>
+                        <p id="loadingSpinner" style={{'text-align': 'center'}}>
+                            <img src={require('../images/Spinner.gif')}
+                                 width='45%' height='45%'/></p>
+                    </ToggleDisplay>
+
+                    <ToggleDisplay show={this.state.showGraph}>
+                        <LineChart width={this.returnWidth()} height={400}
+                                   data={this.state.dataset}
+                                   margins={{top: 5, right: 30, bottom: 5}}>
+                            <XAxis allowDecimals={false} type="number"
+                                   dataKey="label" domain={[0, 'auto']}
+                                   label={this.returnXLabel(475, 375)}
+                                   padding={{bottom: 50, right: 10}}
+                                   labelStyle={{
+                                       paddingTop: 20,
+                                       color: '#32CD32'
+                                   }}/>
+                            <YAxis domain={['auto', 'auto']}
+                                   label={this.returnYLabel(30, 150)}/>
+                            <Tooltip
+                                position={{x: this.returnStartTooltip(), y: 0}}
+                                content={<CustomToolTipDisplayGameElo
+                                    setGameDisplay={this.setGameDisplayState}/>}/>
+                            <CartesianGrid strokeDasharray="3 3"/>
+                            <ReferenceLine y={1500} className="referenceLine"
+                                           stroke='#000'/>
+                            {this.renderEloRating(this.state.showEloRating)}
+                            {this.renderOppEloRating(
+                                this.state.showOppEloRating)}
+                            <Legend margins={{top: 15, right: 15, bottom: 5}}/>
+                        </LineChart>
+                    </ToggleDisplay>
                 </div>
                 <div className="averageScoreToggleButtons">
                     <button className="graphButton"

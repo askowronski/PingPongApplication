@@ -1,7 +1,8 @@
 import ToggleDisplay from 'react-toggle-display';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
-
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const React = require('react');
@@ -31,7 +32,15 @@ export default class GamesList extends React.Component {
             editDate: '',
             loading: true,
             loadTable: false,
-            graphContent: null
+            graphContent: null,
+            editPlayer1: {
+                id:'',
+                username:''
+            },
+            editPlayer2: {
+                id:'',
+                username:''
+            }
         }
     }
 
@@ -96,6 +105,8 @@ export default class GamesList extends React.Component {
             editScore1: game.score1,
             editScore2: game.score2,
             editDate: moment(game.timeString),
+            editPlayer2:game.player2,
+            editPlayer1:game.player1
         });
     };
 
@@ -125,14 +136,16 @@ export default class GamesList extends React.Component {
     onChangePlayer1 = (event) => {
         let id = event.id;
         this.setState({
-            editPlayer1ID: id
+            editPlayer1ID: id,
+            editPlayer1:event
         });
     };
 
     onChangePlayer2 = (event) => {
         let id = event.id;
         this.setState({
-            editPlayer2ID: id
+            editPlayer2ID: id,
+            editPlayer2:event
         });
     };
 
@@ -244,13 +257,12 @@ export default class GamesList extends React.Component {
                                         </ToggleDisplay>
                                         <ToggleDisplay
                                             show={this.state.showEdit[i]}>
-                                            <EditUsernameTypeAhead
+                                            <EditUsernameSelect
+                                                players={this.state.players}
                                                 onOptionSelected={(event) => this.onChangePlayer1(
                                                     event)}
-                                                players={this.state.players}
-                                                currentPlayer={game.player1.username}
-                                                id="1"
-                                            />
+                                                currentPlayer={this.state.editPlayer1}
+                                                className="editGamePlayer1"/>
                                         </ToggleDisplay>
                                     </div>
                                 </Td>
@@ -263,13 +275,12 @@ export default class GamesList extends React.Component {
                                         </ToggleDisplay>
                                         <ToggleDisplay
                                             show={this.state.showEdit[i]}>
-                                            <EditUsernameTypeAhead
+                                            <EditUsernameSelect
+                                                players={this.state.players}
                                                 onOptionSelected={(event) => this.onChangePlayer2(
                                                     event)}
-                                                players={this.state.players}
-                                                currentPlayer={game.player2.username}
-                                                id="2"
-                                            />
+                                                currentPlayer={this.state.editPlayer2}
+                                            className="editGamePlayer2"/>
                                         </ToggleDisplay>
                                     </div>
                                 </Td>
@@ -382,6 +393,30 @@ export const EditUsernameTypeAhead = (props) => {
             }}
         />
     );
+};
+
+export const EditUsernameSelect = (props) => {
+    let options = props.players;
+
+    let displayOption = (option) => {
+        return option.username;
+    };
+    return  <Select
+        options={options}
+        filterOption={displayOption}
+        value={props.currentPlayer}
+        valueKey="username"
+        labelKey="username"
+        id={props.id}
+        onChange={props.onOptionSelected}
+        className={props.className}
+        customClasses={{
+            input: "typeahead-text-input" + props.id,
+            results: "typeahead-list__container" + props.id,
+            listItem: "typeahead-list__item" + props.id,
+            hover: "typeahead-active" + props.id,
+        }}
+    />
 };
 
 const EditScoreInput = (props) => {

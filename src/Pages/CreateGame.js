@@ -1,5 +1,5 @@
 import {Header} from '../ReactComponents/displayComponents.js';
-import {DateInput, EditUsernameTypeAhead} from "./Games";
+import {DateInput, EditUsernameSelect, EditUsernameTypeAhead} from "./Games";
 import moment from 'moment';
 import {Typeahead} from 'react-bootstrap-typeahead';
 import DatePicker from 'react-datepicker';
@@ -39,6 +39,14 @@ class CreateGameForm extends React.Component {
                 score1:'',
                 score2:'',
                 timeString:moment()
+            },
+            player1:{
+              id:'',
+                username:''
+            },
+            player2:{
+                id:'',
+                username:''
             },
             showGameVs:false
         };
@@ -101,15 +109,18 @@ class CreateGameForm extends React.Component {
     };
 
     setPlayer1 = (event) => {
+        debugger;
         let id = event.id;
         this.setState({
-            player1ID: id,
+            player1:event,
+            player1ID:id
         });
     };
 
     setPlayer2 = (event) => {
         let id = event.id;
         this.setState({
+            player2:event,
             player2ID: id,
         });
     };
@@ -221,152 +232,6 @@ class CreateGameForm extends React.Component {
 
 <div className="createGameContainer">
             <div className="createGameForm">
-                {/*<table className="createGameTable">*/}
-                    {/*<td>*/}
-                        {/*<div className="creatGameForm">*/}
-                            {/*<form onSubmit={this.handleSubmit}*/}
-                                  {/*className="createGameForm">*/}
-                                {/*<table className="inputTable">*/}
-                                    {/*<tbody>*/}
-                                    {/*<tr className="inputRow">*/}
-                                        {/*<label className="inputGameLabel">*/}
-                                            {/*<td className="inputCell">*/}
-                                                {/*<text*/}
-                                                    {/*className="inputGameLabel">*/}
-                                                    {/*Date :*/}
-                                                {/*</text>*/}
-                                            {/*</td>*/}
-                                        {/*</label>*/}
-                                        {/*<td className="inputCell">*/}
-                                                    {/*<DateInput*/}
-                                                        {/*startDate={this.state.date}*/}
-                                                        {/*onChange={this.handleDateChange}/>*/}
-                                            {/*</td>*/}
-                                    {/*</tr>*/}
-                                    {/*<tr className="inputRow">*/}
-                                        {/*<label className="inputGameLabel">*/}
-                                            {/*<td className="inputCell">*/}
-                                                {/*<text*/}
-                                                    {/*className="inputGameLabel">*/}
-                                                    {/*Time :*/}
-                                                {/*</text>*/}
-                                            {/*</td>*/}
-                                            {/*<td className="inputCell">*/}
-                                                {/*<div*/}
-                                                    {/*className="choosePlayerTypeAhead">*/}
-                                                    {/*<TimePicker*/}
-                                                        {/*onChange={this.handleTimeChange}*/}
-                                                        {/*defaultValue={moment()}*/}
-                                                        {/*use12Hours*/}
-                                                        {/*open={this.state.open}*/}
-                                                        {/*onOpen={this.setOpen}*/}
-                                                        {/*onClose={this.setOpen}/>*/}
-                                                {/*</div>*/}
-                                            {/*</td>*/}
-                                        {/*</label>*/}
-                                    {/*</tr>*/}
-                                    {/*<tr className="inputRow">*/}
-                                        {/*<label className="inputGameLabel">*/}
-                                            {/*<td className="inputCell">*/}
-                                                {/*<text*/}
-                                                    {/*className="inputGameLabel">*/}
-                                                    {/*Player 1:*/}
-                                                {/*</text>*/}
-                                            {/*</td>*/}
-                                            {/*<td className="inputCell">*/}
-                                                {/*<div*/}
-                                                    {/*className="choosePlayerTypeAhead">*/}
-                                                    {/*<EditUsernameTypeAhead*/}
-                                                        {/*id="player1IDInput"*/}
-                                                        {/*players={this.state.players}*/}
-                                                        {/*onOptionSelected={(event) => this.setPlayer1(*/}
-                                                            {/*event)}/>*/}
-                                                {/*</div>*/}
-                                            {/*</td>*/}
-                                        {/*</label>*/}
-                                    {/*</tr>*/}
-                                    {/*<tr className="inputRow">*/}
-                                        {/*<label className="inputGameLabel">*/}
-                                            {/*<td className="inputCell">*/}
-                                                {/*<text*/}
-                                                    {/*className="inputGameLabel">*/}
-                                                    {/*Player 2:*/}
-                                                {/*</text>*/}
-                                            {/*</td>*/}
-                                            {/*<td className="inputCell">*/}
-                                                {/*<div*/}
-                                                    {/*className="choosePlayerTypeAhead">*/}
-                                                    {/*<EditUsernameTypeAhead*/}
-                                                        {/*id="player2IDInput"*/}
-                                                        {/*players={this.state.players}*/}
-                                                        {/*onOptionSelected={(event) => this.setPlayer2(*/}
-                                                            {/*event)}/>*/}
-                                                {/*</div>*/}
-                                            {/*</td>*/}
-                                        {/*</label>*/}
-                                    {/*</tr>*/}
-                                    {/*<tr className="inputRow">*/}
-                                        {/*<label>*/}
-                                            {/*<td className="inputCell" v>*/}
-                                                {/*<text*/}
-                                                    {/*className="inputGameLabel">*/}
-                                                    {/*Score 1:*/}
-                                                {/*</text>*/}
-                                            {/*</td>*/}
-                                            {/*<td className="inputCell">*/}
-                                                {/*<input className="scoreInput"*/}
-                                                       {/*type="text"*/}
-                                                       {/*id="score1Input"*/}
-                                                       {/*value={this.state.score1}*/}
-                                                       {/*onChange={this.handleChange}/>*/}
-                                            {/*</td>*/}
-                                        {/*</label>*/}
-                                    {/*</tr>*/}
-                                    {/*<tr className="inputRow">*/}
-                                        {/*<label>*/}
-                                            {/*<td className="inputCell">*/}
-                                                {/*<text*/}
-                                                    {/*className="inputGameLabel">*/}
-                                                    {/*Score 2:*/}
-                                                {/*</text>*/}
-                                            {/*</td>*/}
-                                            {/*<td className="inputCell">*/}
-                                                {/*<input className="scoreInput"*/}
-                                                       {/*id="score2Input"*/}
-                                                       {/*type="text"*/}
-                                                       {/*value={this.state.score2}*/}
-                                                       {/*onChange={this.handleChange}/>*/}
-                                            {/*</td>*/}
-                                        {/*</label>*/}
-
-                                    {/*</tr>*/}
-                                    {/*<tr rowSpan={2}>*/}
-                                    {/*<input type="submit"*/}
-                                           {/*className="createButton"*/}
-                                           {/*value="Submit"/>*/}
-                                    {/*</tr>*/}
-                                    {/*</tbody>*/}
-                                {/*</table>*/}
-                            {/*</form>*/}
-                        {/*</div>*/}
-
-                    {/*</td>*/}
-                    {/*<td>*/}
-                        {/*<div>*/}
-
-
-                            {/*{*/}
-                                {/*this.state.showKim ?*/}
-                                    {/*<img src={require('../images/kimGif.gif')}*/}
-                                         {/*width='80%' height='80%'/> :*/}
-                                    {/*<img></img>*/}
-                            {/*}*/}
-
-                        {/*</div>*/}
-
-
-                    {/*</td>*/}
-                {/*</table>*/}
                 <Provider
                     theme={{
                         font: '"Serif"',
@@ -386,9 +251,11 @@ class CreateGameForm extends React.Component {
 
 
                         <Box px={2} pb={3} pt={2} width={1 / 2}>
+                            <div className="Select-control-wrapper">
                                 <DateInput
                                     startDate={this.state.date}
                                     onChange={this.handleDateChange}/>
+                            </div>
                         </Box>
 
                         <Box px={2} py={2} width={1/2}
@@ -403,6 +270,7 @@ class CreateGameForm extends React.Component {
 
 
                         <Box px={2} py={2} width={1 / 2}>
+                            <div className="Select-control-wrapper">
                             <TimePicker
                                 onChange={this.handleTimeChange}
                                 defaultValue={moment()}
@@ -410,6 +278,7 @@ class CreateGameForm extends React.Component {
                                 open={this.state.open}
                                 onOpen={this.setOpen}
                                 onClose={this.setOpen}/>
+                            </div>
                         </Box>
                         <Box px={2} py={2} width={1/2}
                              className="createGameFormText">
@@ -423,12 +292,13 @@ class CreateGameForm extends React.Component {
 
 
                         <Box px={2} py={2} width={1 / 2}>
-                            <div>
-                            <EditUsernameTypeAhead
+                            <div className="Select-control-wrapper">
+                            <EditUsernameSelect
                                 id="player1IDInput"
                                 players={this.state.players}
                                 onOptionSelected={(event) => this.setPlayer1(
-                                    event)}/>
+                                    event)}
+                            currentPlayer={this.state.player1}/>
                             </div>
                         </Box>
                         <Box px={2} py={2} width={1/2}
@@ -443,11 +313,14 @@ class CreateGameForm extends React.Component {
 
 
                         <Box px={2} py={2} width={1 / 2}>
-                            <EditUsernameTypeAhead
+                            <div className="Select-control-wrapper">
+                            <EditUsernameSelect
                                 id="player2IDInput"
                                 players={this.state.players}
                                 onOptionSelected={(event) => this.setPlayer2(
-                                    event)}/>
+                                    event)}
+                                currentPlayer={this.state.player2}/>
+                            </div>
                         </Box>
                         <Box px={2} py={2} width={1/2}
                              className="createGameFormText">
@@ -461,11 +334,13 @@ class CreateGameForm extends React.Component {
 
 
                         <Box px={2} py={2} width={1 / 2}>
+                            <div className="Select-control-wrapper">
                             <input className="scoreInput"
                                    type="text"
                                    id="score1Input"
                                    value={this.state.score1}
                                    onChange={this.handleChange}/>
+                            </div>
                         </Box>
                         <Box px={2} py={2} width={1/2}
                              className="createGameFormText">
@@ -479,11 +354,13 @@ class CreateGameForm extends React.Component {
 
 
                         <Box px={2} py={2} width={1 / 2}>
+                            <div className="Select-control-wrapper">
                             <input className="scoreInput"
                                    type="text"
                                    id="score2Input"
                                    value={this.state.score2}
                                    onChange={this.handleChange}/>
+                            </div>
                         </Box>
                     <Box width={1} py={2} className="createGameFormText">
                         <Button onClick={this.handleSubmit}>

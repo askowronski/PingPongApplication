@@ -40,7 +40,7 @@ class InfoDisplayPlayer extends React.Component {
             url: "http://localhost:8080/GetLongestStreak",
             type: "GET",
             dataType: "json",
-            async: false,
+            async: true,
             success: function(data) {
                 this.setState({
                     data: data.message,
@@ -51,6 +51,8 @@ class InfoDisplayPlayer extends React.Component {
                     streak: JSON.parse(data.message).streak,
                     loading:false
                 });
+                debugger;
+                this.props.changeLoading();
             }.bind(this)
         });
 
@@ -145,6 +147,7 @@ class InfoDisplayGame extends React.Component {
             time: '',
             loading:props.loading
         };
+
     }
 
     componentDidMount = () => {
@@ -154,7 +157,7 @@ class InfoDisplayGame extends React.Component {
             url: "http://localhost:8080/GetLastGame?",
             type: "GET",
             dataType: "json",
-            async: false,
+            async: true,
             success: function(data) {
                 this.setState({
                     data: data.message,
@@ -167,6 +170,7 @@ class InfoDisplayGame extends React.Component {
                         'MMMM Do YYYY, h:mm:ss a'),
                     loading:false
                 });
+                this.props.changeLoading();
             }.bind(this)
         });
 
@@ -259,6 +263,8 @@ class InfoDisplayHighestRating extends React.Component {
             lastName: '',
             loading:props.loading
         };
+
+
     }
 
     componentDidMount = () => {
@@ -268,7 +274,7 @@ class InfoDisplayHighestRating extends React.Component {
             url: "http://localhost:8080/GetPlayerWithHighestRating",
             type: "GET",
             dataType: "json",
-            async: false,
+            async: true,
             success: function(data) {
                 this.setState({
                     data: data.message,
@@ -279,6 +285,7 @@ class InfoDisplayHighestRating extends React.Component {
                     eloRating: JSON.parse(data.message).eloRating.rating,
                     loading:false
                 });
+                this.props.changeLoading();
             }.bind(this)
         });
 
@@ -368,6 +375,8 @@ class InfoDisplayTotalGameStats extends React.Component {
             loading:props.loading
 
         };
+
+
     }
 
     componentDidMount = () => {
@@ -378,7 +387,7 @@ class InfoDisplayTotalGameStats extends React.Component {
             url: "http://localhost:8080/TotalGameStats",
             type: "GET",
             dataType: "json",
-            async: false,
+            async: true,
             success: function(data) {
                 this.setState({
                     data: data.message,
@@ -389,6 +398,7 @@ class InfoDisplayTotalGameStats extends React.Component {
                     fetchInProgress: false,
                     loading:false
                 });
+                this.props.changeLoading();
             }.bind(this)
         });
 
@@ -480,9 +490,58 @@ export class InfoDisplayTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading:props.loading
+            loadingPlayer:true,
+            loadingGame:true,
+            loadingHighestRating:true,
+            loadingTotalStats:true,
         };
     }
+
+    changeLoadingPlayer = () => {
+       this.setState({
+           loadingPlayer:false
+       });
+       debugger;
+
+        if (!this.state.loadingGame && !this.state.loadingHighestRating
+        && !this.state.loadingTotalStats) {
+            this.props.changeLoadingState();
+        }
+    };
+
+    changeLoadingGame = () => {
+        this.setState({
+            loadingPlayer:false
+        });
+        debugger;
+
+
+        if (!this.state.loadingPlayer && !this.state.loadingHighestRating
+            && !this.state.loadingTotalStats) {
+            this.props.changeLoadingState();
+        }
+    };
+
+    changeLoadingHighestRating = () => {
+        this.setState({
+            loadingPlayer:false
+        });
+        debugger;
+
+        if (!this.state.loadingPlayer && !this.state.loadingGame
+            && !this.state.loadingTotalStats) {
+            this.props.changeLoadingState();
+        }
+    };
+
+    changeLoadingTotalStats = () => {
+        this.setState({
+            loadingPlayer:false
+        });
+        debugger;
+
+            this.props.changeLoadingState();
+    };
 
     render() {
         return (
@@ -490,13 +549,13 @@ export class InfoDisplayTable extends React.Component {
                 <table className="homePageTable">
                     <tbody className="homePageBody">
                     <tr id="infoDisplay" className="infoDisplay">
-                        <td className="homePageTd"><InfoDisplayPlayer loading={this.props.loading}/></td>
-                        <td className="homePageTd"><InfoDisplayGame loading={this.props.loading}/></td>
+                        <td className="homePageTd"><InfoDisplayPlayer changeLoading={this.changeLoadingPlayer}/></td>
+                        <td className="homePageTd"><InfoDisplayGame changeLoading={this.changeLoadingGame}/></td>
                     </tr>
                     <tr id="infoDisplay" className="infoDisplay">
-                        <td className="homePageTd"><InfoDisplayHighestRating loading={this.props.loading}/>
+                        <td className="homePageTd"><InfoDisplayHighestRating changeLoading={this.changeLoadingHighestRating}/>
                         </td>
-                        <td className="homePageTd"><InfoDisplayTotalGameStats loading={this.props.loading}/>
+                        <td className="homePageTd"><InfoDisplayTotalGameStats changeLoading={this.changeLoadingTotalStats}/>
                         </td>
                     </tr>
                     </tbody>
@@ -746,8 +805,6 @@ export class Header extends React.Component {
     };
 
     render() {
-        const {showInputButtons} = this.state;
-
         return (
 
             <div>

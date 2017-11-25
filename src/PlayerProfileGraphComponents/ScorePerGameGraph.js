@@ -51,8 +51,9 @@ export class AverageScorePerGame extends React.Component {
         playerID: 0,
         startDate: '',
         endDate: '',
-        errorMessage:'',
-        displayError:false
+        errorMessage: '',
+        displayError: false,
+        showGraph:false
     };
 
     hideBarElement = () => {
@@ -98,7 +99,7 @@ export class AverageScorePerGame extends React.Component {
                 + timeString,
                 type: "GET",
                 dataType: "json",
-                async: false,
+                async: true,
                 success: function(data) {
                     if (data.success === false) {
                         this.handleFailure(data.message)
@@ -107,8 +108,9 @@ export class AverageScorePerGame extends React.Component {
                         this.setState({
                             dataset: ParseApiMessage(data),
                             result: data.success,
-                            displayError:false,
-                            errorMessage:''
+                            displayError: false,
+                            errorMessage: '',
+                            showGraph:true
                         });
                     }
                 }.bind(this)
@@ -238,7 +240,6 @@ export class AverageScorePerGame extends React.Component {
         })
     };
 
-
     returnWidth = () => {
         debugger;
         return jQuery('#infoDisplay').width() * .70;
@@ -249,12 +250,20 @@ export class AverageScorePerGame extends React.Component {
         return jQuery('#infoDisplay').width() * .76;
     };
 
-
     render() {
         return (
             <div className="PlayerChartContainer">
                 <div className="PlayerGraph">
-                    <span ><ToggleDisplay show={this.state.displayError}><text className = "errorMessageGraph">{this.state.errorMessage}</text></ToggleDisplay><text >Score Per Game</text></span>
+                    <span ><ToggleDisplay show={this.state.displayError}><text
+                        className="errorMessageGraph">{this.state.errorMessage}</text></ToggleDisplay><text
+                        className="graphHeaderText">Score Per Game</text></span>
+                    <ToggleDisplay show={!this.state.showGraph}>
+                        <p id="loadingSpinner" style={{'text-align': 'center'}}>
+                            <img src={require('../images/Spinner.gif')}
+                                 width='45%' height='45%'/></p>
+                    </ToggleDisplay>
+                    <ToggleDisplay show={this.state.showGraph}>
+
                     <ComposedChart width={this.returnWidth()} height={400}
                                    data={this.state.dataset}
                                    margins={{top: 5, right: 30, bottom: 5}}>
@@ -275,6 +284,7 @@ export class AverageScorePerGame extends React.Component {
                         {this.renderBarOppScore(this.state.showOppScore)}
                         <Legend margins={{top: 15, right: 15, bottom: 5}}/>
                     </ComposedChart>
+                    </ToggleDisplay>
                 </div>
                 <div className="averageScoreToggleButtons">
                     <button className="graphButton"

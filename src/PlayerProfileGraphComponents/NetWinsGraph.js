@@ -1,4 +1,3 @@
-
 import {
     LineChart,
     Line,
@@ -35,8 +34,9 @@ export class NetWinsGraph extends React.Component {
         playerID: 0,
         startDate: '',
         endDate: '',
-        errorMessage:'',
-        displayError:false
+        errorMessage: '',
+        displayError: false,
+        showGraph:false
     };
 
     returnData = () => {
@@ -62,10 +62,11 @@ export class NetWinsGraph extends React.Component {
             }
             jQuery.ajax({
 
-                url: "http://localhost:8080/GetPlayerOutcomes?id=" + playerID+timeString,
+                url: "http://localhost:8080/GetPlayerOutcomes?id=" + playerID
+                + timeString,
                 type: "GET",
                 dataType: "json",
-                async: false,
+                async: true,
                 success: function(data) {
                     if (data.success === false) {
                         this.handleFailure(data.message)
@@ -73,8 +74,9 @@ export class NetWinsGraph extends React.Component {
                         this.setState({
                             dataset: ParseApiMessage(data),
                             result: data.success,
-                            displayError:false,
-                            errorMessage:''
+                            displayError: false,
+                            errorMessage: '',
+                            showGraph:true
                         });
                     }
                 }.bind(this)
@@ -92,13 +94,15 @@ export class NetWinsGraph extends React.Component {
 
     returnYLabel = (x, y) => {
         return (
-            <text x={x} y={y} textAnchor="left" className="XAxisLabel">Net</text>
+            <text x={x} y={y} textAnchor="left" className="XAxisLabel">
+                Net</text>
         )
     };
 
     returnXLabel = (x, y) => {
         return (
-            <text x={x} y={y} textAnchor="center" className="XAxisLabel">Game</text>
+            <text x={x} y={y} textAnchor="center" className="XAxisLabel">
+                Game</text>
         )
     };
 
@@ -124,7 +128,7 @@ export class NetWinsGraph extends React.Component {
 
     returnWidth = () => {
         debugger;
-       return jQuery('#infoDisplay').width() * .72;
+        return jQuery('#infoDisplay').width() * .72;
     };
 
     returnStartTooltip = () => {
@@ -136,7 +140,16 @@ export class NetWinsGraph extends React.Component {
         return (
             <div className="PlayerChartContainer">
                 <div className="PlayerGraph">
-                    <span ><ToggleDisplay show={this.state.displayError}><text className = "errorMessageGraph">{this.state.errorMessage}</text></ToggleDisplay><text >Net Wins</text></span>
+                    <span ><ToggleDisplay show={this.state.displayError}><text
+                        className="errorMessageGraph">{this.state.errorMessage}</text></ToggleDisplay><text
+                        className="graphHeaderText">Net Wins</text></span>
+
+                    <ToggleDisplay show={!this.state.showGraph}>
+                        <p id="loadingSpinner" style={{'text-align': 'center'}}>
+                            <img src={require('../images/Spinner.gif')}
+                                 width='45%' height='45%'/></p>
+                    </ToggleDisplay>
+                    <ToggleDisplay show={this.state.showGraph}>
                     <ComposedChart width={this.returnWidth()} height={400}
                                    data={this.state.dataset}
                                    margin={{
@@ -146,28 +159,30 @@ export class NetWinsGraph extends React.Component {
                                        bottom: 5
                                    }}
                                    label={"Net Wins/Losses"}>
+                        <ReferenceLine y={0} stroke='#000'/>
                         <XAxis allowDecimals={false} dataKey="label"
                                label={this.returnXLabel(500, 400)}
                                domain={[0, 'auto']}
                                padding={{bottom: 50, right: 10}}
                                labelStyle={{paddingTop: 20, color: '#32CD32'}}
                         />
-                        <YAxis allowDecimals={false} domain={[0, 'auto']}
+                        <YAxis allowDecimals={false} domain={['auto', 'auto']}
                                label={this.returnYLabel(20, 150)}/>
                         <CartesianGrid strokeDasharray="3 3"/>
-                        <ReferenceLine y={0} stroke='#000'/>
                         <div className="legendWinsLosses">
                             <Legend />
                         </div>
                         {this.returnBar(this.state.showBar)}
-                        <Tooltip position={{x:this.returnStartTooltip(), y: 0}}
+                        <Tooltip position={{x: this.returnStartTooltip(), y: 0}}
                                  content={<CustomToolTipDisplayNet/>}/>
                     </ComposedChart>
                     <div className="netWinsToggleButtons">
                         <button className="graphButton"
                                 onClick={() => this.toggleBarLine()}>{this.state.buttonValue}</button>
                     </div>
+                    </ToggleDisplay>
                 </div>
+
 
             </div>
         )
