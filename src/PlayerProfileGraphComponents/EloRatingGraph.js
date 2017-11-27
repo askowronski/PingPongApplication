@@ -84,6 +84,9 @@ export class EloRatingPerGame extends React.Component {
                 success: function(data) {
                     if (data.success === false) {
                         this.handleFailure(data.message);
+                        this.setState({
+                            showGraph:false
+                        });
                     } else {
                         let oppDataSet = [];
                         let dataSet = ParseApiMessage(data);

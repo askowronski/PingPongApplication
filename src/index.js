@@ -8,6 +8,7 @@ import {Header, toggleHeaderButton} from './ReactComponents/displayComponents';
 import {PlayerGraphTable} from './Pages/PlayerProfilePage.js';
 import TotalStats from "./Pages/HomePage";
 import FeedbackPage from "./Pages/Feedback";
+import LogoPage from "./Pages/LogoPage";
 
 const React = require('react');
 const ReactDOM = require('react-dom');
@@ -130,6 +131,8 @@ ReactDOM.render(
             <Route path="/Games" component={GamesPage}/>
             <Route path="/PlayerProfile" component={PlayerProfilePage}/>
             <Route path="/Feedback" component={FeedbackPage}/>
+            <Route path="/Home" component={LogoPage}/>
+
         </div>
 
     </Router>,

@@ -666,6 +666,10 @@ input[class^="editDateInput"] {
     color: #1d5d90;
 }
 
+.feedBackContainer {
+    width: 100%;
+}
+
 .editDateInput react-datepicker-ignore-onclickoutside{
     text-align: center;
 }
@@ -771,6 +775,21 @@ input[class^="editDateInput"] {
 .createGameContainer {
     margin-top: 2%;
     margin-left:2%;
+}
+
+.homeLogoContainer {
+    text-align: center;
+    font-weight: 500;
+}
+
+.homeTextContainer {
+    text-align: center;
+    color: #000069;
+
+}
+
+.homePageContainer {
+    margin-top: 4%;
 }
 
 

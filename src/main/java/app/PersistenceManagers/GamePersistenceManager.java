@@ -391,7 +391,6 @@ public class GamePersistenceManager {
         EloRatingPersistenceManager eRPM1 = new EloRatingPersistenceManager(game.getPlayer1ID());
 
         eRPM1.updateEloRatingsOnDeleteGame(game, this.getGamesNew().indexOf(game));
-        this.deleteGame(game);
     }
 
     public void hardDeleteGame(PersistenceGame game) {

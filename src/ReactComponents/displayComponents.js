@@ -759,49 +759,60 @@ export class HeaderButtons2 extends React.Component {
         history.push('/Feedback');
     };
 
+    goToHome = () => {
+        history.push('/Home');
+    };
+
     render() {
         return (
             <div>
                 <Provider
                     theme={{
                         font: '"Serif"',
+                        fontSizes: [
+                            12, 25, 30
+                        ],
+                        breakpoints: [
+                            // min-width breakpoints in ems
+                            40, 52, 64
+                        ]
 
                     }}
                 >
                     <Toolbar bg="black">
-                        <Button ml={40} mr={20} f={23}
+                        <Button ml={40} mr={20}
                                 onClick={this.showInputButtons}
                                 id = "inputButtonTab"
                         >
                             <span className="inputButton" > Input </span>
                         </Button>
-                        <Button mx={20} f={24}
+                        <Button mx={20}
                                 onClick={this.goToGames}
                                 id = "gamesButtonTab">
                             Games
                         </Button >
-                        <Button mx={20} f={24} onClick={this.goToPlayers}
+                        <Button mx={20}  onClick={this.goToPlayers}
                                 id = "playersButtonTab">
                             Players
                         </Button>
-                        <Button mx={20} f={24} onClick={this.goToTotalStats}
+                        <Button mx={20}  onClick={this.goToTotalStats}
                                 id = "totalStatsButtonTab">
                             Total Stats
                         </Button>
-                        <Button mx={20} f={24}
+                        <Button mx={20}
                                 onClick={this.goToIndividualStats}
                                 id = "individualStatsButtonTab">
                             Individual Stats
                         </Button>
-                        <NavLink ml='auto' f={24}
+                        <Button ml='auto'
                                  onClick={this.goToFeedback}
                                  id = "feedbackButtonTab">
                             Feedback
-                        </NavLink>
+                        </Button>
                         <NavLink
-                                 onClick={this.goToFeedback}
+                                 onClick={this.goToHome}
                                  id = "feedbackButtonTab">
-                                  <img src={require('../images/backstopPingPonglogo3.png')} width="60px" />
+                                  <img src={require('../images/backstopPingPongLogo4.png')} width="60px" />
 
                         </NavLink>
 

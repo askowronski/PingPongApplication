@@ -83,7 +83,7 @@ export class FeedbackForm extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="feedBackContainer">
             <div className="feedBackForm">
                 <Provider
                     theme={{

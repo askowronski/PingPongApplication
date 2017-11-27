@@ -269,7 +269,9 @@ public class EloRatingPersistenceManager {
         eRPM1.saveOrUpdateEloList(eRPM1.getEloRatingList());
         eRPM2.saveOrUpdateEloList(eRPM2.getEloRatingList());
 
-        this.updateAllEloRatingsFromGameIndexOn(indexOfGame + 1, gPM);
+        gPM.deleteGame(game);
+
+        this.updateAllEloRatingsFromGameIndexOn(indexOfGame, gPM);
     }
 
     public void updateEloRatingsEditGame(PersistenceGame oldGame, PersistenceGame newGame) {
@@ -374,7 +376,7 @@ public class EloRatingPersistenceManager {
             int gameIdPriorToGame1;
             int gameIdPriorToGame2;
 
-            if (i - 1 <= 0) {
+            if (i - 1 < 0) {
                 gameIdPriorToGame1 = 0;
                 gameIdPriorToGame2 = 0;
 

@@ -156,7 +156,6 @@ class CreateGameForm extends React.Component {
                         }
                     });
                     this.clearInputs();
-                    event.preventDefault();
                 } else if (data.success){
                     this.setState({
                         result: data.success,
@@ -185,7 +184,6 @@ class CreateGameForm extends React.Component {
                         }
                     });
                     this.clearInputs();
-                    event.preventDefault();
                 }
             }.bind(this)
         });

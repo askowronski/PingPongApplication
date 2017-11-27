@@ -421,7 +421,7 @@ export class PlayerGraphTable extends React.Component {
             + this.state.playerID,
             type: "GET",
             dataType: "json",
-            async: false,
+            async: true,
             success: function(data) {
                 this.setState({
                     startDate: moment(data.beginningDate),

@@ -111,6 +111,9 @@ public class TotalGamesStatsCalculator {
             for (PingPongGame game: gamesForPlayer) {
                 if (game.didWin(player)) {
                     counter++;
+                    if (counter > currentHighForPlayer) {
+                        currentHighForPlayer = counter;
+                    }
                 } else {
                     if (counter > currentHighForPlayer) {
                         currentHighForPlayer = counter;
