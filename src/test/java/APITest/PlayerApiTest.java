@@ -87,7 +87,7 @@ public class PlayerApiTest {
 
         List<Player> players = retrievePlayerListResourceFromResponse(response);
 
-        assertTrue(players.size() > 1);
+        assertTrue(players.size() >= 1);
     }
 
     public static <T> T retrieveResourceFromResponse(HttpResponse response, Class<T> clazz)

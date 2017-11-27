@@ -25,6 +25,12 @@
   height: 90%;
 }
 
+.feedBackForm {
+  width:50%;
+  float: left;
+  height: 90%;
+}
+
 .createGameDisplay {
   width:50%;
   float: right;

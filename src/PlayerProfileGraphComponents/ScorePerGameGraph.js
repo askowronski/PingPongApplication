@@ -245,7 +245,6 @@ export class AverageScorePerGame extends React.Component {
     };
 
     returnWidth = () => {
-        debugger;
         return jQuery('#infoDisplay').width() * .70;
     };
 
@@ -281,9 +280,9 @@ export class AverageScorePerGame extends React.Component {
                                label={this.returnXLabel(475, 375)}
                                padding={{bottom: 50, right: 10}}
                                labelStyle={{paddingTop: 20, color: '#32CD32'}}/>
-                        <YAxis domain={[0, 20]}
+                        <YAxis domain={[0, 'auto']}
                                label={this.returnYLabel(30, 150)}
-                               ticks={[0, 10, 20]}/>
+                               />
                         <Tooltip position={{x: this.returnStartTooltip(), y: 0}}
                                  content={<CustomToolTipDisplayGame
                                      setGameDisplay={this.setGameDisplayState}/>}/>

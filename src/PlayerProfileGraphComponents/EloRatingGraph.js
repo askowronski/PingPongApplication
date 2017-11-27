@@ -198,7 +198,6 @@ export class EloRatingPerGame extends React.Component {
     };
 
     returnStartTooltip = () => {
-        debugger;
         return jQuery('#infoDisplay').width() * .77;
     };
 

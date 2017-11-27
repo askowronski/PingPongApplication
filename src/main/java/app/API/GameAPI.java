@@ -2,8 +2,11 @@ package app.API;
 
 import app.Exceptions.InvalidParameterException;
 import app.PersistenceManagers.GamePersistenceManager;
+import app.PersistenceManagers.PlayerPersistenceManager;
 import app.PersistenceModel.PersistenceGame;
+import app.PersistenceModel.PersistencePlayer;
 import app.ViewModel.PingPongGame;
+import app.ViewModel.Player;
 import com.mysql.jdbc.StringUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,7 +33,7 @@ public class GameAPI {
             @RequestParam(value="score1",required = true) String score1,
             @RequestParam(value="score2",required = true) String score2,
             @RequestParam(value="date", required=true) String date,
-            @RequestParam(value="time", required=false) String time) {
+            @RequestParam(value="time", required=false) Optional<String> time) {
         GamePersistenceManager gPM = new GamePersistenceManager();
 
         try {
@@ -45,10 +48,10 @@ public class GameAPI {
             int player1Score = Integer.parseInt(score1);
             int player2Score = Integer.parseInt(score2);
             Date newTime;
-            if (time == null) {
+            if (!time.isPresent()) {
                 newTime = new SimpleDateFormat("yyyyMMMdd").parse(date);
             } else {
-                newTime = new SimpleDateFormat("yyyyMMMdd H:mm:ss").parse(date+" "+time);
+                newTime = new SimpleDateFormat("yyyyMMMdd H:mm:ss").parse(date+" "+time.get());
             }
 
             if (gPM.doesPlayerHaveFourGamesOnDate(newTime, IDplayer1) ||
@@ -109,7 +112,6 @@ public class GameAPI {
 
             if (time.isPresent()) {
                 try {
-
                     newTime = new SimpleDateFormat("yyyyMMMdd H:mm").parse(time.get());
                 } catch(ParseException p ){
                     System.out.println(p.getMessage());
@@ -207,9 +209,10 @@ public class GameAPI {
     @RequestMapping(path = "/GetGamesForPlayer", method=GET)
     public APIResult getGamesForPlayer(@RequestParam(value="id") int id) {
         GamePersistenceManager gPM = new GamePersistenceManager();
-        List<PingPongGame> games = gPM.getGamesForPlayer(gPM.getPlayer(id));
+        PlayerPersistenceManager pPM = new PlayerPersistenceManager();
+        Player player = pPM.getViewPlayerByID(id, 0);
+        List<PingPongGame> games = gPM.getGamesForPlayer(player);
         return new APIResult(true, gPM.writeViewGamesToJson(games));
-
     }
 
     @CrossOrigin

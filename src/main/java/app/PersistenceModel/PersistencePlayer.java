@@ -16,6 +16,7 @@ public class PersistencePlayer {
 
     @JsonProperty("id")
     @Id
+    @GeneratedValue
     @Column(name = "id", updatable = false)
     private int id;
     @JsonProperty("username")

@@ -50,7 +50,7 @@ class CreatePlayerForm extends React.Component {
             + this.state.lastName,
             type: "POST",
             dataType: "json",
-            async: false,
+            async: true,
             success: function(data) {
                 this.setState({
                     data: data.message,

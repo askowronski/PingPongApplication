@@ -92,7 +92,7 @@ export default class PlayersList extends React.Component {
             url: urlString,
             type: "POST",
             dataType: "json",
-            async: false,
+            async: true,
             success: function(data) {
                 alert(data.message);
                 this.componentDidMount();
@@ -107,7 +107,7 @@ export default class PlayersList extends React.Component {
             + username,
             type: "DELETE",
             dataType: "json",
-            async: false,
+            async: true,
             success: function(data) {
                 alert(data.message);
                 this.componentDidMount();
@@ -165,7 +165,7 @@ export default class PlayersList extends React.Component {
                        pageButtonLimit={5}>
 
                     {this.state.players.map((player, i) => {
-                        if (i > 0 && i === playersLength - 1) {
+                        if (i === playersLength - 1) {
                             jQuery('.tableHolder').css('visibility', 'visible');
                             jQuery('#loadingSpinner').remove();
                         }
@@ -320,7 +320,7 @@ class EditPlayer extends React.Component {
             + "&newUsername=" + this.state.newUsername,
             type: "POST",
             dataType: "json",
-            async: false,
+            async: true,
             success: function(data) {
                 this.setState({
                     message: data.message,

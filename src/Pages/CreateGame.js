@@ -74,7 +74,7 @@ class CreateGameForm extends React.Component {
             url: "http://localhost:8080/GetPlayers",
             type: "GET",
             dataType: "json",
-            async: false,
+            async: true,
             success: function(data) {
                 this.setState({
                     players: JSON.parse(data.message),
@@ -136,7 +136,7 @@ class CreateGameForm extends React.Component {
             + "&date=" + this.state.date.format('YYYYMMMDD')+"&time="+timeString,
             type: "POST",
             dataType: "json",
-            async: false,
+            async: true,
             success: function(data) {
                 if (data.message === "Should you be doing that?") {
                     this.setState({

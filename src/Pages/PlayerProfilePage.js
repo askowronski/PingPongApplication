@@ -537,4 +537,4 @@ export class PlayerGraphTable extends React.Component {
         )
     }
 }
-;
+

@@ -9,7 +9,7 @@ import {
     Row,
     Column,
     Provider,
-    Text, Flex, Container, Border, NavLink, Toolbar, Button
+    Text, Flex, Container, Border, NavLink, Toolbar, Button, Image
 } from 'rebass'
 import moment from "moment";
 const React = require('react');
@@ -500,7 +500,6 @@ export class InfoDisplayTable extends React.Component {
        this.setState({
            loadingPlayer:false
        });
-       debugger;
 
         if (!this.state.loadingGame && !this.state.loadingHighestRating
         && !this.state.loadingTotalStats) {
@@ -524,7 +523,6 @@ export class InfoDisplayTable extends React.Component {
         this.setState({
             loadingPlayer:false
         });
-        debugger;
 
         if (!this.state.loadingPlayer && !this.state.loadingGame
             && !this.state.loadingTotalStats) {
@@ -677,7 +675,6 @@ export class HeaderButtons2 extends React.Component {
 
     componentDidMount = () => {
         toggleHeaderButton(this.state.selectedButton, this.state.secondarySelected);
-        debugger;
     };
 
 
@@ -733,12 +730,8 @@ export class HeaderButtons2 extends React.Component {
 
     };
 
-    inputPlayer = () => {
-        history.push('/CreatePlayer');
-    };
-
-    inputGame = () => {
-        history.push('/CreateGame');
+    goToFeedback = () => {
+        history.push('/Feedback');
     };
 
     render() {
@@ -775,6 +768,18 @@ export class HeaderButtons2 extends React.Component {
                                 id = "individualStatsButtonTab">
                             Individual Stats
                         </Button>
+                        <NavLink ml='auto' f={24}
+                                 onClick={this.goToFeedback}
+                                 id = "feedbackButtonTab">
+                            Feedback
+                        </NavLink>
+                        <NavLink
+                                 onClick={this.goToFeedback}
+                                 id = "feedbackButtonTab">
+                                  <img src={require('../images/backstopPingPonglogo3.png')} width="60px" />
+
+                        </NavLink>
+
                     </Toolbar>
                 </Provider>
                 <InputButtons

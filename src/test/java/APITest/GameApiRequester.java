@@ -75,7 +75,7 @@ public class GameApiRequester {
             throws IOException {
         HttpUriRequest getGames = new HttpPost(
                 HOST + "CreateGame?player1ID=" + player1Id + "&player2ID=" + player2Id
-                        + "&score1=" + score1 + "&score2=" + score2 + "&time=2017OCT10");
+                        + "&score1=" + score1 + "&score2=" + score2 + "&date=2017OCT10&time=00:00:00");
         return HttpClientBuilder.create().build()
                 .execute(getGames);
     }
@@ -85,7 +85,7 @@ public class GameApiRequester {
             throws IOException {
         HttpUriRequest getGames = new HttpPost(
                 HOST + "CreateGame?player1ID=" + player1Id + "&player2ID=" + player2Id
-                        + "&score1=" + score1 + "&score2=" + score2 + "&time=" + dateString);
+                        + "&score1=" + score1 + "&score2=" + score2 + "&date=" + dateString+"&time=00:00:00");
         return HttpClientBuilder.create().build()
                 .execute(getGames);
     }
@@ -128,7 +128,7 @@ public class GameApiRequester {
 
     public HttpResponse editGame(int gameId, String date) throws IOException {
         HttpUriRequest getGames = new HttpPost(
-                HOST + "EditGame?iD=" + gameId + "&time=" + date);
+                HOST + "EditGame?iD=" + gameId + "&time=" + date+"+00:00");
         return HttpClientBuilder.create().build()
                 .execute(getGames);
     }

@@ -623,6 +623,28 @@ input[class^="editDateInput"] {
     font-style: italic;
 }
 
+.filterGame {
+    margin: 2%;
+    font-style: italic;
+    font-weight: 400;
+}
+
+.feedBackTextInput{
+    width:100%;
+}
+
+.feedBackTextArea{
+    width:100%;
+    max-width: 100%;
+}
+
+.feedBackTextArea {
+    min-height: 200px;
+    font-size: 14pt;
+}
+
+
+
 .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list {
     padding-left: 0;
     padding-right: 0;
@@ -630,6 +652,12 @@ input[class^="editDateInput"] {
 
 .rc-time-picker-input {
     font-size:16px;
+}
+
+.feedBackThanks {
+    font-size: 30pt;
+    text-decoration: underline;
+    color: #1d5d90;
 }
 
 .editDateInput react-datepicker-ignore-onclickoutside{

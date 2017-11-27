@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -503,13 +504,13 @@ public class GamePersistenceManager {
         return gamesForPlayer;
     }
 
-    public List<PersistenceGame> getPersistenceGamesForPlayer(Player player, Date beginning,
+    public List<PersistenceGame> getPersistenceGamesForPlayer(int playerId, Date beginning,
             Date end) {
         try {
             Session session = factory.openSession();
 
             DateFormat df = new SimpleDateFormat("YYYY-MM-dd");
-            Query query = session.createNativeQuery(this.getStringForGamesInDate(player.getiD(), df.format(beginning), df.format(end)),
+            Query query = session.createNativeQuery(this.getStringForGamesInDate(playerId, df.format(beginning), df.format(end)),
                     PersistenceGame.class);
             List<PersistenceGame> games = query.getResultList();
             games.sort(Comparator.comparing(PersistenceGame::getTime));
@@ -557,13 +558,23 @@ public class GamePersistenceManager {
 
     public Pair<String, String> getDateRangeOfGamesForPlayer(List<PingPongGame> games) {
         if (games.size() > 0) {
+
             String beginning = games.get(0).getTimeString();
-            String end = games.get(games.size() - 1).getTimeString();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(games.get(games.size() - 1).getTime());
+            calendar.add(Calendar.DATE, 1);
+            SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String end = sdfDate.format(calendar.getTime());
             return new Pair<>(beginning, end);
         } else {
             SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String date = sdfDate.format(new Date());
-            return new Pair<>(date, date);
+            Date newDate = new Date();
+            String dateStringStart = sdfDate.format(newDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(newDate);
+            calendar.add(Calendar.DATE, 1);
+            String dateStringEnd = sdfDate.format(calendar.getTime());
+            return new Pair<>(dateStringStart, dateStringEnd);
         }
     }
 

@@ -1,6 +1,7 @@
 package app.PersistenceManagers;
 
 import app.PersistenceModel.PersistenceEloRating;
+import app.PersistenceModel.PersistenceFeedBack;
 import app.PersistenceModel.PersistenceGame;
 import app.PersistenceModel.PersistencePlayer;
 import org.hibernate.Session;
@@ -13,7 +14,7 @@ public class HibernateConfiguration {
 
     public static final Configuration CONFIG = new Configuration().configure().addAnnotatedClass(
             PersistenceEloRating.class).addAnnotatedClass(PersistenceGame.class).addAnnotatedClass(
-            PersistencePlayer.class);
+            PersistencePlayer.class).addAnnotatedClass(PersistenceFeedBack.class);
 
     private static final StandardServiceRegistryBuilder ssrb =  new StandardServiceRegistryBuilder().applySettings(CONFIG.getProperties());
 

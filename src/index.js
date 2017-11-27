@@ -7,6 +7,7 @@ import Games from './Pages/Games.js';
 import {Header, toggleHeaderButton} from './ReactComponents/displayComponents';
 import {PlayerGraphTable} from './Pages/PlayerProfilePage.js';
 import TotalStats from "./Pages/HomePage";
+import FeedbackPage from "./Pages/Feedback";
 
 const React = require('react');
 const ReactDOM = require('react-dom');
@@ -128,6 +129,7 @@ ReactDOM.render(
             <Route path="/Players" component={PlayersPage}/>
             <Route path="/Games" component={GamesPage}/>
             <Route path="/PlayerProfile" component={PlayerProfilePage}/>
+            <Route path="/Feedback" component={FeedbackPage}/>
         </div>
 
     </Router>,

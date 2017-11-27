@@ -65,6 +65,8 @@ public class EloRatingAPITest {
         for (Integer id : playersToDelete) {
             HttpResponse response = playerApi.hardDeletePlayer(id);
         }
+
+        playersToDelete = new ArrayList<>();
     }
 
     @Test
@@ -78,7 +80,6 @@ public class EloRatingAPITest {
 
         assertTrue(ratings.size() == 1);
         assertTrue(ratings.get(0).getEloRating() == 1500.00);
-
     }
 
     @Test
@@ -169,7 +170,7 @@ public class EloRatingAPITest {
             gamesForPlayer = gameApi.getGamesForPlayer(player1.getiD());
         }
 
-        gameApi.editGame(gamesForPlayer.get(1).getiD(), "2016MAR05");
+        gameApi.editGame(gamesForPlayer.get(1).getiD(), "2016MAR05+00:00");
 
         List<PersistenceEloRating> ratings = eloApi.getRatings(player1.getiD());
 
@@ -247,7 +248,7 @@ public class EloRatingAPITest {
 
         List<PingPongGame> gamesForPlayer = gameApi.getGamesForPlayer(player1.getiD());
 
-        gameApi.editGame(gamesForPlayer.get(0).getiD(), "2017NOV02");
+        gameApi.editGame(gamesForPlayer.get(0).getiD(), "2017NOV02+00:00");
 
         List<PersistenceEloRating> ratings = eloApi.getRatings(player1.getiD());
 
@@ -309,7 +310,7 @@ public class EloRatingAPITest {
         gameApi.createGame(player1.getiD(), player2.getiD(), 15, 14, "2017NOV02");
 
         List<PingPongGame> games = gameApi.getGamesForPlayer(player1.getiD());
-        gameApi.editGame(games.get(games.size() - 1).getiD(), "2017SEP01");
+        gameApi.editGame(games.get(games.size() - 1).getiD(), "2017SEP01+00:00");
 
         List<PersistenceEloRating> ratings = eloApi.getRatings(player1.getiD());
 
@@ -327,7 +328,7 @@ public class EloRatingAPITest {
         gameApi.createGame(player1.getiD(), player2.getiD(), 15, 14, "2017SEP01");
 
         List<PingPongGame> games = gameApi.getGamesForPlayer(player1.getiD());
-        gameApi.editGame(games.get(games.size() - 1).getiD(), "2017SEP01");
+        gameApi.editGame(games.get(games.size() - 1).getiD(), "2017SEP01+00:00");
 
         List<PersistenceEloRating> ratings = eloApi.getRatings(player2.getiD());
 

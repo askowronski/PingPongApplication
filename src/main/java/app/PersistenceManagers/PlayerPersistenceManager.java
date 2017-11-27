@@ -66,15 +66,17 @@ public class PlayerPersistenceManager {
     public void createPlayer(String username, String firstName, String lastName) {
         if (this.checkUsernameValidity(username)) {
             try {
-                int id = this.getNextID();
-                PersistencePlayer player = new PersistencePlayer(id, username, firstName, lastName);
-                EloRatingPersistenceManager eRPM = new EloRatingPersistenceManager(id);
+                PersistencePlayer player = new PersistencePlayer();
+                player.setUsername(username);
+                player.setFirstName(firstName);
+                player.setLastName(lastName);
                 Session session = this.factory.openSession();
                 Transaction transaction = session.beginTransaction();
                 session.save(player);
                 transaction.commit();
                 session.close();
-                eRPM.createEloRating(new PersistenceEloRating(EloRating.DEFAULT_RATING, id, 0));
+                EloRatingPersistenceManager eRPM = new EloRatingPersistenceManager(player.getId());
+                eRPM.createEloRating(new PersistenceEloRating(EloRating.DEFAULT_RATING, player.getId(), 0));
             } catch (HibernateException he) {
                 System.out.println(he.getMessage());
                 throw he;
@@ -236,19 +238,6 @@ public class PlayerPersistenceManager {
         return this.file;
     }
 
-    public int getNextID() {
-        List<PersistencePlayer> players = this.getPlayersNew();
-
-        List<Integer> ids = new ArrayList<>();
-        int highestID = 0;
-        for (PersistencePlayer player : players) {
-            if (player.getId() > highestID) {
-                highestID = player.getId();
-            }
-        }
-        return highestID + 1;
-    }
-
     public boolean checkUsernameValidity(String username) {
         List<PersistencePlayer> players = this.getPlayersIncludingDeleted();
         List<String> usernames = new ArrayList<>();
@@ -391,7 +380,12 @@ public class PlayerPersistenceManager {
 
 
     public Player getPlayerWithHighestRating() {
+
         List<Player> players = this.getViewPlayers();
+
+        if (players.size() == 0) {
+            throw new NoResultException("No Players Found.");
+        }
         Player highestPlayer = players.get(0);
         for (int i = 0; i < players.size(); i++) {
             if (players.get(i).getRating().getRating() > highestPlayer.getRating()

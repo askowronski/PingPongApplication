@@ -11,6 +11,7 @@ import app.PersistenceManagers.PlayerPersistenceManager;
 import app.ViewModel.PingPongGame;
 import app.ViewModel.Player;
 import app.StatsEngine.SinglePlayerStatisticsCalculator;
+import javax.persistence.NoResultException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -75,7 +76,7 @@ public class PlayerAPI {
 
         List<PersistenceGame> games = gPM.getGamesForPlayer(playerForId.getId());
         if (games.size() > 0) {
-            gameId = games.get(gPM.getGamesNew().size() - 1).getiD();
+            gameId = games.get(games.size() - 1).getiD();
         } else {
             gameId = 0;
         }
@@ -136,7 +137,11 @@ public class PlayerAPI {
     @RequestMapping("/GetPlayerWithHighestRating")
     public APIResult getPlayerWithHighestRating() {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        return new APIResult(true, pPM.writePlayerToJson(pPM.getPlayerWithHighestRating()));
+        try {
+            return new APIResult(true, pPM.writePlayerToJson(pPM.getPlayerWithHighestRating()));
+        } catch (NoResultException e) {
+            return new APIResult(false, e.getMessage());
+        }
     }
 
     @CrossOrigin
