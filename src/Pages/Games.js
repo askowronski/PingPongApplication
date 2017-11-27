@@ -50,7 +50,7 @@ export default class GamesList extends React.Component {
             editHour:'',
             editMinute:'',
             focusTime:false,
-            areThereGames:false,
+            areThereGames:true,
         }
     }
 
@@ -154,6 +154,7 @@ export default class GamesList extends React.Component {
             async: true,
             success: function(data) {
                 alert(data.message);
+                this.componentDidMount()
             }.bind(this)
         });
     };
@@ -229,7 +230,7 @@ export default class GamesList extends React.Component {
 
             <div>
             {
-                !this.state.areThereGames ? <div>No Games</div> :
+                !this.state.areThereGames ? <div className="noDataContainer">No Games</div> :
                 <div>
                     <div>
                         <p id="loadingSpinner" style={{'text-align': 'center'}}>

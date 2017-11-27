@@ -530,18 +530,6 @@ class GameView extends React.Component {
                             </Text>
                         </Box>
                     </Flex>
-
-                    {/*<ResultText text={this.props.resultText}/>*/}
-                    {/*<div className="gameCell1">{this.props.player1Username}</div>*/}
-                    {/*<div className="gameCell2">{*/}
-                    {/*this.props.showGame ? <text>vs.</text> : ''*/}
-                    {/*}</div>*/}
-                    {/*<div className="gameCell3">{this.props.player2Username}</div>*/}
-                    {/*<div className="gameCell5">{this.props.score1}</div>*/}
-                    {/*<div className="gameCell6">{this.props.score2}</div>*/}
-                    {/*<div className="gameCell7">{*/}
-                    {/*this.props.showGame ? <text>{this.props.time}</text> : ''*/}
-                    {/*}</div>*/}
                 </Provider>
 
 
@@ -549,3 +537,5 @@ class GameView extends React.Component {
         );
     }
 }
+
+

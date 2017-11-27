@@ -42,7 +42,7 @@ public class PlayerAPI {
             return new APIResult(false, e.getMessage());
         }
 
-        return new APIResult(true, "Player Created with Username " + username);
+        return new APIResult(true, "Player Created.");
     }
 
     @CrossOrigin
@@ -118,18 +118,23 @@ public class PlayerAPI {
             @RequestParam(value = "username", required = false) String username) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         boolean result = false;
-        if (id.isPresent()) {
-            result = pPM.deletePlayerById(id.get());
-            if (result) {
-                return new APIResult(true, "Player with ID " + id.get() + " was Deleted");
+        try {
+            if (id.isPresent()) {
+                PersistencePlayer player = pPM.getPlayerById(id.get());
+                result = pPM.deletePlayerById(id.get());
+                if (result) {
+                    return new APIResult(true, "Player " + player.getUsername() + " was deleted.");
+                }
+            } else {
+                result = pPM.deletePlayerByUsername(username);
+                if (result) {
+                    return new APIResult(true, "Player " + username + " was deleted.");
+                }
             }
-        } else {
-            result = pPM.deletePlayerByUsername(username);
-            if (result) {
-                return new APIResult(true, "Player with newUsername " + username + " was Deleted");
-            }
-        }
+        } catch (NoResultException e) {
+            return new APIResult(false, "Player was not found");
 
+        }
         return new APIResult(false, "Player was not found");
     }
 
@@ -171,18 +176,22 @@ public class PlayerAPI {
             @RequestParam(value = "username", required = false) String username) {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         boolean result = false;
-        if (id.isPresent()) {
-            result = pPM.hardDeletePlayerById(id.get());
-            if (result) {
-                return new APIResult(true, "Player with ID " + id.get() + " was Deleted");
+        try {
+            if (id.isPresent()) {
+                PersistencePlayer player = pPM.getPlayerById(id.get());
+                result = pPM.hardDeletePlayerById(id.get());
+                if (result) {
+                    return new APIResult(true, "Player " + player.getUsername() + " was deleted.");
+                }
+            } else {
+                result = pPM.hardDeletePlayerByUsername(username);
+                if (result) {
+                    return new APIResult(true, "Player " + username + " was deleted.");
+                }
             }
-        } else {
-            result = pPM.hardDeletePlayerByUsername(username);
-            if (result) {
-                return new APIResult(true, "Player with newUsername " + username + " was Deleted");
-            }
+        } catch (NoResultException e) {
+            return new APIResult(false, "Player was not found");
         }
-
         return new APIResult(false, "Player was not found");
     }
 }

@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.NoSuchElementException;
 import javafx.util.Pair;
+import javax.persistence.NoResultException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -179,7 +180,7 @@ public class GameAPI {
         try {
             PingPongGame game = gPM.getLastGame();
             return new APIResult(true, gPM.writeGameToJson(game));
-        } catch (NoSuchElementException e) {
+        } catch (NoSuchElementException | NoResultException e) {
             return new APIResult(false, e.getMessage());
         }
 
@@ -237,6 +238,16 @@ public class GameAPI {
         GamePersistenceManager gPM = new GamePersistenceManager();
         Pair<String,String> dates = gPM.getDateRangeOfGamesForPlayer(gPM.getGamesForPlayer(gPM.getPlayer(playerId)));
         return new ApiResultDates(true, dates.getKey(), dates.getValue());
+
+    }
+
+    @CrossOrigin
+    @RequestMapping(path = "/AreThereGames", method=GET)
+    public APIResult getAreThereGames() {
+
+        GamePersistenceManager gPM = new GamePersistenceManager();
+        List<PersistenceGame> games = gPM.getGamesNew();
+        return new APIResult(games.size() > 0, "");
 
     }
 

@@ -10,9 +10,8 @@ public class APIResultStats extends APIResult {
     private final double stdDevForGames;
     private final double averageEloRating;
 
-    public APIResultStats() {
+    public APIResultStats(TotalGamesStatsCalculator tGSC) {
         super();
-        TotalGamesStatsCalculator tGSC = new TotalGamesStatsCalculator();
         this.totalGames = tGSC.getTotalGames();
         this.stdDevForLosses = tGSC.stdDeviationOfLosses();
         this.stdDevForGames = tGSC.stdDeviationOfGames();

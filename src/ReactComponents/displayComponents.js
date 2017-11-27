@@ -158,17 +158,28 @@ class InfoDisplayGame extends React.Component {
             dataType: "json",
             async: true,
             success: function(data) {
-                this.setState({
-                    data: data.message,
-                    player1Username: JSON.parse(data.message).player1.username,
-                    player2Username: JSON.parse(data.message).player2.username,
-                    id: JSON.parse(data.message).iD,
-                    score1: JSON.parse(data.message).score1,
-                    score2: JSON.parse(data.message).score2,
-                    time: moment(JSON.parse(data.message).timeString).format(
-                        'MMMM Do YYYY, h:mm:ss a'),
-                    loading:false
-                });
+                if (data.success) {
+                    this.setState({
+                        data: data.message,
+                        player1Username: JSON.parse(
+                            data.message).player1.username,
+                        player2Username: JSON.parse(
+                            data.message).player2.username,
+                        id: JSON.parse(data.message).iD,
+                        score1: JSON.parse(data.message).score1,
+                        score2: JSON.parse(data.message).score2,
+                        time: moment(
+                            JSON.parse(data.message).timeString).format(
+                            'MMMM Do YYYY, h:mm:ss a'),
+                        loading: false
+                    });
+                }
+                else {
+                    this.setState({
+                        loading: false,
+                        data:data.message
+                    })
+                }
                 this.props.changeLoading();
             }.bind(this)
         });
@@ -275,15 +286,21 @@ class InfoDisplayHighestRating extends React.Component {
             dataType: "json",
             async: true,
             success: function(data) {
-                this.setState({
-                    data: data.message,
-                    id: JSON.parse(data.message).id,
-                    username: JSON.parse(data.message).username,
-                    firstName: JSON.parse(data.message).firstName,
-                    lastName: JSON.parse(data.message).lastName,
-                    eloRating: JSON.parse(data.message).eloRating.rating,
-                    loading:false
-                });
+                if (data.success) {
+                    this.setState({
+                        data: data.message,
+                        id: JSON.parse(data.message).id,
+                        username: JSON.parse(data.message).username,
+                        firstName: JSON.parse(data.message).firstName,
+                        lastName: JSON.parse(data.message).lastName,
+                        eloRating: JSON.parse(data.message).eloRating.rating,
+                        loading: false
+                    });
+                } else {
+                    this.setState({
+                        data:data.message
+                    })
+                }
                 this.props.changeLoading();
             }.bind(this)
         });
@@ -388,15 +405,23 @@ class InfoDisplayTotalGameStats extends React.Component {
             dataType: "json",
             async: true,
             success: function(data) {
-                this.setState({
-                    data: data.message,
-                    totalGamesPlayed: JSON.parse(data.message).totalGames,
-                    stdDevForGames: JSON.parse(data.message).stdDevForGames,
-                    stdDevForLosses: JSON.parse(data.message).stdDevForLosses,
-                    averageEloRating: JSON.parse(data.message).averageEloRating,
-                    fetchInProgress: false,
-                    loading:false
-                });
+                if(data.success) {
+                    this.setState({
+                        data: data.message,
+                        totalGamesPlayed: JSON.parse(data.message).totalGames,
+                        stdDevForGames: JSON.parse(data.message).stdDevForGames,
+                        stdDevForLosses: JSON.parse(
+                            data.message).stdDevForLosses,
+                        averageEloRating: JSON.parse(
+                            data.message).averageEloRating,
+                        fetchInProgress: false,
+                        loading: false
+                    });
+                } else {
+                    this.setState({
+                      data:data.message
+                    })
+                }
                 this.props.changeLoading();
             }.bind(this)
         });

@@ -24,6 +24,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
+import javax.persistence.NoResultException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -169,8 +170,11 @@ public class StatsAPI {
     public APIResult getTotalGameStats() {
 
         TotalGamesStatsCalculator tGSC = new TotalGamesStatsCalculator();
-
-        return new APIResultStats();
+        if (tGSC.getTotalGames() > 0) {
+            return new APIResultStats(tGSC);
+        } else {
+            return new APIResult(false, "No Games");
+        }
     }
 
     @CrossOrigin(origins = "http://localhost:3000")
@@ -182,8 +186,12 @@ public class StatsAPI {
 
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         GamePersistenceManager gPM = new GamePersistenceManager();
-
-        Player player = pPM.getViewPlayerByID(playerID,0);
+        Player player;
+        try {
+             player = pPM.getViewPlayerByID(playerID, 0);
+        } catch(NoResultException e){
+            return new APIResult(false, "No Games For Player.");
+        }
         List<PersistenceGame> gamesForPlayer;
 
         try {

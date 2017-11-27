@@ -18,7 +18,8 @@ export default class PlayersList extends React.Component {
         editFirstName: '',
         editLastName: '',
         editId: 0,
-        originalUsername:''
+        originalUsername:'',
+        areTherePlayers:true,
     };
 
     componentDidMount = () => {
@@ -36,6 +37,16 @@ export default class PlayersList extends React.Component {
                     result: data.success,
                 });
                 let showEditArray = [];
+                if (JSON.parse(data.message).length == 0) {
+                    this.setState({
+                        areTherePlayers:false
+                    })
+                } else {
+                    this.setState({
+                        areTherePlayers:true
+                    })
+                }
+
                 for (let i = 0; i < JSON.parse(data.message).length; i++) {
                     showEditArray.push(false);
                 }
@@ -151,140 +162,149 @@ export default class PlayersList extends React.Component {
         let playersLength = this.state.players.length;
 
         return (
+
+
+
             <div>
-                <div>
-                    <p id="loadingSpinner" style={{'text-align': 'center'}}>
-                        <img src={require('../images/Spinner.gif')}
-                             width='45%' height='45%'/></p>
-                </div>
+                {
+                    !this.state.areTherePlayers ? <div className="noDataContainer">No Players</div> :
+                        <div>
+                            <div>
+                                <p id="loadingSpinner" style={{'text-align': 'center'}}>
+                                    <img src={require('../images/Spinner.gif')}
+                                         width='45%' height='45%'/></p>
+                            </div>
 
-            <div className="tableHolder">
+                            <div className="tableHolder">
 
 
-                <Table className="PlayersTable" sortable={true} itemsPerPage={8}
-                       pageButtonLimit={5}>
+                                <Table className="PlayersTable" sortable={true} itemsPerPage={8}
+                                       pageButtonLimit={5}>
 
-                    {this.state.players.map((player, i) => {
-                        if (i === playersLength - 1) {
-                            jQuery('.tableHolder').css('visibility', 'visible');
-                            jQuery('#loadingSpinner').remove();
-                        }
+                                    {this.state.players.map((player, i) => {
+                                        if (i === playersLength - 1) {
+                                            jQuery('.tableHolder').css('visibility', 'visible');
+                                            jQuery('#loadingSpinner').remove();
+                                        }
 
-                        return <Tr className="PlayersRow">
+                                        return <Tr className="PlayersRow">
 
-                            <Td column="Username" className="playersTableColumn"
-                                value={player.username}>
-                                <div>
-                                    <ToggleDisplay id="usernameToggleDisplay"
-                                                   show={!this.state.showEditPlayer[i]}>
-                                        {player.username}
-                                    </ToggleDisplay>
-                                    <ToggleDisplay
-                                        id="editUsernameToggleDisplay"
-                                        show={this.state.showEditPlayer[i]}>
-                                        <input className="editUsernameInput"
-                                               type="text"
-                                               value={this.state.editUsername}
-                                               onChange={(event) => this.onChangeUsername(
-                                                   event)}
-                                        />
-                                    </ToggleDisplay>
-                                </div>
-                            </Td>
-                            <Td column="First Name"
-                                className="playersTableColumn"
-                                value={player.firstName}>
-                                <div>
-                                    <ToggleDisplay id="usernameToggleDisplay"
-                                                   show={!this.state.showEditPlayer[i]}>
-                                        {player.firstName}
-                                    </ToggleDisplay>
-                                    <ToggleDisplay
-                                        id="editUsernameToggleDisplay"
-                                        show={this.state.showEditPlayer[i]}>
-                                        <input className="editUsernameInput"
-                                               type="text"
-                                               value={this.state.editFirstName}
-                                               onChange={(event) => this.onChangeFirstName(
-                                                   event)}
-                                        />
-                                    </ToggleDisplay>
-                                </div>
-                            </Td>
-                            <Td column="Last Name"
-                                className="playersTableColumn"
-                                value={player.lastName}>
-                                <div>
-                                    <ToggleDisplay id="usernameToggleDisplay"
-                                                   show={!this.state.showEditPlayer[i]}>
-                                        {player.lastName}
-                                    </ToggleDisplay>
-                                    <ToggleDisplay
-                                        id="editUsernameToggleDisplay"
-                                        show={this.state.showEditPlayer[i]}>
-                                        <input className="editUsernameInput"
-                                               type="text"
-                                               value={this.state.editLastName}
-                                               onChange={(event) => this.onChangeLastName(
-                                                   event)}
-                                        />
-                                    </ToggleDisplay>
-                                </div>
-                            </Td>
-                            <Td column="Elo Rating"
-                                className="playersTableColumn"
-                                value={parseFloat(
-                                    player.eloRating.rating).toFixed(2)}>
-                                {parseFloat(player.eloRating.rating).toFixed(2)}
-                            </Td>
-                            <Td column="Actions" id={player.id}>
-                                <div>
-                                    <ToggleDisplay
-                                        show={this.state.showEditPlayer[i]}>
-                                        <div>
-                                            <input type="button" value="Submit"
-                                                   className="editButton"
-                                                   onClick={this.processEditPlayer}
-                                            />
-                                            &nbsp;
-                                        </div>
-                                    </ToggleDisplay>
-                                    <div className="editContainer">
-                                        <a className="editPlayer"
-                                           style={{cursor: 'pointer'}}
-                                           onClick={() => this.showEditPlayer(
-                                               i, player)}>Edit</a>
-                                    </div>
-                                    &nbsp;
-                                    <ToggleDisplay
-                                        show={this.state.showEditPlayer[i]}>
-                                        <div className="cancelContainer">
-                                            <a style={{cursor: 'pointer'}}
-                                               onClick={() => this.cancelEditPlayer(
-                                                   i)}>Cancel</a>
-                                        </div>
-                                    </ToggleDisplay>
-                                    &nbsp;
-                                    <div className="profileContainer">
-                                        <a style={{cursor: 'pointer'}}
-                                           onClick={() => this.playerProfile(
-                                               player)}>Profile</a>
-                                    </div>
-                                    &nbsp;
-                                    &nbsp;
-                                    &nbsp;
-                                    <div className="deleteContainer">
-                                        <a style={{cursor: 'pointer'}}
-                                           onClick={() => this.processDeletePlayer(
-                                               player.id, player.username)}>Delete</a>
-                                    </div>
-                                </div>
-                            </Td>
-                        </Tr>
-                    })};
-                </Table>
+                                            <Td column="Username" className="playersTableColumn"
+                                                value={player.username}>
+                                                <div>
+                                                    <ToggleDisplay id="usernameToggleDisplay"
+                                                                   show={!this.state.showEditPlayer[i]}>
+                                                        {player.username}
+                                                    </ToggleDisplay>
+                                                    <ToggleDisplay
+                                                        id="editUsernameToggleDisplay"
+                                                        show={this.state.showEditPlayer[i]}>
+                                                        <input className="editUsernameInput"
+                                                               type="text"
+                                                               value={this.state.editUsername}
+                                                               onChange={(event) => this.onChangeUsername(
+                                                                   event)}
+                                                        />
+                                                    </ToggleDisplay>
+                                                </div>
+                                            </Td>
+                                            <Td column="First Name"
+                                                className="playersTableColumn"
+                                                value={player.firstName}>
+                                                <div>
+                                                    <ToggleDisplay id="usernameToggleDisplay"
+                                                                   show={!this.state.showEditPlayer[i]}>
+                                                        {player.firstName}
+                                                    </ToggleDisplay>
+                                                    <ToggleDisplay
+                                                        id="editUsernameToggleDisplay"
+                                                        show={this.state.showEditPlayer[i]}>
+                                                        <input className="editUsernameInput"
+                                                               type="text"
+                                                               value={this.state.editFirstName}
+                                                               onChange={(event) => this.onChangeFirstName(
+                                                                   event)}
+                                                        />
+                                                    </ToggleDisplay>
+                                                </div>
+                                            </Td>
+                                            <Td column="Last Name"
+                                                className="playersTableColumn"
+                                                value={player.lastName}>
+                                                <div>
+                                                    <ToggleDisplay id="usernameToggleDisplay"
+                                                                   show={!this.state.showEditPlayer[i]}>
+                                                        {player.lastName}
+                                                    </ToggleDisplay>
+                                                    <ToggleDisplay
+                                                        id="editUsernameToggleDisplay"
+                                                        show={this.state.showEditPlayer[i]}>
+                                                        <input className="editUsernameInput"
+                                                               type="text"
+                                                               value={this.state.editLastName}
+                                                               onChange={(event) => this.onChangeLastName(
+                                                                   event)}
+                                                        />
+                                                    </ToggleDisplay>
+                                                </div>
+                                            </Td>
+                                            <Td column="Elo Rating"
+                                                className="playersTableColumn"
+                                                value={parseFloat(
+                                                    player.eloRating.rating).toFixed(2)}>
+                                                {parseFloat(player.eloRating.rating).toFixed(2)}
+                                            </Td>
+                                            <Td column="Actions" id={player.id}>
+                                                <div>
+                                                    <ToggleDisplay
+                                                        show={this.state.showEditPlayer[i]}>
+                                                        <div>
+                                                            <input type="button" value="Submit"
+                                                                   className="editButton"
+                                                                   onClick={this.processEditPlayer}
+                                                            />
+                                                            &nbsp;
+                                                        </div>
+                                                    </ToggleDisplay>
+                                                    <div className="editContainer">
+                                                        <a className="editPlayer"
+                                                           style={{cursor: 'pointer'}}
+                                                           onClick={() => this.showEditPlayer(
+                                                               i, player)}>Edit</a>
+                                                    </div>
+                                                    &nbsp;
+                                                    <ToggleDisplay
+                                                        show={this.state.showEditPlayer[i]}>
+                                                        <div className="cancelContainer">
+                                                            <a style={{cursor: 'pointer'}}
+                                                               onClick={() => this.cancelEditPlayer(
+                                                                   i)}>Cancel</a>
+                                                        </div>
+                                                    </ToggleDisplay>
+                                                    &nbsp;
+                                                    <div className="profileContainer">
+                                                        <a style={{cursor: 'pointer'}}
+                                                           onClick={() => this.playerProfile(
+                                                               player)}>Profile</a>
+                                                    </div>
+                                                    &nbsp;
+                                                    &nbsp;
+                                                    &nbsp;
+                                                    <div className="deleteContainer">
+                                                        <a style={{cursor: 'pointer'}}
+                                                           onClick={() => this.processDeletePlayer(
+                                                               player.id, player.username)}>Delete</a>
+                                                    </div>
+                                                </div>
+                                            </Td>
+                                        </Tr>
+                                    })};
+                                </Table>
 
-            </div>
+                            </div>
+                        </div>
+
+                }
             </div>
         );
     }

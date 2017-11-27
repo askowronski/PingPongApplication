@@ -418,8 +418,7 @@ public class GamePersistenceManager {
         try {
             Session session = factory.openSession();
             Transaction transaction = session.beginTransaction();
-            game.setDeleted(true);
-            session.update(game);
+            session.delete(game);
             transaction.commit();
             session.close();
         } catch (HibernateException e) {

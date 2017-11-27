@@ -374,7 +374,7 @@ public class EloRatingPersistenceManager {
             int gameIdPriorToGame1;
             int gameIdPriorToGame2;
 
-            if (i - 1 < 0) {
+            if (i - 1 <= 0) {
                 gameIdPriorToGame1 = 0;
                 gameIdPriorToGame2 = 0;
 

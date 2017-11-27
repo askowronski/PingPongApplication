@@ -199,10 +199,7 @@ Tr {
 }
 
 .CreatePlayerForm {
-    margin-left:10%;
-    margin-right:auto;
-    z-index: 0;
-
+    margin-left:5%;
 }
 
 .custom-tooltip {
@@ -239,6 +236,15 @@ Tr {
 .Select-control-wrapper {
     width:55%;
 }
+
+.Select-control-wrapper-player {
+    width:100%;
+}
+
+.playerRating {
+    float: left;
+}
+
 
 
 .PlayerGraph {
@@ -576,10 +582,10 @@ border-color: #020104;
 }
 
 .createPlayerInput {
-    height:20px;
+    margin-top: 5%;
+    height:100%;
     font-size:16px;
     text-align: center;
-    color:darkblue;
     font-weight: bold;
 }
 
@@ -682,6 +688,13 @@ input[class^="editDateInput"] {
     grid-column-end: 4;
     grid-row-start: 1;
     grid-row-end: 2;
+}
+
+.noDataContainer {
+    text-align: center;
+    font-size: 50pt;
+    color: #1d5d90;
+    margin-top: 5%
 }
 
 .gameCell1 {

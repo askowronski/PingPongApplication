@@ -25,10 +25,21 @@
   height: 90%;
 }
 
+.createPlayerFormCont {
+  width:50%;
+  float: left;
+  height: 90%;
+  margin-top: 5%;
+}
+
+
+
 .feedBackForm {
   width:50%;
   float: left;
   height: 90%;
+  margin-top: 2%;
+  margin-left: 2%;
 }
 
 .createGameDisplay {
