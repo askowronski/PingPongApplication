@@ -207,22 +207,22 @@ export class AverageScorePerGame extends React.Component {
 
     };
 
-    renderBarScore = (state) => {
+    renderPlayersLineScore = (state) => {
         if (state === true) {
             return (<Line dataKey="score" barSize={25} fill='#4286f4'/>)
         }
     };
 
-    renderBarOppScore = (state) => {
+    renderLineOppScore = (state) => {
         if (state === true) {
-            return (<Line dataKey="opponentScore" barSize={25} fill='#ad0505'/>
+            return (<Line dataKey="opponentScore" barSize={25}  stroke='#4d004d' fill='#4d004d'/>
             )
         }
     };
 
     renderAverageScore = (state) => {
         if (state === true) {
-            return (<Line dataKey="" fill='#581887' stroke='#1029cc'/>
+            return (<Line dataKey="" fill='#581887' stroke='#4d004d'/>
             )
         }
     };
@@ -291,8 +291,8 @@ export class AverageScorePerGame extends React.Component {
                                      setGameDisplay={this.setGameDisplayState}/>}/>
                         <CartesianGrid strokeDasharray="3 3"/>
                         <ReferenceLine y={0} stroke='#000'/>
-                        {this.renderBarScore(this.state.showScore)}
-                        {this.renderBarOppScore(this.state.showOppScore)}
+                        {this.renderPlayersLineScore(this.state.showScore)}
+                        {this.renderLineOppScore(this.state.showOppScore)}
                         <Legend margins={{top: 15, right: 15, bottom: 5}}/>
                     </ComposedChart>
                     </ToggleDisplay>

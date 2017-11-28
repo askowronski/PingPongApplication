@@ -43,7 +43,7 @@ export const CustomToolTipDisplayNet = React.createClass({
         payload: PropTypes.array,
         label: PropTypes.number,
     },
-    
+
     render() {
         const {active} = this.props;
 
