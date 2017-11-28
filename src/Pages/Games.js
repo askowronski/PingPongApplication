@@ -121,6 +121,8 @@ export default class GamesList extends React.Component {
         }
         showEditArray[index] = true;
 
+        debugger;
+
         this.setState({
             showEdit: showEditArray,
             editGameID: game.iD,
@@ -141,7 +143,9 @@ export default class GamesList extends React.Component {
 
         this.setState({
             showEdit: showEditArray,
-            editGameID: 0
+            editGameID: 0,
+            editScore1: '',
+            editScore2: '',
         });
     };
 
@@ -160,19 +164,37 @@ export default class GamesList extends React.Component {
     };
 
     onChangePlayer1 = (event) => {
-        let id = event.id;
-        this.setState({
-            editPlayer1ID: id,
-            editPlayer1:event
-        });
+        if (event !== null) {
+            let id = event.id;
+            this.setState({
+                editPlayer1: event,
+                editPlayer1ID: id
+            });
+        } else {
+            this.setState({
+                editPlayer1:{
+                    id:'',
+                    username:''
+                },
+                editPlayer1ID:0
+            });
+        }
     };
 
     onChangePlayer2 = (event) => {
-        let id = event.id;
-        this.setState({
-            editPlayer2ID: id,
-            editPlayer2:event
-        });
+        debugger;
+        if (event !== null) {
+            let id = event.id;
+            this.setState({
+                editPlayer2: event,
+                editPlayer2ID: id
+            });
+        } else {
+            this.setState({
+                editPlayer2:'',
+                editPlayer2ID:0
+            });
+        }
     };
 
     onChangeScore1 = (event) => {
@@ -204,6 +226,9 @@ export default class GamesList extends React.Component {
             async: true,
             success: function(data) {
                 alert(data.message);
+                this.componentDidMount();
+            }.bind(this),
+            error: function(data) {
                 this.componentDidMount();
             }.bind(this)
         });
@@ -347,7 +372,7 @@ export default class GamesList extends React.Component {
                                                     <EditScoreInput
                                                         onChange={(event) => this.onChangeScore1(
                                                             event)}
-                                                        score={game.score1}/>
+                                                        score={this.state.editScore1} scoreState={this.state.editScore1}/>
                                                 </div>
                                             </ToggleDisplay>
                                         </div>
@@ -365,7 +390,7 @@ export default class GamesList extends React.Component {
                                                     <EditScoreInput
                                                         onChange={(event) => this.onChangeScore2(
                                                             event)}
-                                                        score={game.score2}/>
+                                                        score={this.state.editScore2}/>
                                                 </div>
                                             </ToggleDisplay>
                                         </div>
@@ -474,7 +499,7 @@ export const EditUsernameSelect = (props) => {
 const EditScoreInput = (props) => {
     return (
         <input className="editScoreInput" type="number"
-               defaultValue={props.score} onChange={props.onChange}/>
+               value={props.score}  onChange={props.onChange}/>
     )
 };
 

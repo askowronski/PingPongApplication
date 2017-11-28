@@ -739,7 +739,7 @@ export class HeaderButtons2 extends React.Component {
     };
 
     inputPlayer = () => {
-        history.push('/CreatPlayer');
+        history.push('/CreatePlayer');
     };
 
     goToIndividualStats = () => {

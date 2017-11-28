@@ -321,6 +321,13 @@ public class GamePersistenceManager {
             throw new IllegalArgumentException("Scores must be greater than or equal to 0.");
         }
 
+        try {
+            pPM.getPlayerById(newGame.getPlayer1ID());
+            pPM.getPlayerById(newGame.getPlayer2ID());
+        } catch (NoResultException e) {
+            throw new IllegalArgumentException("Please provide two players.");
+        }
+
         Integer player1Score = oldGame.getPlayer1Score();
         Integer player2Score = oldGame.getPlayer2Score();
 
@@ -332,8 +339,7 @@ public class GamePersistenceManager {
 
         try {
             // validate players exist
-            pPM.getPlayerById(newGame.getPlayer1ID());
-            pPM.getPlayerById(newGame.getPlayer2ID());
+
             Session session = factory.openSession();
             Transaction transaction = session.beginTransaction();
             oldGame.setPlayer2Score(newGame.getPlayer2Score());
@@ -554,18 +560,19 @@ public class GamePersistenceManager {
         return this.getGamesForPlayer(playerId, games);
     }
 
-    public Pair<String, String> getDateRangeOfGamesForPlayer(List<PingPongGame> games) {
+    public Pair<String, String> getDateRangeOfGamesForPlayer(List<PersistenceGame> games) {
         if (games.size() > 0) {
 
-            String beginning = games.get(0).getTimeString();
+            Date start = games.get(0).getTime();
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(games.get(games.size() - 1).getTime());
             calendar.add(Calendar.DATE, 1);
-            SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
             String end = sdfDate.format(calendar.getTime());
+            String beginning = sdfDate.format(start);
             return new Pair<>(beginning, end);
         } else {
-            SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
             Date newDate = new Date();
             String dateStringStart = sdfDate.format(newDate);
             Calendar calendar = Calendar.getInstance();

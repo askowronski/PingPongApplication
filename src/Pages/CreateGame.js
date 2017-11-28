@@ -109,19 +109,40 @@ class CreateGameForm extends React.Component {
     };
 
     setPlayer1 = (event) => {
-        let id = event.id;
-        this.setState({
-            player1:event,
-            player1ID:id
-        });
+
+        if (event !== null) {
+            let id = event.id;
+            this.setState({
+                player1: event,
+                player1ID: id
+            });
+        } else {
+            this.setState({
+                player1:{
+                    id:'',
+                    username:''
+                },
+                player1ID:''
+            });
+        }
     };
 
     setPlayer2 = (event) => {
-        let id = event.id;
-        this.setState({
-            player2:event,
-            player2ID: id,
-        });
+        if (event !== null) {
+            let id = event.id;
+            this.setState({
+                player2: event,
+                player2ID: id
+            });
+        } else {
+            this.setState({
+                player2:{
+                    id:'',
+                    username:''
+                },
+                player2ID:''
+            });
+        }
     };
 
     handleSubmit(event) {

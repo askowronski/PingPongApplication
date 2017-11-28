@@ -445,13 +445,27 @@ export class PlayerGraphTable extends React.Component {
     };
 
     setPlayer = (event) => {
-        let id = event.id;
-        let username = event.username;
-        this.setState({
-            playerID: id,
-            playerUsername: username,
-            player:event
-        })
+
+        if (event !== null) {
+            let id = event.id;
+            let username = event.username;
+            this.setState({
+                playerID: id,
+                playerUsername: username,
+                player:event
+            })
+        } else {
+            this.setState({
+                playerID: 0,
+                playerUsername: 'Choose a Player',
+                player:{
+                    username:'',
+                    firstName:'',
+                    lastName:''
+                }
+            })
+        }
+
     };
 
     renderEloRatingGraph = () => {
@@ -482,10 +496,6 @@ export class PlayerGraphTable extends React.Component {
                                 currentPlayer={this.state.player}
                             className="profile"/>
                         </div>
-                            {/*<PlayerTypeAhead*/}
-                                {/*onOptionSelected={(event) => this.setPlayer(*/}
-                                    {/*event)}*/}
-                                {/*players={this.state.players}/>*/}
                         </div>
                     </div>
                     <div className="dateInputContainer">

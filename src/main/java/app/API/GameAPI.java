@@ -125,7 +125,7 @@ public class GameAPI {
             try {
                 gPM.editWriteGameToFileNew(newGame, game);
                 return new APIResult(true, "Game Edited");
-            } catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException | NoResultException e) {
                 return new APIResult(false, e.getMessage());
             }
 
@@ -236,7 +236,7 @@ public class GameAPI {
     public APIResult getDateRangeForPlayersGame(@RequestParam(value="id") int playerId) {
 
         GamePersistenceManager gPM = new GamePersistenceManager();
-        Pair<String,String> dates = gPM.getDateRangeOfGamesForPlayer(gPM.getGamesForPlayer(gPM.getPlayer(playerId)));
+        Pair<String,String> dates = gPM.getDateRangeOfGamesForPlayer(gPM.getPersistenceGamesForPlayer(playerId));
         return new ApiResultDates(true, dates.getKey(), dates.getValue());
 
     }

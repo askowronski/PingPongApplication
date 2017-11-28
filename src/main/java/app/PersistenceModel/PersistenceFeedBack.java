@@ -26,8 +26,9 @@ public class PersistenceFeedBack {
     private  int playerId;
 
     @Lob
+
     @JsonProperty("feedback_text")
-    @Column(name = "feedback_text")
+    @Column(name = "feedback_text", nullable = false)
     private String feedBack;
 
 

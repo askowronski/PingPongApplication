@@ -16,7 +16,8 @@ export class FeedbackForm extends React.Component {
             players: [],
             feedBackPlayer: null,
             feedBackText:'',
-            showThanks:false
+            showThanks:false,
+            errorText:''
 
         };
 
@@ -66,11 +67,18 @@ export class FeedbackForm extends React.Component {
             data:JSON.stringify({player_Id:this.state.feedBackPlayer.id, feedback_text:this.state.feedBackText}),
             async: true,
             success: function(data) {
+                if (data.success) {
 
                     this.setState({
-                        showThanks:true
+                        showThanks: true,
+                        errorText:''
                     });
                     jQuery('.feedBackTextArea').val('');
+                } else {
+                    this.setState({
+                        errorText:data.message
+                    })
+                }
 
             }.bind(this),
             error: function(xhr, status, error) {
@@ -143,7 +151,8 @@ export class FeedbackForm extends React.Component {
             </div>
             <div className="createGameDisplay">
                 {
-                    this.state.showThanks ? <span className="feedBackThanks">Thanks {this.state.feedBackPlayer.firstName}!</span> : ''
+                    this.state.showThanks ? <span className="feedBackThanks">Thanks {this.state.feedBackPlayer.firstName}!</span> :
+                        <span className="feedBackThanks"> {this.state.errorText} </span>
                 }
                 </div>
             </div>

@@ -1,9 +1,7 @@
-
 var path = require('path');
 
 module.exports = {
     entry: './src/main/js/app.js',
-    devtool: 'sourcemaps',
     cache: true,
     debug: true,
     output: {
@@ -18,9 +16,22 @@ module.exports = {
                 loader: 'babel',
                 query: {
                     cacheDirectory: true,
-                    presets: ['es2015', 'react']
+                    presets: ['es2015']
                 }
             }
         ]
-    }
+    },
+    plugins: [
+        new UglifyJsPlugin({
+            parallel: true,
+            uglifyOptions: {
+                ie8: false,
+                warnings: true,
+                output: {
+                    comments: false,
+                    beautify: false,
+                }
+            }
+        })
+    ]
 };
