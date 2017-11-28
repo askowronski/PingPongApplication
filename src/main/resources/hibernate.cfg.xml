@@ -16,6 +16,7 @@
 
     <property name="show_sql">true</property>
 
+    <property name="current_session_context_class">thread</property>
 
   </session-factory>
 
