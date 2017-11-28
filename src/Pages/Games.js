@@ -475,12 +475,12 @@ export const EditUsernameTypeAhead = (props) => {
 export const EditUsernameSelect = (props) => {
     let options = props.players;
 
-    let displayOption = (option) => {
-        return option.username;
+    let filterFunction = (option, value) => {
+        return option.username.includes(value);
     };
     return  <Select
         options={options}
-        filterOption={displayOption}
+        filterOption={filterFunction}
         value={props.currentPlayer}
         valueKey="username"
         labelKey="username"
