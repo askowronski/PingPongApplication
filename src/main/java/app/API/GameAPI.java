@@ -52,7 +52,7 @@ public class GameAPI {
             if (!time.isPresent()) {
                 newTime = new SimpleDateFormat("yyyyMMMdd").parse(date);
             } else {
-                newTime = new SimpleDateFormat("yyyyMMMdd H:mm:ss").parse(date+" "+time.get());
+                newTime = new SimpleDateFormat("yyyyMMMdd H:mm").parse(date+" "+time.get());
             }
 
             if (gPM.doesPlayerHaveFourGamesOnDate(newTime, IDplayer1) ||

@@ -295,7 +295,10 @@ class CreateGameForm extends React.Component {
                                 use12Hours
                                 open={this.state.open}
                                 onOpen={this.setOpen}
-                                onClose={this.setOpen}/>
+                                onClose={this.setOpen}
+                                showSecond={false}
+                                format={"hh:mm"}
+                            />
                             </div>
                         </Box>
                         <Box px={2} py={2} width={1/2}
