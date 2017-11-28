@@ -43,11 +43,7 @@ export const CustomToolTipDisplayNet = React.createClass({
         payload: PropTypes.array,
         label: PropTypes.number,
     },
-
-    getIntroOfPage(label, timeString) {
-        return "Game " + label + " - " + timeString;
-    },
-
+    
     render() {
         const {active} = this.props;
 
@@ -66,7 +62,7 @@ export const CustomToolTipDisplayNet = React.createClass({
                             <Flex wrap mx={-2} align='center' width='auto'>
                                 <Box px={2} py={2} width={1}>
                                     <Text p={1} color='black' bg='white'
-                                          f={32}><u>Game - {label} </u></Text>
+                                          f={32}><u>Game {label} </u></Text>
                                 </Box>
                                 <Box px={2} py={2} width={1}>
                                     <Text p={1} color='black' bg='white'
@@ -135,10 +131,6 @@ export const CustomToolTipDisplayGame = React.createClass({
         label: PropTypes.number,
     },
 
-    getIntroOfPage(label, timeString) {
-        return "Game " + label + " - " + timeString;
-    },
-
     render() {
 
         const {active} = this.props;
@@ -159,7 +151,7 @@ export const CustomToolTipDisplayGame = React.createClass({
                             <Flex wrap mx={-2} align='center' width='auto'>
                                 <Box px={2} py={2} width={1}>
                                     <Text p={1} color='black' bg='white'
-                                          f={32}><u>Game - {number} </u></Text>
+                                          f={32}><u>Game {number} </u></Text>
                                 </Box>
                                 <Box px={2} py={2} width={1}>
                                     <Text p={1} color='black' bg='white'

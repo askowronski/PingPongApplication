@@ -75,8 +75,9 @@ export class NetWinsGraph extends React.Component {
                             showGraph:false
                         });
                     } else {
+                        this.setupGraphDataSoPlayerIsAlwaysFirst(data.message);
                         this.setState({
-                            dataset: ParseApiMessage(data),
+                            // dataset: ParseApiMessage(data),
                             result: data.success,
                             displayError: false,
                             errorMessage: '',
@@ -137,6 +138,37 @@ export class NetWinsGraph extends React.Component {
 
     returnStartTooltip = () => {
         return jQuery('#infoDisplay').width() * .76;
+    };
+
+    setupGraphDataSoPlayerIsAlwaysFirst = (graphData) => {
+        let theFirstPlayerId = this.state.playerID;
+        let player1Username = '';
+        let player2Username = '';
+        let player1Score = '';
+        let player2Score = '';
+        let player2Id = 0;
+        let parsedData = JSON.parse(graphData);
+        debugger;
+        for (let i = 0; i < parsedData.length; i++) {
+
+            if (parsedData[i].game.player1ID !== theFirstPlayerId) {
+                player2Id = parsedData[i].game.player1ID;
+                player2Score = parsedData[i].game.score1;
+                player2Username = parsedData[i].player1Username;
+                player1Username = parsedData[i].player2Username;
+                player1Score = parsedData[i].game.score2;
+                parsedData[i].game.player1ID = theFirstPlayerId;
+                parsedData[i].game.player2ID = player2Id;
+                parsedData[i].game.score1 = player1Score;
+                parsedData[i].game.score2 = player2Score;
+                parsedData[i].player1Username = player1Username;
+                parsedData[i].player2Username = player2Username;
+            }
+        }
+        this.setState({
+            dataset:parsedData
+        });
+
     };
 
     render() {

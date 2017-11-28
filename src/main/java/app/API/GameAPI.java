@@ -71,7 +71,7 @@ public class GameAPI {
         }
         catch (ParseException e){
             e.printStackTrace();
-            return new APIResult(false,"Game Unsuccessfully Created. Provide a valid datea");
+            return new APIResult(false,"Game Unsuccessfully Created. Provide a valid date");
         }catch (InvalidParameterException e) {
             return new APIResult(false,e.getMessage());
         }
@@ -125,7 +125,7 @@ public class GameAPI {
             try {
                 gPM.editWriteGameToFileNew(newGame, game);
                 return new APIResult(true, "Game Edited");
-            } catch (IllegalArgumentException | NoResultException e) {
+            } catch (IllegalArgumentException | NoResultException | InvalidParameterException e) {
                 return new APIResult(false, e.getMessage());
             }
 

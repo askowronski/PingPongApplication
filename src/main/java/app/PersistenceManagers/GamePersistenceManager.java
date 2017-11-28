@@ -212,7 +212,6 @@ public class GamePersistenceManager {
     public String writeGameToJson(PersistenceGame game) {
         ObjectMapper mapper = new ObjectMapper();
 
-        PingPongGame viewGame = new GamePersistenceManager().getViewGameByID(game.getiD());
         try {
             return mapper.writeValueAsString(game);
         } catch (JsonProcessingException e) {
@@ -310,8 +309,12 @@ public class GamePersistenceManager {
 
 
     public void editWriteGameToFileNew(PersistenceGame newGame,
-            PersistenceGame oldGame) {
+            PersistenceGame oldGame) throws InvalidParameterException {
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
+
+        if (newGame.getTime().compareTo(new Date()) > 0) {
+            throw new InvalidParameterException("Date cannot be greater than now.");
+        }
 
         if (newGame.getPlayer2ID() == newGame.getPlayer1ID()) {
             throw new IllegalArgumentException("Players must be different.");
@@ -538,6 +541,18 @@ public class GamePersistenceManager {
             throw e;
         }
     }
+//
+//    public void decoupleGameFromHibernate(PersistenceGame game) {
+//        try {
+//            Session session = factory.openSession();
+//            session.
+//        } catch (NoResultException | HibernateException e) {
+//            System.out.println(e.getMessage());
+//            throw e;
+//        }
+//    }
+
+
 
     public List<PersistenceGame> getGamesForPlayer(int playerId, List<PersistenceGame> games) {
         List<PersistenceGame> gamesForPlayer = new ArrayList<>();
