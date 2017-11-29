@@ -26,7 +26,6 @@ class TotalStatsPage extends React.Component {
 
     }
 }
-
 class InputPlayer extends React.Component {
     render() {
         return (

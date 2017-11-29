@@ -1,12 +1,12 @@
 var path = require('path');
 
 module.exports = {
-    entry: './src/main/js/app.js',
+    entry: './src/index.js',
     cache: true,
     debug: true,
     output: {
         path: __dirname,
-        filename: './src/main/resources/static/built/bundle.js'
+        filename: './src/main/resources/templates'
     },
     module: {
         loaders: [
@@ -16,7 +16,7 @@ module.exports = {
                 loader: 'babel',
                 query: {
                     cacheDirectory: true,
-                    presets: ['es2015']
+                    presets: ['es2015, react']
                 }
             }
         ]

@@ -13,6 +13,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.mysql.cj.core.util.StringUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -242,7 +243,7 @@ public class PlayerPersistenceManager {
         List<PersistencePlayer> players = this.getPlayersIncludingDeleted();
         List<String> usernames = new ArrayList<>();
 
-        if (com.mysql.jdbc.StringUtils.isEmptyOrWhitespaceOnly(username)) {
+        if (StringUtils.isEmptyOrWhitespaceOnly(username)) {
             return false;
         }
 

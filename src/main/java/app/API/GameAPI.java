@@ -7,7 +7,7 @@ import app.PersistenceModel.PersistenceGame;
 import app.PersistenceModel.PersistencePlayer;
 import app.ViewModel.PingPongGame;
 import app.ViewModel.Player;
-import com.mysql.jdbc.StringUtils;
+import com.mysql.cj.core.util.StringUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;

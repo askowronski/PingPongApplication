@@ -5,7 +5,7 @@ import app.PersistenceModel.PersistenceFeedBack;
 import app.ReadWriteFile.File;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mysql.jdbc.StringUtils;
+import com.mysql.cj.core.util.StringUtils;
 import javax.persistence.NoResultException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;

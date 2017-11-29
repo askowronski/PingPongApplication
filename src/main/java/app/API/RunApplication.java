@@ -16,35 +16,37 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
-public class RunApplication extends SpringBootServletInitializer {
-
+public class RunApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(applicationClass, args);
+        SpringApplication.run(RunApplication.class ,args);
     }
-
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(applicationClass);
-    }
-
-    private static Class<PlayerAPI> applicationClass = PlayerAPI.class;
-
-    @RestController
-    class GreetingController {
-
-        @RequestMapping("/hello")
-        String hello() {
-            return "Hello!";
-        }
-    }
-
-    @RestController
-    class GreetController {
-
-        @RequestMapping("/yo")
-        String hello() {
-            return "Hello!";
-        }
-    }
+//    public static void main(String[] args) {
+//        SpringApplication.run(applicationClass, args);
+//    }
+//
+//    @Override
+//    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+//        return application.sources(applicationClass);
+//    }
+//
+//    private static Class<PlayerAPI> applicationClass = PlayerAPI.class;
+//
+//    @RestController
+//    class GreetingController {
+//
+//        @RequestMapping("/hello")
+//        String hello() {
+//            return "Hello!";
+//        }
+//    }
+//
+//    @RestController
+//    class GreetController {
+//
+//        @RequestMapping("/yo")
+//        String hello() {
+//            return "Hello!";
+//        }
+//    }
 }

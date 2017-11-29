@@ -5,7 +5,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import app.Exceptions.InvalidParameterException;
 import app.PersistenceManagers.FeedbackPersistenceManager;
 import app.PersistenceModel.PersistenceFeedBack;
-import com.mysql.jdbc.StringUtils;
+import com.mysql.cj.core.util.StringUtils;
 import javax.persistence.NoResultException;
 import org.hibernate.HibernateException;
 import org.springframework.web.bind.annotation.CrossOrigin;

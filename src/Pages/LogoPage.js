@@ -51,7 +51,7 @@ export default class LogoPage extends React.Component {
 
         return (
             <div>
-                <Header selectedButton="totalStatsButton"/>
+                <Header />
                 <br/>
                <div className="homePageContainer">
 

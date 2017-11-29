@@ -1,5 +1,6 @@
 package StatsEngineTest;
 
+import app.PersistenceModel.PersistenceGame;
 import app.ViewModel.EloRating;
 import app.ViewModel.PingPongGame;
 import app.ViewModel.Player;
@@ -67,18 +68,19 @@ public class SinglePlayerStatisticsCalculatorTest {
         Player player1 = new Player(new EloRating(), 1,"ka","jah","boi");
         Player player2 = new Player(new EloRating(), 2,"sweet","jah","boi");
 
-        PingPongGame game1 = new PingPongGame(1,player1,player2,15,9);
-        PingPongGame game2 = new PingPongGame(1,player1,player2,10,1);
-        PingPongGame game3 = new PingPongGame(1,player1,player2,12,10);
-        PingPongGame game4 = new PingPongGame(1,player1,player2,9,13);
+        PersistenceGame game1 = new PersistenceGame(1,player1.getiD(),player2.getiD(),15,9);
+        PersistenceGame game2 = new PersistenceGame(1,player1.getiD(),player2.getiD(),10,1);
+        PersistenceGame game3 = new PersistenceGame(1,player1.getiD(),player2.getiD(),12,10);
+        PersistenceGame game4 = new PersistenceGame(1,player1.getiD(),player2.getiD(),9,13);
 
-        List<PingPongGame> games = new ArrayList<>();
+        List<PersistenceGame> games = new ArrayList<>();
         games.add(game1);
         games.add(game2);
         games.add(game3);
         games.add(game4);
 
-        SinglePlayerStatisticsCalculator stats = new SinglePlayerStatisticsCalculator(games,player1);
+        SinglePlayerStatisticsCalculator stats = new SinglePlayerStatisticsCalculator(player1);
+        stats.setPersistenceGames(games);
         int wins = stats.getWins();
         assertTrue(wins==3);
     }
