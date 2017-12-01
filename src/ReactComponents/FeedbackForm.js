@@ -1,10 +1,12 @@
 import {EditUsernameSelect} from "../Pages/Games";
 import {Border, Box, Button, Flex, Provider, Text} from "rebass";
+// import '../index.css';
+
 
 const React = require('react');
 const jQuery = require('jquery');
 const css = require("css-loader");
-require("../stylesheet.css");
+require("../main/css/index.css");
 var TextArea = require('react-text-input').TextArea;
 var Input = require('react-text-input').Input;
 

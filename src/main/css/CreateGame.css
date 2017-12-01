@@ -1,0 +1,91 @@
+.inputTable {
+  border:2px groove;
+  row-span: 3;
+}
+
+.inputPlayerTable {
+  width:40%;
+  border:2px groove;
+  align-self: center;
+  row-span: 2;
+  margin-left: 0;
+}
+
+.inputRow {
+  border:none;
+}
+
+.inputCell {
+  border:none;
+}
+
+.createGameForm {
+  width:50%;
+  float: left;
+  height: 90%;
+}
+
+.createPlayerFormCont {
+  width:50%;
+  float: left;
+  height: 90%;
+  margin-top: 5%;
+}
+
+
+
+.feedBackForm {
+  width:50%;
+  float: left;
+  height: 90%;
+  margin-top: 2%;
+  margin-left: 2%;
+}
+
+.createGameDisplay {
+  width:50%;
+  float: right;
+  text-align: center;
+}
+.createGameFormText {
+  text-align: center;
+}
+
+.createButton {
+  border-style: groove;
+  background-color: white;
+  font-weight: bold;
+  font-size: 22px;
+  font-style: italic;
+}
+
+.resultTextContrainer {
+  font-size:28pt;
+  color:black;
+  font-weight:bold;
+  grid-column-start: 1;
+  grid-column-end: 4;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  /*float: left;*/
+}
+
+.createGameTable > td{
+  border:none;
+  flex:auto;
+}
+
+.createGameTable {
+  width: 100%;
+}
+
+.ResultHeaderText {
+  display: inline-block;
+  font-size:34pt;
+  font-weight: bold;
+  color: #0077cc;
+}
+
+.creatGameForm {
+  flex:auto;
+}

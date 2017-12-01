@@ -1,10 +1,11 @@
 import {Header} from '../ReactComponents/displayComponents.js';
 import {Border, Box, Button, Flex, Provider, Text} from "rebass";
 import {ResultText} from "./CreateGame";
+// import '../index.css';
 const React = require('react');
 const jQuery = require('jquery');
 const css = require("css-loader");
-require("../stylesheet.css");
+require("../main/css/index.css");
 
 class CreatePlayerForm extends React.Component {
     constructor(props) {

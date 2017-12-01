@@ -184,6 +184,10 @@ public class PlayerPersistenceManager {
                 throw new IllegalArgumentException("Id is not valid.");
             }
 
+            if (StringUtils.isEmptyOrWhitespaceOnly(newUsername)) {
+                throw new IllegalArgumentException("Username must not be blank.");
+            }
+
             if (newUsername != null) {
                 player.setUsername(newUsername);
                 if (!this.checkUsernameValidity(newUsername)) {
@@ -397,63 +401,6 @@ public class PlayerPersistenceManager {
         return highestPlayer;
     }
 
-    public void updatePlayerEloRatingEdit(PersistenceGame game, PersistenceGame oldGame,
-            int playerId,
-            GamePersistenceManager gPM) {
-
-        List<PersistenceGame> games = gPM.getGamesNew();
-
-        int indexOfGame = games.indexOf(game);
-
-        EloRatingPersistenceManager eRPM1 = new EloRatingPersistenceManager(playerId);
-        PersistencePlayerEloRatingList listPlayer1 = eRPM1.getEloRatingList();
-        EloRatingPersistenceManager eRPM2;
-        PersistencePlayerEloRatingList listPlayerOpp;
-
-        if (game.getPlayer1ID() == playerId) {
-            eRPM2 = new EloRatingPersistenceManager(game.getPlayer2ID());
-            listPlayerOpp = eRPM2.getEloRatingList();
-        } else {
-            eRPM2 = new EloRatingPersistenceManager(game.getPlayer1ID());
-            listPlayerOpp = eRPM2.getEloRatingList();
-        }
-
-        PersistenceGame currentGame = games.get(indexOfGame);
-        int indexOfGame1 = listPlayer1.getIndexOfGame(currentGame.getiD());
-        int indexOfGame2 = listPlayerOpp.getIndexOfGame(currentGame.getiD());
-
-        PersistenceEloRating newRating1;
-        int indexOfElo1;
-        int indexOfElo2;
-        if (indexOfGame1 <= 0) {
-            indexOfElo1 = listPlayer1.getListSize() - 1;
-        } else {
-            indexOfElo1 = indexOfGame1 - 1;
-        }
-        if (indexOfGame2 <= 0) {
-            indexOfElo2 = listPlayerOpp.getListSize() - 1;
-        } else {
-            indexOfElo2 = indexOfGame2 - 1;
-        }
-
-        newRating1 = this.getNewRating(game,
-                game.getPlayer1ID(),
-                listPlayer1.getRating(indexOfElo1),
-                listPlayerOpp.getRating(indexOfElo2));
-
-        if (indexOfGame1 < 0) {
-            listPlayer1.addEloRating(newRating1);
-        } else {
-            listPlayer1.replaceEloRating(indexOfGame1, newRating1);
-        }
-
-//            eRPM1.getFile().writeFile(eRPM1.writeEloRatingListToJson(listPlayer1),false);
-
-        if (indexOfGame != games.size() - 1) {
-            this.updatePlayersEloRatingEdit(games.get(indexOfGame + 1), oldGame, gPM, false);
-        }
-    }
-
     public void updatePlayersEloRatingEdit(PersistenceGame game, PersistenceGame oldGame,
             GamePersistenceManager gPM, boolean delete) {
         List<PersistenceGame> games = gPM.getGamesNew();
@@ -558,90 +505,5 @@ public class PlayerPersistenceManager {
                 return rating.newRating(GameOutcomeEnum.DRAW, oppRating, game.getiD());
             }
         }
-    }
-
-    public void updatePlayersEloOnCreateGame(PersistenceGame game, GamePersistenceManager gPM,
-            PersistencePlayerEloRatingList list1, PersistencePlayerEloRatingList list2) {
-//        List<PersistenceGame> games = gPM.getGamesNew();
-//
-//        EloRatingPersistenceManager eRPM1 = new EloRatingPersistenceManager(games.get(games.size()-1).getPlayer1ID());
-//        EloRatingPersistenceManager eRPM2 = new EloRatingPersistenceManager(games.get(games.size()-1).getPlayer2ID());
-//        PersistencePlayerEloRatingList listPlayer1 = eRPM1.getEloRatingList();
-//        PersistencePlayerEloRatingList listPlayer2 = eRPM2.getEloRatingList();
-//
-//        PersistenceEloRating newRating1;
-//        PersistenceEloRating newRating2;
-//
-//        int indexOfPlayer1CurrentElo = listPlayer1.getListSize() - 1;
-//        int indexOfPlayer2CurrentElo = listPlayer2.getListSize() - 1;
-//
-//        newRating1 = this.getNewRating(game,
-//                game.getPlayer1ID(),
-//                listPlayer1.getRating(indexOfPlayer1CurrentElo),
-//                listPlayer2.getRating(indexOfPlayer2CurrentElo));
-//
-//        newRating2 = this.getNewRating(game,
-//                game.getPlayer2ID(),
-//                listPlayer2.getRating(indexOfPlayer2CurrentElo),
-//                listPlayer1.getRating(indexOfPlayer1CurrentElo));
-//
-//        listPlayer1.addEloRating(newRating1);
-//        listPlayer2.addEloRating(newRating2);
-//
-//        eRPM1.saveOrUpdateEloList(listPlayer1);
-//        eRPM2.saveOrUpdateEloList(listPlayer2);
-        List<PersistenceGame> games = gPM.getGamesNew();
-
-        EloRatingPersistenceManager eRPM1 = new EloRatingPersistenceManager(game.getPlayer1ID());
-        EloRatingPersistenceManager eRPM2 = new EloRatingPersistenceManager(game.getPlayer2ID());
-
-        for (int i = 0; i < games.size(); i++) {
-            if (games.get(i).getTime().compareTo(game.getTime()) > 0) {
-                games.add(i, game);
-                break;
-            }
-        }
-
-        for (int i = games.indexOf(game); i < games.size(); i++) {
-
-        }
-
-    }
-
-    public List<Player> getPlayersPriorToAGame(PingPongGame game) {
-        List<Player> currentPlayers = this.getViewPlayers();
-        GamePersistenceManager gPM = new GamePersistenceManager();
-        List<PingPongGame> currentGames = gPM.getGamesView();
-        if (!currentGames.contains(game)) {
-            return currentPlayers;
-        }
-        List<PingPongGame> splicedGames = currentGames
-                .subList(currentGames.indexOf(game) + 1, currentGames.size());
-
-        Player player1 = game.getPlayer1();
-        Player player2 = game.getPlayer2();
-
-        for (int i = 0; i < currentPlayers.size(); i++) {
-            Player playerCheck = currentPlayers.get(i);
-
-            if (playerCheck.getiD() == player1.getiD() || playerCheck.getiD() == player2.getiD()) {
-                break;
-            }
-            for (int j = 0; j < splicedGames.size(); j++) {
-                if (splicedGames.get(j).getPlayer1().getiD() == playerCheck.getiD()) {
-                    currentPlayers.set(i, splicedGames.get(j).getPlayer1());
-                    break;
-                }
-                if (splicedGames.get(j).getPlayer2().getiD() == playerCheck.getiD()) {
-                    currentPlayers.set(i, splicedGames.get(j).getPlayer2());
-                    break;
-                }
-//                if(j==0){
-//                    Player newPlayer = new Player(new EloRating(),currentPlayers.get(i).getiD(),currentPlayers.get(i).getUsername());
-//                    currentPlayers.set(i,newPlayer);
-//                }
-            }
-        }
-        return currentPlayers;
     }
 }

@@ -2,10 +2,12 @@ import {
     Header
 } from '../ReactComponents/displayComponents.js';
 import {Box, Flex, Provider, Text} from "rebass";
+// import '../index.css';
+
 const React = require('react');
 const jQuery = require('jquery');
 const css = require("css-loader");
-require("../stylesheet.css");
+require("../main/css/index.css");
 
 
 export default class LogoPage extends React.Component {

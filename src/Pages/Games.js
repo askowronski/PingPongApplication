@@ -7,12 +7,14 @@ import 'react-datepicker/dist/react-datepicker.css';
 import TimePicker from 'react-times';
 // use material theme
 import 'react-times/css/material/default.css';
+// import '../index.css';
+
 
 const React = require('react');
 const jQuery = require('jquery');
 const css = require("css-loader");
 const Reactable = require('reactable');
-require("../stylesheet.css");
+require("../main/css/index.css");
 const Typeahead = require('react-typeahead').Typeahead;
 
 export default class GamesList extends React.Component {

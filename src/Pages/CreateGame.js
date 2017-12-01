@@ -4,14 +4,16 @@ import moment from 'moment';
 import {Typeahead} from 'react-bootstrap-typeahead';
 import DatePicker from 'react-datepicker';
 import TimePicker from 'rc-time-picker';
-import '../timeinput.css';
+// import '../timeinput.css';
+// import '../CreateGame.css';
+// import '../ReactDatePicker.css';
 import {Border, Box, Button, Flex, Provider, Text} from "rebass";
 const React = require('react');
 const jQuery = require('jquery');
 const css = require("css-loader");
-require("../stylesheet.css");
-require("../CreateGame.css");
-require("../ReactDatePicker.css");
+require("../main/css/index.css");
+require("../main/css/CreateGame.css");
+require("../main/css/ReactDatePicker.css");
 
 class CreateGameForm extends React.Component {
     constructor(props) {

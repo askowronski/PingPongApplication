@@ -26,12 +26,14 @@ import {DateInput, EditUsernameSelect} from "./Games";
 import moment from "moment";
 import {Box, Flex, Provider, Text} from "rebass";
 import {ResultText} from "./CreateGame";
+// import '../index.css';
+
 
 const React = require('react');
 const jQuery = require('jquery');
 const css = require("css-loader");
 const Reactable = require('reactable');
-require("../stylesheet.css");
+require("../main/css/index.css");
 const ReactFC = require('react-fusioncharts');
 const fusioncharts = require('fusioncharts');
 const charts = require('fusioncharts/fusioncharts.charts');

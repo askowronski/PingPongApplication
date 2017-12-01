@@ -11,7 +11,7 @@ public class HtmlProvider {
     @Value("pingpong-1.0-SNAPSHOT")
     String appName;
 
-    @RequestMapping(value = {"/Home","/Players","/PingPong/Players","/PingPong/Games", "/"})
+    @RequestMapping(value = {"/Home","/Players","/Games","/LogoPage", "/", "/TotalStats", "/PlayerProfilePage"})
     public String index() {
         return "index";
     }

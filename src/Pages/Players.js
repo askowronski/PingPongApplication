@@ -1,12 +1,12 @@
 import ToggleDisplay from 'react-toggle-display';
 import {Link} from "react-router-link";
 import history from '../history.js';
+import '../main/css/index.css';
 
 const React = require('react');
 const jQuery = require('jquery');
 const css = require("css-loader");
 const Reactable = require('reactable');
-require("../stylesheet.css");
 
 export default class PlayersList extends React.Component {
     state = {

@@ -3,10 +3,12 @@ import {
     InfoDisplayTable
 } from '../ReactComponents/displayComponents.js';
 import ToggleDisplay from 'react-toggle-display';
+// import '../index.css';
+
 const React = require('react');
 const jQuery = require('jquery');
 const css = require("css-loader");
-require("../stylesheet.css");
+require("../main/css/index.css");
 
 export default class TotalStats extends React.Component {
     constructor(props) {

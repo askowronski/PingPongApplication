@@ -17,10 +17,12 @@ import ToggleDisplay from 'react-toggle-display';
 import {CustomToolTipDisplayNet} from "../Pages/PlayerProfilePage";
 import moment from "moment";
 import {ParseApiMessage} from "./EloRatingGraph";
+// import '../index.css';
+
 const React = require('react');
 const jQuery = require('jquery');
 const css = require("css-loader");
-require("../stylesheet.css");
+require("../main/css/index.css");
 const fusioncharts = require('fusioncharts');
 const charts = require('fusioncharts/fusioncharts.charts');
 

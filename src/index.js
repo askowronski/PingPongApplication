@@ -10,11 +10,14 @@ import TotalStats from "./Pages/HomePage";
 import FeedbackPage from "./Pages/Feedback";
 import LogoPage from "./Pages/LogoPage";
 
+
 const React = require('react');
 const ReactDOM = require('react-dom');
-require("./stylesheet.css");
+const css = require("css-loader");
 var Router = require('react-router').Router;
 var Route = require('react-router').Route;
+require("./main/css/index.css");
+
 
 class TotalStatsPage extends React.Component {
     render() {

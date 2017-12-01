@@ -12,11 +12,13 @@ import {
     Text, Flex, Container, Border, NavLink, Toolbar, Button, Image
 } from 'rebass'
 import moment from "moment";
+// import '../index.css';
+
 const React = require('react');
 const jQuery = require('jquery');
 var _ = require('lodash');
 const css = require("css-loader");
-require("../stylesheet.css");
+require("../main/css/index.css");
 var Router = require('react-router').Router;
 
 class InfoDisplayPlayer extends React.Component {
