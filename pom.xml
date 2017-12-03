@@ -112,7 +112,7 @@
   <properties>
     <start-class>app.API.RunApplication</start-class>
     <java.version>1.8</java.version>
-    <full-artifact-name>target/${project.artifactId}-${project.version}.jar</full-artifact-name>
+    <full-artifact-name>target/pingpong-1.0-SNAPSHOT.jar</full-artifact-name>
   </properties>
 
 
@@ -130,7 +130,7 @@
           </includes>
           <jdkVersion>1.8</jdkVersion>
           <processTypes>
-            <web>java -jar pingpong-1.0-SNAPSHOT.jar</web>
+            <web>java -Dserver.port=8080 $JAVA_OPTS -jar target/pingpong-1.0-SNAPSHOT.jar</web>
           </processTypes>
         </configuration>
       </plugin>
