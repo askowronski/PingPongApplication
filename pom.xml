@@ -100,6 +100,13 @@
       <artifactId>nekohtml</artifactId>
       <version>1.9.21</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.wildfly.swarm/javafx -->
+    <dependency>
+      <groupId>org.wildfly.swarm</groupId>
+      <artifactId>javafx</artifactId>
+      <version>2017.11.0</version>
+    </dependency>
+
   </dependencies>
 
   <properties>

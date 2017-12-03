@@ -4,7 +4,6 @@ import app.Exceptions.InvalidParameterException;
 import app.PersistenceManagers.GamePersistenceManager;
 import app.PersistenceManagers.PlayerPersistenceManager;
 import app.PersistenceModel.PersistenceGame;
-import app.PersistenceModel.PersistencePlayer;
 import app.ViewModel.PingPongGame;
 import app.ViewModel.Player;
 import com.mysql.cj.core.util.StringUtils;

@@ -65,6 +65,10 @@ public class PlayerPersistenceManager {
     // Create
 
     public void createPlayer(String username, String firstName, String lastName) {
+        if (StringUtils.isEmptyOrWhitespaceOnly(username)) {
+            throw new IllegalArgumentException("Username is either taken or blank.");
+        }
+
         if (this.checkUsernameValidity(username)) {
             try {
                 PersistencePlayer player = new PersistencePlayer();

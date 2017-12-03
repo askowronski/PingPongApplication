@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class HtmlProvider {
+
     @Value("pingpong-1.0-SNAPSHOT")
     String appName;
 
-    @RequestMapping(value = {"/Home","/Players","/Games","/LogoPage", "/", "/TotalStats", "/PlayerProfilePage"})
+    @RequestMapping(value = { "/Home", "/Players", "/Games", "/LogoPage", "/", "/CreateGame","/Feedback",
+            "/CreatePlayer", "/TotalStats", "/PlayerProfilePage" })
     public String index() {
         return "index";
     }

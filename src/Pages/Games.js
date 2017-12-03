@@ -279,9 +279,7 @@ export default class GamesList extends React.Component {
                                         'custom-pagination');
                                     jQuery('.tableHolder').css('visibility','visible');
                                     jQuery('#loadingSpinner').remove();
-                                    if (jQuery('.filterGame').length) {
-
-                                    } else {
+                                    if (!jQuery('.filterGame').length) {
                                         jQuery(
                                             '.reactable-filter-input').parent().prepend(
                                             '<span class="filterGame">Player Filter<span>')
