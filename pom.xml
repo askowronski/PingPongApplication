@@ -130,7 +130,7 @@
           </includes>
           <jdkVersion>1.8</jdkVersion>
           <processTypes>
-            <web>java $JAVA_OPTS -jar pingpong-1.0-SNAPSHOT.jar</web>
+            <web>java -jar pingpong-1.0-SNAPSHOT.jar</web>
           </processTypes>
         </configuration>
       </plugin>
