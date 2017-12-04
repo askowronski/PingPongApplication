@@ -39,7 +39,7 @@ class InfoDisplayPlayer extends React.Component {
 
         jQuery.ajax({
 
-            url: "http://localhost:8080/GetLongestStreak",
+            url: "/GetLongestStreak",
             type: "GET",
             dataType: "json",
             async: true,
@@ -155,7 +155,7 @@ class InfoDisplayGame extends React.Component {
 
         jQuery.ajax({
 
-            url: "http://localhost:8080/GetLastGame?",
+            url: "/GetLastGame?",
             type: "GET",
             dataType: "json",
             async: true,
@@ -283,7 +283,7 @@ class InfoDisplayHighestRating extends React.Component {
 
         jQuery.ajax({
 
-            url: "http://localhost:8080/GetPlayerWithHighestRating",
+            url: "/GetPlayerWithHighestRating",
             type: "GET",
             dataType: "json",
             async: true,
@@ -402,7 +402,7 @@ class InfoDisplayTotalGameStats extends React.Component {
 
         jQuery.ajax({
 
-            url: "http://localhost:8080/TotalGameStats",
+            url: "/TotalGameStats",
             type: "GET",
             dataType: "json",
             async: true,

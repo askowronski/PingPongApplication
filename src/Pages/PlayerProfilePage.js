@@ -244,7 +244,7 @@ export class AverageScoreGraph extends React.Component {
     componentDidMount = () => {
         jQuery.ajax({
 
-            url: "http://localhost:8080/GetAverageScore?id=2",
+            url: "/GetAverageScore?id=2",
             type: "GET",
             dataType: "json",
             async: false,
@@ -263,7 +263,7 @@ export class AverageScoreGraph extends React.Component {
         });
         jQuery.ajax({
 
-            url: "http://localhost:8080/GetGamesForPlayerChart?id=2",
+            url: "/GetGamesForPlayerChart?id=2",
             type: "GET",
             dataType: "json",
             async: false,
@@ -398,7 +398,7 @@ export class PlayerGraphTable extends React.Component {
     componentDidMount = () => {
         jQuery.ajax({
 
-            url: "http://localhost:8080/GetPlayers",
+            url: "/GetPlayers",
             type: "GET",
             dataType: "json",
             async: false,
@@ -411,7 +411,7 @@ export class PlayerGraphTable extends React.Component {
         });
         jQuery.ajax({
 
-            url: "http://localhost:8080/GetDateRangeForPlayersGames?id="
+            url: "/GetDateRangeForPlayersGames?id="
             + this.state.playerID,
             type: "GET",
             dataType: "json",

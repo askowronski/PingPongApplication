@@ -99,7 +99,7 @@ export class AverageScorePerGame extends React.Component {
 
             jQuery.ajax({
 
-                url: "http://localhost:8080/GetAverageScores?id=" + playerID
+                url: "/GetAverageScores?id=" + playerID
                 + timeString,
                 type: "GET",
                 dataType: "json",

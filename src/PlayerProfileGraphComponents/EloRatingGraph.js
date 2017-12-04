@@ -77,7 +77,7 @@ export class EloRatingPerGame extends React.Component {
             }
             jQuery.ajax({
 
-                url: "http://localhost:8080/GetEloRatings?id=" + playerID
+                url: "/GetEloRatings?id=" + playerID
                 + timeString,
                 type: "GET",
                 dataType: "json",

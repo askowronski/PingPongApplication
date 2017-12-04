@@ -27,7 +27,7 @@ export default class PlayersList extends React.Component {
             'custom-pagination');
         jQuery.ajax({
 
-            url: "http://localhost:8080/GetPlayers",
+            url: "/GetPlayers",
             type: "GET",
             dataType: "json",
             async: false,
@@ -93,7 +93,7 @@ export default class PlayersList extends React.Component {
 
     processEditPlayer = () => {
 
-        let urlString = "http://localhost:8080/EditPlayer?id="+this.state.editId+ "&newFirstName="
+        let urlString = "/EditPlayer?id="+this.state.editId+ "&newFirstName="
             + this.state.editFirstName + "&newLastName=" + this.state.editLastName;
         if (this.state.editUsername !== this.state.originalUsername) {
             urlString = urlString + "&newUsername="+this.state.editUsername
@@ -114,7 +114,7 @@ export default class PlayersList extends React.Component {
     processDeletePlayer = (id, username) => {
         jQuery.ajax({
 
-            url: "http://localhost:8080/DeletePlayer?id=" + id + "&username="
+            url: "/DeletePlayer?id=" + id + "&username="
             + username,
             type: "DELETE",
             dataType: "json",
@@ -336,7 +336,7 @@ class EditPlayer extends React.Component {
 
         jQuery.ajax({
 
-            url: "http://localhost:8080/EditPlayer?id=" + this.state.id
+            url: "/EditPlayer?id=" + this.state.id
             + "&newUsername=" + this.state.newUsername,
             type: "POST",
             dataType: "json",

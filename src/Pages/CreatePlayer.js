@@ -61,7 +61,7 @@ class CreatePlayerForm extends React.Component {
 
         jQuery.ajax({
 
-            url: "http://localhost:8080/CreatePlayer?username="
+            url: "/CreatePlayer?username="
             + this.state.value
             + "&firstName=" + this.state.firstName + "&lastName="
             + this.state.lastName,

@@ -31,7 +31,7 @@ export class FeedbackForm extends React.Component {
     componentDidMount = () => {
         jQuery.ajax({
 
-            url: "http://localhost:8080/GetPlayers",
+            url: "/GetPlayers",
             type: "GET",
             dataType: "json",
             async: true,
@@ -62,7 +62,7 @@ export class FeedbackForm extends React.Component {
             alert("Who are ya?!");
         } else
         jQuery.ajax({
-            url: "http://localhost:8080/CreateFeedback",
+            url: "/CreateFeedback",
             type: "POST",
             dataType: "json",
             contentType: "application/json; charset=utf-8",

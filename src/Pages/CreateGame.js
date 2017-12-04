@@ -73,7 +73,7 @@ class CreateGameForm extends React.Component {
         });
         jQuery.ajax({
 
-            url: "http://localhost:8080/GetPlayers",
+            url: "/GetPlayers",
             type: "GET",
             dataType: "json",
             async: true,
@@ -153,7 +153,7 @@ class CreateGameForm extends React.Component {
         let timeString = moment(this.state.time).format('HH:mm:ss');
 
         jQuery.ajax({
-            url: "http://localhost:8080/CreateGame?player1ID="
+            url: "/CreateGame?player1ID="
             + this.state.player1ID + "&player2ID=" + this.state.player2ID +
             "&score1=" + this.state.score1 + "&score2=" + this.state.score2
             + "&date=" + this.state.date.format('YYYYMMMDD')+"&time="+timeString,

@@ -60,7 +60,7 @@ export default class GamesList extends React.Component {
         this.finishTableSetup();
         jQuery.ajax({
 
-            url: "http://localhost:8080/GetGamesNoRatings",
+            url: "/GetGamesNoRatings",
             type: "GET",
             dataType: "json",
             async: true,
@@ -93,7 +93,7 @@ export default class GamesList extends React.Component {
         });
         jQuery.ajax({
 
-            url: "http://localhost:8080/GetPlayers",
+            url: "/GetPlayers",
             type: "GET",
             dataType: "json",
             async: true,
@@ -154,7 +154,7 @@ export default class GamesList extends React.Component {
     deleteGame = (id) => {
         jQuery.ajax({
 
-            url: "http://localhost:8080/DeleteGame?iD=" + id,
+            url: "/DeleteGame?iD=" + id,
             type: "DELETE",
             dataType: "json",
             async: true,
@@ -218,7 +218,7 @@ export default class GamesList extends React.Component {
         let timeString = moment(this.state.editDate+this.state.editTime).format('YYYYMMMDD HH:mm:ss');
 
         jQuery.ajax({
-            url: "http://localhost:8080/EditGame?iD=" + this.state.editGameID
+            url: "/EditGame?iD=" + this.state.editGameID
             + "&player1ID=" + this.state.editPlayer1ID
             + "&player2ID=" + this.state.editPlayer2ID + "&score1="
             + this.state.editScore1 + "&score2=" + this.state.editScore2 +
