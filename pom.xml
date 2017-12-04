@@ -15,6 +15,8 @@
   </parent>
 
 
+
+
   <dependencies>
     <dependency>
       <groupId>org.springframework</groupId>
@@ -106,6 +108,17 @@
       <artifactId>javafx</artifactId>
       <version>2017.11.0</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.hive</groupId>
+      <artifactId>hive-jdbc</artifactId>
+      <version>1.2.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.eclipse.jetty.aggregate</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
 
   </dependencies>
 
@@ -114,6 +127,7 @@
     <java.version>1.8</java.version>
     <full-artifact-name>target/pingpong-1.0-SNAPSHOT.jar</full-artifact-name>
   </properties>
+
 
 
   <build>
@@ -130,7 +144,7 @@
           </includes>
           <jdkVersion>1.8</jdkVersion>
           <processTypes>
-            <web>java -Dserver.port=8080 $JAVA_OPTS -jar target/pingpong-1.0-SNAPSHOT.jar</web>
+            <web>java  $JAVA_OPTS -Dserver.port=$PORT -jar target/pingpong-1.0-SNAPSHOT.jar</web>
           </processTypes>
         </configuration>
       </plugin>
