@@ -281,21 +281,21 @@
     <orderEntry type="library" name="Maven: net.sourceforge.nekohtml:nekohtml:1.9.21" level="project" />
     <orderEntry type="library" name="Maven: xerces:xercesImpl:2.10.0" level="project" />
     <orderEntry type="library" name="Maven: xml-apis:xml-apis:1.4.01" level="project" />
-    <orderEntry type="library" name="Maven: org.wildfly.swarm:javafx:2017.11.0" level="project" />
-    <orderEntry type="library" name="Maven: org.wildfly.swarm:container:2017.11.0" level="project" />
-    <orderEntry type="library" name="Maven: org.wildfly.swarm:spi:2017.11.0" level="project" />
+    <orderEntry type="library" name="Maven: org.wildfly.swarm:javafx:2017.9.5" level="project" />
+    <orderEntry type="library" name="Maven: org.wildfly.swarm:container:2017.9.5" level="project" />
+    <orderEntry type="library" name="Maven: org.wildfly.swarm:spi:2017.9.5" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.shrinkwrap:shrinkwrap-api:1.2.6" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.shrinkwrap:shrinkwrap-impl-base:1.2.6" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.shrinkwrap:shrinkwrap-spi:1.2.6" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.shrinkwrap.descriptors:shrinkwrap-descriptors-api-jboss:2.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.shrinkwrap.descriptors:shrinkwrap-descriptors-impl-jboss:2.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.wildfly.swarm:bootstrap:2017.11.0" level="project" />
+    <orderEntry type="library" name="Maven: org.wildfly.swarm:bootstrap:2017.9.5" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.modules:jboss-modules:1.5.2.Final" level="project" />
     <orderEntry type="library" name="Maven: org.wildfly.swarm:config-api:1.1.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.wildfly.swarm:config-api-runtime:1.1.0.Final" level="project" />
     <orderEntry type="library" name="Maven: org.ow2.asm:asm-all:5.0.4" level="project" />
-    <orderEntry type="library" name="Maven: org.wildfly.swarm:logging:2017.11.0" level="project" />
-    <orderEntry type="library" name="Maven: org.wildfly.swarm:meta-spi:2017.11.0" level="project" />
+    <orderEntry type="library" name="Maven: org.wildfly.swarm:logging:2017.9.5" level="project" />
+    <orderEntry type="library" name="Maven: org.wildfly.swarm:meta-spi:2017.9.5" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.shrinkwrap.descriptors:shrinkwrap-descriptors-impl-javaee:2.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.shrinkwrap.descriptors:shrinkwrap-descriptors-api-javaee:2.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.shrinkwrap.descriptors:shrinkwrap-descriptors-api-base:2.0.0" level="project" />

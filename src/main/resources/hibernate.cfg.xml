@@ -6,20 +6,22 @@
   <session-factory>
     <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
     <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-    <!--<property name="hibernate.connection.username">root</property>-->
-    <!--<property name="hibernate.connection.password">SweetSwag1!</property>-->
-    <!--<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/PingPong</property>-->
-    <property name="hibernate.connection.username">bf955992f81742</property>
-    <property name="hibernate.connection.password">4ae09c5f</property>
-    <property name="hibernate.connection.url">jdbc:mysql://us-cdbr-iron-east-05.cleardb.net/heroku_cb828f6bd488fff</property>
+    <property name="hibernate.connection.username">root</property>
+    <property name="hibernate.connection.password">SweetSwag1!</property>
+    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/PingPong</property>
+    <!--<property name="hibernate.connection.username">bf955992f81742</property>-->
+    <!--<property name="hibernate.connection.password">4ae09c5f</property>-->
+    <!--<property name="hibernate.connection.url">jdbc:mysql://us-cdbr-iron-east-05.cleardb.net/heroku_cb828f6bd488fff</property>-->
 
-    <property name="connection_pool_size">1</property>
+    <property name="connection_pool_size">100</property>
 
     <property name="hibernate.hbm2ddl.auto">update</property>
 
     <property name="show_sql">true</property>
 
     <property name="current_session_context_class">thread</property>
+
+    <!--<property name="autoReconnect=">true</property>-->
 
   </session-factory>
 

@@ -46,6 +46,15 @@
 
 .header-button-input {
 
+}
+
+#gameInputButton {
+    visibility: hidden;
+    position:absolute;
+    margin-top: .5%;
+}
+
+#playerInputButton {
     visibility: hidden;
     position:absolute;
     margin-top: .5%;

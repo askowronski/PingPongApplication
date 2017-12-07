@@ -13,7 +13,7 @@ public class HtmlProvider {
     String appName;
 
     @RequestMapping(value = { "/Home", "/Players", "/Games", "/LogoPage", "/", "/CreateGame","/Feedback",
-            "/CreatePlayer", "/TotalStats", "/PlayerProfilePage" })
+            "/CreatePlayer", "/TotalStats", "/PlayerProfile" })
     public String index() {
         return "index";
     }

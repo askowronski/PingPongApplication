@@ -65,7 +65,7 @@ export class NetWinsGraph extends React.Component {
             }
             jQuery.ajax({
 
-                url: "http://localhost:8080/GetPlayerOutcomes?id=" + playerID
+                url: "/GetPlayerOutcomes?id=" + playerID
                 + timeString,
                 type: "GET",
                 dataType: "json",

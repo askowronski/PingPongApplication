@@ -104,7 +104,7 @@
     <dependency>
       <groupId>org.wildfly.swarm</groupId>
       <artifactId>javafx</artifactId>
-      <version>2017.11.0</version>
+      <version>2017.9.5</version>
     </dependency>
     <dependency>
       <groupId>org.apache.hive</groupId>
@@ -148,13 +148,13 @@
       </plugin>
 
 
-      <plugin>
-        <groupId>com.github.eirslett</groupId>
-        <artifactId>frontend-maven-plugin</artifactId>
-        <!-- Use the latest released version:
-        https://repo1.maven.org/maven2/com/github/eirslett/frontend-maven-plugin/ -->
-        <version>1.6</version>
-        <executions>
+      <!--<plugin>-->
+        <!--<groupId>com.github.eirslett</groupId>-->
+        <!--<artifactId>frontend-maven-plugin</artifactId>-->
+        <!--&lt;!&ndash; Use the latest released version:-->
+        <!--https://repo1.maven.org/maven2/com/github/eirslett/frontend-maven-plugin/ &ndash;&gt;-->
+        <!--<version>1.6</version>-->
+        <!--<executions>-->
 
           <!--<execution>-->
             <!--<id>install node and npm</id>-->
@@ -187,15 +187,90 @@
             <!--</configuration>-->
           <!--</execution>-->
 
-        </executions>
-      </plugin>
+        <!--</executions>-->
+      <!--</plugin>-->
 
-      <plugin><!--<plugin>-->
+      <!--<plugin>-->
+        <!--<artifactId>maven-clean-plugin</artifactId>-->
+        <!--<version>3.0.0</version>-->
+        <!--<configuration>-->
+          <!--<filesets>-->
+            <!--<fileset>-->
+              <!--<directory>/src/main/resources/static/</directory>-->
+            <!--</fileset>-->
+          <!--</filesets>-->
+        <!--</configuration>-->
+      <!--</plugin>-->
+
+      <!--<plugin>-->
+        <!--<artifactId>maven-clean-plugin</artifactId>-->
+        <!--<version>3.0.0</version>-->
+        <!--<configuration>-->
+          <!--<filesets>-->
+            <!--<fileset>-->
+              <!--<directory>/src/main/resources/templates/</directory>-->
+            <!--</fileset>-->
+          <!--</filesets>-->
+        <!--</configuration>-->
+      <!--</plugin>-->
+
+      <!--<plugin>-->
+        <!--<artifactId>maven-resources-plugin</artifactId>-->
+        <!--<version>3.0.2</version>-->
+        <!--<executions>-->
+          <!--<execution>-->
+            <!--<id>copy-resources</id>-->
+            <!--&lt;!&ndash; here the phase you need &ndash;&gt;-->
+            <!--<phase>validate</phase>-->
+            <!--<goals>-->
+              <!--<goal>copy-resources</goal>-->
+            <!--</goals>-->
+            <!--<configuration>-->
+              <!--<outputDirectory>./src/main/resources/static/</outputDirectory>-->
+              <!--<resources>-->
+                <!--<resource>-->
+                  <!--<directory>./build/static</directory>-->
+                  <!--<filtering>true</filtering>-->
+                <!--</resource>-->
+              <!--</resources>-->
+            <!--</configuration>-->
+          <!--</execution>-->
+        <!--</executions>-->
+      <!--</plugin>-->
+
+      <!--<plugin>-->
+        <!--<artifactId>maven-resources-plugin</artifactId>-->
+        <!--<version>3.0.2</version>-->
+        <!--<executions>-->
+          <!--<execution>-->
+            <!--<id>copy-resources</id>-->
+            <!--&lt;!&ndash; here the phase you need &ndash;&gt;-->
+            <!--<phase>validate</phase>-->
+            <!--<goals>-->
+              <!--<goal>copy-resources</goal>-->
+            <!--</goals>-->
+            <!--<configuration>-->
+              <!--<outputDirectory>./src/main/resources/templates</outputDirectory>-->
+              <!--<resources>-->
+                <!--<resource>-->
+                  <!--<directory>./build/</directory>-->
+                  <!--<includes>-->
+                    <!--<include>index.html</include>-->
+                  <!--</includes>-->
+                  <!--<filtering>true</filtering>-->
+                <!--</resource>-->
+              <!--</resources>-->
+            <!--</configuration>-->
+          <!--</execution>-->
+        <!--</executions>-->
+      <!--</plugin>-->
+
+      <plugin>
         <groupId>org.springframework.boot
-        </groupId>    <!--<groupId>org.apache.maven.plugins</groupId>-->
+        </groupId>
         <artifactId>spring-boot-maven-plugin
-        </artifactId>    <!--<artifactId>maven-resources-plugin</artifactId>-->
-      </plugin>    <!--<version>3.0.2</version>-->
+        </artifactId>
+      </plugin>
       <!--<executions>-->
       <!--<execution>-->
       <!--<id>default-copy-resources</id>-->

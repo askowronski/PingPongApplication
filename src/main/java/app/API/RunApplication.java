@@ -21,32 +21,4 @@ public class RunApplication {
     public static void main(String[] args) {
         SpringApplication.run(RunApplication.class ,args);
     }
-//    public static void main(String[] args) {
-//        SpringApplication.run(applicationClass, args);
-//    }
-//
-//    @Override
-//    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-//        return application.sources(applicationClass);
-//    }
-//
-//    private static Class<PlayerAPI> applicationClass = PlayerAPI.class;
-//
-//    @RestController
-//    class GreetingController {
-//
-//        @RequestMapping("/hello")
-//        String hello() {
-//            return "Hello!";
-//        }
-//    }
-//
-//    @RestController
-//    class GreetController {
-//
-//        @RequestMapping("/yo")
-//        String hello() {
-//            return "Hello!";
-//        }
-//    }
 }

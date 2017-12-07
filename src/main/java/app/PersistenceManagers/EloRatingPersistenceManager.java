@@ -149,6 +149,7 @@ public class EloRatingPersistenceManager {
             Query query = session.createQuery(FIND_ELO_RATINGS_FOR_PLAYER);
             query.setParameter("playerid", this.getPlayerID());
             List<PersistenceEloRating> ratings = query.list();
+            session.close();
             PersistencePlayerEloRatingList list = new PersistencePlayerEloRatingList(new LinkedList<>(ratings));
             list.sortEloRatings();
             return list;

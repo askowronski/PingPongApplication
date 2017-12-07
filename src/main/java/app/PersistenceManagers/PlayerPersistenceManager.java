@@ -28,20 +28,15 @@ import org.hibernate.query.Query;
 
 public class PlayerPersistenceManager {
 
-    public static String FILE_PATH = "pingPongPlayers.txt";
-
     public static String FIND_ALL_PLAYERS = "from PersistencePlayer as player where player.deleted = 0";
     public static String FIND_ALL_PLAYERS_INCLUDING_DELETED = "from PersistencePlayer";
     public static String FIND_PLAYER_BY_ID = "from PersistencePlayer as player where player.id = :id";
     public static String FIND_PLAYER_BY_USERNAME = "from PersistencePlayer as player where player.username = :username";
 
 
-    private final File file;
-
     private SessionFactory factory;
 
     public PlayerPersistenceManager() {
-        this.file = new File(FILE_PATH);
         try {
             this.factory = HibernateConfiguration.SESSION_FACTORY;
         } catch (HibernateException e) {
@@ -52,7 +47,6 @@ public class PlayerPersistenceManager {
     }
 
     public PlayerPersistenceManager(String filePath) {
-        this.file = new File(filePath);
         try {
             Configuration config = HibernateConfiguration.CONFIG;
             this.factory = HibernateConfiguration.SESSION_FACTORY;
@@ -99,6 +93,7 @@ public class PlayerPersistenceManager {
             Query query = session.createQuery(FIND_PLAYER_BY_ID);
             query.setParameter("id", id);
             Object obj = query.getSingleResult();
+            session.close();
             return (PersistencePlayer) obj;
         } catch (NoResultException e) {
             System.out.println(e.getMessage());
@@ -113,6 +108,7 @@ public class PlayerPersistenceManager {
             Query query = session.createQuery(FIND_PLAYER_BY_USERNAME);
             query.setParameter("username", username);
             Object obj = query.getSingleResult();
+            session.close();
             return (PersistencePlayer) obj;
         } catch (NoResultException e) {
             System.out.println(e.getMessage());
@@ -121,7 +117,6 @@ public class PlayerPersistenceManager {
     }
 
     public List<Player> getViewPlayers() {
-        String json = this.readFile();
         List<PersistencePlayer> players = this.getPlayersNew();
         List<Player> viewPlayers = new ArrayList<>();
 
@@ -243,10 +238,6 @@ public class PlayerPersistenceManager {
         }
     }
 
-    public File getFile() {
-        return this.file;
-    }
-
     public boolean checkUsernameValidity(String username) {
         List<PersistencePlayer> players = this.getPlayersIncludingDeleted();
         List<String> usernames = new ArrayList<>();
@@ -284,24 +275,6 @@ public class PlayerPersistenceManager {
             e.printStackTrace();
             return players;
         }
-    }
-
-    public String readFile() {
-        try {
-            return this.getFile().readFile();
-        } catch (NullPointerException e) {
-            return "No Players Found";
-        }
-    }
-
-    public Player getPlayerByIDOld(int id) {
-        List<Player> players = this.readPlayerArrayFromJson(this.getFile().readFile());
-        for (Player player : players) {
-            if (player.getiD() == id) {
-                return player;
-            }
-        }
-        return new Player(new EloRating(0), 0, "Player Does Not Exist", "No", "Player");
     }
 
     public Player getViewPlayerByID(int id, int gameID) {

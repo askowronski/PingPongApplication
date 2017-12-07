@@ -609,8 +609,6 @@ const InputButtons = (props) => {
                                 bg="blue">
                             Player
                         </Button>
-                    </Box>
-                    <Box>
                         <Button className="header-button-input"
                                 onClick={inputGame} id="gameInputButton">Game
                         </Button>
@@ -715,7 +713,7 @@ export class HeaderButtons2 extends React.Component {
             let width = jQuery('.inputButton').width();
             let positionPlayer = position + width / 2.0;
             let positionGame = positionPlayer - jQuery(
-                    '#gameInputButton').width();
+                    '#gameInputButton').outerWidth();
             jQuery('#playerInputButton').css('left', positionPlayer);
             jQuery('#gameInputButton').css('left', positionGame);
             jQuery('#playerInputButton').css('visibility', 'visible');

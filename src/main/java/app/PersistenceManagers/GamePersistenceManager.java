@@ -6,15 +6,14 @@ import app.PersistenceModel.PersistenceEloRating;
 import app.PersistenceModel.PersistenceGame;
 import app.PersistenceModel.PersistencePlayer;
 import app.PersistenceModel.PersistencePlayerEloRatingList;
+import app.ViewModel.DateRange;
 import app.ViewModel.EloRating;
 import app.ViewModel.PingPongGame;
 import app.ViewModel.Player;
 import app.ReadWriteFile.File;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,15 +22,11 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
-import javafx.util.Pair;
 import javax.persistence.NoResultException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
 public class GamePersistenceManager {
@@ -105,7 +100,7 @@ public class GamePersistenceManager {
 
     public Player getPlayer(int id) {
         PlayerPersistenceManager ppm = new PlayerPersistenceManager();
-        return ppm.getPlayerByIDOld(id);
+        return ppm.getViewPlayerByID(id,0);
     }
 
     public Boolean doesPlayerHaveFourGamesOnDate(Date date, int playerId) {
@@ -118,6 +113,7 @@ public class GamePersistenceManager {
             query.setParameter("playerId", playerId);
             query.setParameter("date", dateString);
             List<PersistenceGame> games = query.getResultList();
+            session.close();
             return games.size() > 3;
         } catch (NoResultException | HibernateException e) {
             System.out.println(e.getMessage());
@@ -157,6 +153,7 @@ public class GamePersistenceManager {
             Query query = session.createQuery(GET_GAME_BY_ID);
             query.setParameter("id", id);
             Object obj = query.getSingleResult();
+            session.close();
             return (PersistenceGame) obj;
         } catch (NoResultException | HibernateException e) {
             System.out.println(e.getMessage());
@@ -175,6 +172,7 @@ public class GamePersistenceManager {
             if (games.size() == 0) {
                 throw new NoResultException("No games found.");
             }
+            session.close();
 
             PersistenceGame game = games.get(games.size() - 1);
             Player player1 = pPM.getViewPlayerByID(game.getPlayer1ID(), game.getiD());
@@ -300,6 +298,7 @@ public class GamePersistenceManager {
             Query query = session.createQuery(GET_GAMES);
             List<PersistenceGame> games = query.getResultList();
             games.sort(Comparator.comparing(PersistenceGame::getTime));
+            session.close();
             return games;
         } catch (NoResultException | HibernateException e) {
             System.out.println(e.getMessage());
@@ -376,6 +375,7 @@ public class GamePersistenceManager {
             Query query = session.createNativeQuery(this.getStringForLastPlayerQuery(playerId),
                     PersistenceGame.class);
             List<PersistenceGame> games = query.getResultList();
+            session.close();
 
             if (games.size() > 0) {
                 return games.get(games.size() - 1).getiD();
@@ -521,6 +521,7 @@ public class GamePersistenceManager {
                     PersistenceGame.class);
             List<PersistenceGame> games = query.getResultList();
             games.sort(Comparator.comparing(PersistenceGame::getTime));
+            session.close();
             return games;
         } catch (NoResultException | HibernateException e) {
             System.out.println(e.getMessage());
@@ -535,24 +536,13 @@ public class GamePersistenceManager {
             query.setParameter("playerId", playerId);
             List<PersistenceGame> games = query.getResultList();
             games.sort(Comparator.comparing(PersistenceGame::getTime));
+            session.close();
             return games;
         } catch (NoResultException | HibernateException e) {
             System.out.println(e.getMessage());
             throw e;
         }
     }
-//
-//    public void decoupleGameFromHibernate(PersistenceGame game) {
-//        try {
-//            Session session = factory.openSession();
-//            session.
-//        } catch (NoResultException | HibernateException e) {
-//            System.out.println(e.getMessage());
-//            throw e;
-//        }
-//    }
-
-
 
     public List<PersistenceGame> getGamesForPlayer(int playerId, List<PersistenceGame> games) {
         List<PersistenceGame> gamesForPlayer = new ArrayList<>();
@@ -575,26 +565,20 @@ public class GamePersistenceManager {
         return this.getGamesForPlayer(playerId, games);
     }
 
-    public Pair<String, String> getDateRangeOfGamesForPlayer(List<PersistenceGame> games) {
+    public DateRange getDateRangeOfGamesForPlayer(List<PersistenceGame> games) {
         if (games.size() > 0) {
 
             Date start = games.get(0).getTime();
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(games.get(games.size() - 1).getTime());
             calendar.add(Calendar.DATE, 1);
-            SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
-            String end = sdfDate.format(calendar.getTime());
-            String beginning = sdfDate.format(start);
-            return new Pair<>(beginning, end);
+            return new DateRange(start, calendar.getTime());
         } else {
-            SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
             Date newDate = new Date();
-            String dateStringStart = sdfDate.format(newDate);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(newDate);
             calendar.add(Calendar.DATE, 1);
-            String dateStringEnd = sdfDate.format(calendar.getTime());
-            return new Pair<>(dateStringStart, dateStringEnd);
+            return new DateRange(newDate, calendar.getTime());
         }
     }
 

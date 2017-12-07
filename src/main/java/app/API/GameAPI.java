@@ -4,6 +4,7 @@ import app.Exceptions.InvalidParameterException;
 import app.PersistenceManagers.GamePersistenceManager;
 import app.PersistenceManagers.PlayerPersistenceManager;
 import app.PersistenceModel.PersistenceGame;
+import app.ViewModel.DateRange;
 import app.ViewModel.PingPongGame;
 import app.ViewModel.Player;
 import com.mysql.cj.core.util.StringUtils;
@@ -11,7 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.NoSuchElementException;
-import javafx.util.Pair;
+import javafx.util.*;
 import javax.persistence.NoResultException;
 import org.springframework.web.bind.annotation.*;
 
@@ -235,8 +236,8 @@ public class GameAPI {
     public APIResult getDateRangeForPlayersGame(@RequestParam(value="id") int playerId) {
 
         GamePersistenceManager gPM = new GamePersistenceManager();
-        Pair<String,String> dates = gPM.getDateRangeOfGamesForPlayer(gPM.getPersistenceGamesForPlayer(playerId));
-        return new ApiResultDates(true, dates.getKey(), dates.getValue());
+        DateRange dates = gPM.getDateRangeOfGamesForPlayer(gPM.getPersistenceGamesForPlayer(playerId));
+        return new ApiResultDates(true, dates.getBeginningString(), dates.getEndString());
 
     }
 

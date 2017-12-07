@@ -43,10 +43,10 @@ public class StatsAPI {
             @RequestParam(value = "end", required = false) Optional<String> end) {
         GamePersistenceManager gPM = new GamePersistenceManager();
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        Player player = pPM.getViewPlayerByID(playerID, 0);
-        if (player.getiD() == 0) {
-            return new APIResult(false, "Player not found");
+        if (playerID == 0) {
+            return new APIResult(false, "No Games For Player");
         }
+        Player player = pPM.getViewPlayerByID(playerID, 0);
 
         if (beginning.isPresent() && end.isPresent()) {
             Date beginningTime;
@@ -80,10 +80,10 @@ public class StatsAPI {
     public APIResult getTotalGames(@RequestParam(value = "id") int playerID) {
         GamePersistenceManager gPM = new GamePersistenceManager();
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        Player player = pPM.getPlayerByIDOld(playerID);
-        if (player.getiD() == 0) {
+        if (playerID == 0) {
             return new APIResult(false, "Player not found");
         }
+        Player player = pPM.getViewPlayerByID(playerID,0);
 
         List<PingPongGame> games = gPM.getGamesForPlayer(player);
 
@@ -96,10 +96,10 @@ public class StatsAPI {
     public APIResult getStdDev(@RequestParam(value = "id") int playerID) {
         GamePersistenceManager gPM = new GamePersistenceManager();
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        Player player = pPM.getPlayerByIDOld(playerID);
-        if (player.getiD() == 0) {
+        if (playerID == 0) {
             return new APIResult(false, "Player not found");
         }
+        Player player = pPM.getViewPlayerByID(playerID,0);
 
         List<PingPongGame> games = gPM.getGamesForPlayer(player);
 
@@ -113,10 +113,10 @@ public class StatsAPI {
     public APIResult getTotalLosses(@RequestParam(value = "id") int playerID) {
         GamePersistenceManager gPM = new GamePersistenceManager();
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        Player player = pPM.getPlayerByIDOld(playerID);
-        if (player.getiD() == 0) {
+        if (playerID == 0) {
             return new APIResult(false, "Player not found");
         }
+        Player player = pPM.getViewPlayerByID(playerID,0);
 
         List<PingPongGame> games = gPM.getGamesForPlayer(player);
 
@@ -138,10 +138,11 @@ public class StatsAPI {
     public APIResult getHighestScore(@RequestParam(value = "id") int playerID) {
         GamePersistenceManager gPM = new GamePersistenceManager();
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        Player player = pPM.getPlayerByIDOld(playerID);
-        if (player.getiD() == 0) {
+        if (playerID == 0) {
             return new APIResult(false, "Player not found");
         }
+        Player player = pPM.getViewPlayerByID(playerID,0);
+
 
         List<PingPongGame> games = gPM.getGamesForPlayer(player);
 
@@ -154,10 +155,11 @@ public class StatsAPI {
     public APIResult getAverageScore(@RequestParam(value = "id") int playerID) {
         GamePersistenceManager gPM = new GamePersistenceManager();
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
-        Player player = pPM.getPlayerByIDOld(playerID);
-        if (player.getiD() == 0) {
+        if (playerID == 0) {
             return new APIResult(false, "Player not found");
         }
+        Player player = pPM.getViewPlayerByID(playerID,0);
+
 
         List<PingPongGame> games = gPM.getGamesForPlayer(player);
 
@@ -183,6 +185,7 @@ public class StatsAPI {
             @RequestParam(value = "beginningTime") Optional<String> beginningTime,
             @RequestParam(value = "endingTime") Optional<String> endingTime
     ) {
+
 
         PlayerPersistenceManager pPM = new PlayerPersistenceManager();
         GamePersistenceManager gPM = new GamePersistenceManager();
@@ -253,7 +256,6 @@ public class StatsAPI {
             GamePersistenceManager gPM) throws ParseException {
         Date begTime;
         Date endTime;
-        List<PingPongGame> gamesForPlayer;
         if (beginningTime.isPresent() && endingTime.isPresent()) {
             try {
                 begTime = new SimpleDateFormat("yyyyMMMdd").parse(beginningTime.get());
@@ -287,7 +289,7 @@ public class StatsAPI {
             }
 
         } else {
-            return gPM.getPersistenceGamesForPlayer(gPM.getPlayer(playerID).getiD());
+            return gPM.getPersistenceGamesForPlayer(playerID);
         }
     }
 
@@ -325,6 +327,10 @@ public class StatsAPI {
         Date begTime;
         Date endTime;
         List<PersistenceGame> gamesForPlayer;
+
+        if (playerID == 0) {
+            return new APIResult(false, "No Games For Player.");
+        }
 
         if (beginningTime.isPresent() && endingTime.isPresent()) {
             try {
